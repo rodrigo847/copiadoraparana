@@ -4,6 +4,7 @@ import Link from "next/link";
 import Script from "next/script";
 
 import { ServicesProductsCarousel } from "@/components/services-products-carousel";
+import { CommercialRegistrationForm } from "@/components/commercial-registration-form";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import {
@@ -267,14 +268,7 @@ export default function HomePage() {
                 {highlights[0]} Mediante cadastro e analise comercial, sua empresa pode centralizar pedidos com mais previsibilidade.
               </p>
 
-              <div className="relative z-10 mt-4 flex flex-col gap-3 sm:flex-row">
-                <a
-                  href={site.financialEmailHref}
-                  className="inline-flex items-center justify-center rounded-md bg-[#1b8bff] px-5 py-3 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(12,81,165,0.45)] transition hover:bg-[#0f6ed7]"
-                >
-                  Solicitar cadastro comercial
-                </a>
-              </div>
+              <CommercialRegistrationForm />
             </article>
           </div>
         </section>
