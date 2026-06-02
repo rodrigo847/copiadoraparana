@@ -9,10 +9,10 @@ export const site = {
   whatsappDisplay: "(41) 99679-9517",
   whatsappHref:
     "https://wa.me/5541996799517?text=Olá!%20Vim%20pelo%20site%20e%20gostaria%20de%20falar%20sobre%20um%20projeto.",
-  email: "contato@copiadoraparana.com.br",
-  financialEmail: "financeiro@copiadoraparana.com.br",
+  email: "contato@copiadoraparanalaser.com.br",
+  financialEmail: "financeiro@copiadoraparanalaser.com.br",
   financialEmailHref:
-    "mailto:financeiro@copiadoraparana.com.br?subject=Solicitacao%20de%20cadastro%20comercial&body=Ola%2C%20gostaria%20de%20solicitar%20cadastro%20comercial.%0A%0AEmpresa%3A%0ACNPJ%3A%0AResponsavel%3A%0ATelefone%3A%0AEmail%3A%0A",
+    "mailto:financeiro@copiadoraparanalaser.com.br?subject=Solicitacao%20de%20cadastro%20comercial&body=Ola%2C%20gostaria%20de%20solicitar%20cadastro%20comercial.%0A%0AEmpresa%3A%0ACNPJ%3A%0AResponsavel%3A%0ATelefone%3A%0AEmail%3A%0A",
   instagram: "https://www.instagram.com/copiadoraparanalaser/",
   googleMapsDirections:
     "https://www.google.com/maps/dir/?api=1&destination=Rua+Teixeira+Coelho,+61,+Batel,+Curitiba+-+PR,+80420-030",

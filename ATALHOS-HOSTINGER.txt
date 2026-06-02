@@ -1,0 +1,34 @@
+ATALHOS RAPIDOS - COPIADORA PARANA
+
+1) AJUSTAR O PROJETO LOCAL
+- Fazer as alteracoes nos arquivos
+
+2) TESTAR ANTES DE PUBLICAR
+- npm run dev
+- Validar as telas principais
+- npm run build
+
+3) PUBLICAR NO GITHUB
+- git add .
+- git commit -m "descricao da alteracao"
+- git push origin main
+
+4) DEPLOY AUTOMATICO NA HOSTINGER
+- Acessar: Sites > copiadoraparana.com.br > Implantacoes
+- Verificar se status ficou Concluido
+
+5) CHECKLIST POS-DEPLOY
+- Home abriu normal
+- /orcafacil abriu normal
+- F5 em /orcafacil sem tela branca
+- WhatsApp e PDF da calculadora funcionando
+- SSL ativo (cadeado no navegador)
+
+6) SE DER ERRO NO DEPLOY
+- Abrir logs da implantacao
+- Copiar as ultimas linhas do erro
+- Corrigir e repetir fluxo
+
+7) VARIAVEIS DE AMBIENTE (HOSTINGER)
+- NEXT_PUBLIC_SITE_URL = https://copiadoraparana.com.br
+- Nao usar NODE_ENV=production nas variaveis de build
