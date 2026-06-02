@@ -1,0 +1,13 @@
+Calculadora
+
+* Materiais menores que 1cm, pedir para entrar em contato;
+* Valor mínimo por cada material; (dar exemplo de quantidade para valor atual);
+* Acabamento adesivo: Meio corte, máscara, letras com máscara, corte laser se rígido;
+* retirar corte especial e deixar no acabamento;
+* Inserir Item inicio, retirar ação ultimo;
+* Deixar cor mais clara/escura fundo para fácil visualização;
+* PDF, inserir logo;
+* Inserir campo especiais: Canetas, lápis, placa metálica,  
+
+* Nas escolhas, ver possibilidade de inserir icons (Banner, Adesivo);
+
