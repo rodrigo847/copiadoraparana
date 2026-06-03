@@ -834,7 +834,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
               .filter(([key]) => {
                 if (rigidMaterial !== "sem_rigido") {
                   if (rigidMaterial === "c2s_triplex") {
-                    return key === "sem_acabamento" || key === "corte_total" || key === "corte_laser" || key === "corte_dobra";
+                    return key === "corte_total";
                   }
 
                   return key === "sem_acabamento" || key === "corte_laser" || key === "corte_dobra";
