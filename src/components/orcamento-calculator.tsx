@@ -825,8 +825,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
                 rigidMaterial !== "sem_rigido" ||
                 material === "banner_brilho" ||
                 material === "banner_fosco" ||
-                material === "vinil_branco_fosco" ||
-                material === "vinil_branco_brilho"
+                material.startsWith("vinil_")
               )
             }
           >
