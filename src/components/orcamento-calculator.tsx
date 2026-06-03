@@ -1,10 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import jsPDF from "jspdf";
 import autoTable, { type Styles } from "jspdf-autotable";
 import { useMemo, useState } from "react";
-import bannerIcon from "@/img/banner.png";
 
 type Unit = "mm" | "cm" | "m2";
 
@@ -194,7 +192,6 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
 
   const isSpecialSelected = special !== "sem_especial";
   const isPrintingSelected = printingType !== "sem_impressao";
-  const isBannerMaterial = material === "banner_brilho" || material === "banner_fosco";
 
   const minimumPerServiceHint = useMemo(() => {
     const h = Number.parseFloat(height);
@@ -765,18 +762,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
         </label>
 
         <label className="text-sm font-semibold text-[#102038]">
-          <span className="flex items-center gap-2">
-            Adesivo/Banner
-            {isBannerMaterial ? (
-              <Image
-                src={bannerIcon}
-                alt="Banner"
-                width={18}
-                height={18}
-                className="rounded-sm border border-[#c8d2df]"
-              />
-            ) : null}
-          </span>
+          Adesivo/Banner
           <select
             className="mt-1.5 h-12 w-full rounded-2xl border border-[#c8d2df] bg-[#f1f4f8] px-4 text-[1.05rem] font-normal text-[#203653] outline-none transition focus:border-[#77a6e7] sm:text-[1.1rem]"
             value={material}
