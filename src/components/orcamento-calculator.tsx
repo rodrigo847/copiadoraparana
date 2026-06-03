@@ -109,9 +109,9 @@ const FINISHING_TYPES: Record<string, PriceLabel> = {
 
 const FINISHING_ICONS: Record<string, string> = {
   sem_acabamento: "🚫",
-  com_ilhos: "🧷",
-  com_madeira: "🪵",
-  aplicacao_cavalete: "🪧",
+  com_ilhos: "◯",
+  com_madeira: "🪧",
+  aplicacao_cavalete: "🚧",
   meio_corte: "✂️",
   corte_total: "🧩",
   corte_laser: "⚡",
