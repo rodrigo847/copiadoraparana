@@ -34,6 +34,10 @@ const nextConfig: NextConfig = {
         source: "/:path*",
         headers: [
           {
+            key: "Cache-Control",
+            value: "no-store, no-cache, must-revalidate, max-age=0",
+          },
+          {
             key: "X-DNS-Prefetch-Control",
             value: "on",
           },
