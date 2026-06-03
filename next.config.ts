@@ -25,6 +25,16 @@ const nextConfig: NextConfig = {
         destination: "/orcafacil",
         permanent: true,
       },
+      {
+        source: "/servicos/encadernação-curitiba",
+        destination: "/servicos/encadernacao-curitiba",
+        permanent: true,
+      },
+      {
+        source: "/servicos/encaderna%C3%A7%C3%A3o-curitiba",
+        destination: "/servicos/encadernacao-curitiba",
+        permanent: true,
+      },
     ];
   },
 

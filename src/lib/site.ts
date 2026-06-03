@@ -129,7 +129,7 @@ export const serviceLandingPages: ServiceLandingPage[] = [
     ],
   },
   {
-    slug: "encadernação-curitiba",
+    slug: "encadernacao-curitiba",
     title: "Encadernação em Curitiba",
     headline: "Encadernações para relatórios, materiais técnicos e acadêmicos",
     metaDescription:
