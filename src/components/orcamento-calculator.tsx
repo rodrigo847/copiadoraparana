@@ -70,7 +70,7 @@ const RIGID_MATERIALS: Record<string, PriceLabel> = {
   acrilico_2mm: { name: "Acrilico 2mm", pricePerM2: 400 },
   acrilico_3mm: { name: "Acrilico 3mm", pricePerM2: 500 },
   //acrilico_6mm: { name: "Acrilico 6mm", pricePerM2: 1250 },
-  c2s_triplex: { name: "Papel C2S Triplex", pricePerM2: 120 },
+  c2s_triplex: { name: "Papel C2S Triplex", pricePerM2: 35 },
 };
 
 const RIGID_MATERIAL_ICONS: Record<string, string> = {
@@ -833,6 +833,10 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
             {Object.entries(FINISHING_TYPES)
               .filter(([key]) => {
                 if (rigidMaterial !== "sem_rigido") {
+                  if (rigidMaterial === "c2s_triplex") {
+                    return key === "sem_acabamento" || key === "corte_total" || key === "corte_laser" || key === "corte_dobra";
+                  }
+
                   return key === "sem_acabamento" || key === "corte_laser" || key === "corte_dobra";
                 }
 
