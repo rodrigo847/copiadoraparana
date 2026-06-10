@@ -124,8 +124,9 @@ const VERSO_TYPES: Record<string, PriceLabel> = {
 };
 
 const MINIMUM_PURCHASE = 60;
-const UV_MINIMUM_SMALL_PIECE = 100;
+const UV_MINIMUM_SMALL_PIECE = 60;
 const UV_MINIMUM_SIZE_LIMIT_CM = 6;
+const UV_SMALL_PIECE_LABOR_SURCHARGE = 1.5;
 const MIN_UNIT_PRICE_SMALL_PIECE = 0.08;
 const MAX_QUANTITY = 100000;
 
@@ -167,12 +168,16 @@ function sanitizeNonNegativeInput(value: string): string {
   return value.replace(/-/g, "");
 }
 
-function getMinimumPurchaseForItem(printingType: string, hCm: number, wCm: number): number {
-  if (
+function isUvSmallPiece(printingType: string, hCm: number, wCm: number): boolean {
+  return (
     printingType === "uv" &&
     hCm <= UV_MINIMUM_SIZE_LIMIT_CM &&
     wCm <= UV_MINIMUM_SIZE_LIMIT_CM
-  ) {
+  );
+}
+
+function getMinimumPurchaseForItem(printingType: string, hCm: number, wCm: number): number {
+  if (isUvSmallPiece(printingType, hCm, wCm)) {
     return UV_MINIMUM_SMALL_PIECE;
   }
 
@@ -249,9 +254,13 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
       versoPrice;
 
     const isSmallerThanTwoByTwoCm = hCm < 2 && wCm < 2;
-    const unitPrice = isSmallerThanTwoByTwoCm
+    let unitPrice = isSmallerThanTwoByTwoCm
       ? Math.max(calculatedUnitPrice, MIN_UNIT_PRICE_SMALL_PIECE)
       : calculatedUnitPrice;
+
+    if (isUvSmallPiece(printingType, hCm, wCm)) {
+      unitPrice += UV_SMALL_PIECE_LABOR_SURCHARGE;
+    }
 
     if (unitPrice <= 0) return null;
 
@@ -486,9 +495,13 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
       areaM2 * (materialPrice + printingPrice + rigidPrice + finishingPrice) * smallPieceMultiplier +
       versoPrice;
     const isSmallerThanTwoByTwoCm = hCm < 2 && wCm < 2;
-    const unitPrice = isSmallerThanTwoByTwoCm
+    let unitPrice = isSmallerThanTwoByTwoCm
       ? Math.max(calculatedUnitPrice, MIN_UNIT_PRICE_SMALL_PIECE)
       : calculatedUnitPrice;
+
+    if (isUvSmallPiece(printingType, hCm, wCm)) {
+      unitPrice += UV_SMALL_PIECE_LABOR_SURCHARGE;
+    }
 
     const itemMinimumPurchase = getMinimumPurchaseForItem(printingType, hCm, wCm);
     const rawTotalPrice = unitPrice * qty;
