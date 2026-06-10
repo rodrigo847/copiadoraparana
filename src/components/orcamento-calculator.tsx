@@ -124,6 +124,8 @@ const VERSO_TYPES: Record<string, PriceLabel> = {
 };
 
 const MINIMUM_PURCHASE = 60;
+const UV_MINIMUM_SMALL_PIECE = 100;
+const UV_MINIMUM_SIZE_LIMIT_CM = 6;
 const MIN_UNIT_PRICE_SMALL_PIECE = 0.08;
 const MAX_QUANTITY = 100000;
 
@@ -163,6 +165,18 @@ function formatCurrency(value: number): string {
 
 function sanitizeNonNegativeInput(value: string): string {
   return value.replace(/-/g, "");
+}
+
+function getMinimumPurchaseForItem(printingType: string, hCm: number, wCm: number): number {
+  if (
+    printingType === "uv" &&
+    hCm <= UV_MINIMUM_SIZE_LIMIT_CM &&
+    wCm <= UV_MINIMUM_SIZE_LIMIT_CM
+  ) {
+    return UV_MINIMUM_SMALL_PIECE;
+  }
+
+  return MINIMUM_PURCHASE;
 }
 
 type OrcamentoCalculatorProps = {
@@ -240,10 +254,11 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
 
     if (unitPrice <= 0) return null;
 
+    const itemMinimumPurchase = getMinimumPurchaseForItem(printingType, hCm, wCm);
     const currentTotal = unitPrice * qty;
-    if (currentTotal >= MINIMUM_PURCHASE) return null;
+    if (currentTotal >= itemMinimumPurchase) return null;
 
-    const suggestedQty = Math.max(qty, Math.ceil(MINIMUM_PURCHASE / unitPrice));
+    const suggestedQty = Math.max(qty, Math.ceil(itemMinimumPurchase / unitPrice));
 
     return {
       currentTotal,
@@ -472,8 +487,10 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
     const unitPrice = isSmallerThanTwoByTwoCm
       ? Math.max(calculatedUnitPrice, MIN_UNIT_PRICE_SMALL_PIECE)
       : calculatedUnitPrice;
+
+    const itemMinimumPurchase = getMinimumPurchaseForItem(printingType, hCm, wCm);
     const rawTotalPrice = unitPrice * qty;
-    const totalPrice = Math.max(rawTotalPrice, MINIMUM_PURCHASE);
+    const totalPrice = Math.max(rawTotalPrice, itemMinimumPurchase);
     const finalUnitPrice = totalPrice / qty;
 
     const item: BudgetItem = {
