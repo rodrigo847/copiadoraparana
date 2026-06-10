@@ -227,6 +227,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
         currentTotal,
         suggestedQty,
         suggestedTotal: selectedSpecial.unitPrice * suggestedQty,
+        minimumPurchase: MINIMUM_PURCHASE,
       };
     }
 
@@ -264,6 +265,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
       currentTotal,
       suggestedQty,
       suggestedTotal: unitPrice * suggestedQty,
+      minimumPurchase: itemMinimumPurchase,
     };
   }, [height, width, quantity, material, rigidMaterial, unit, printingType, finishing, verso, special, isSpecialSelected]);
 
@@ -968,7 +970,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
 
         {minimumPerServiceHint ? (
           <div className="rounded-xl border border-[#f1d486] bg-[#fff9e8] px-4 py-3 text-sm text-[#87621a] sm:col-span-2 lg:col-span-3">
-            <p className="font-semibold">(i) Valor minimo por servico: {formatCurrency(MINIMUM_PURCHASE)}.</p>
+            <p className="font-semibold">(i) Valor minimo por servico: {formatCurrency(minimumPerServiceHint.minimumPurchase)}.</p>
             <p>
               Com a quantidade atual, o item ficaria em {formatCurrency(minimumPerServiceHint.currentTotal)}.
               Sugestao: aumentar para {minimumPerServiceHint.suggestedQty} un. (estimativa de {formatCurrency(minimumPerServiceHint.suggestedTotal)}).
