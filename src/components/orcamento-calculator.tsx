@@ -87,7 +87,7 @@ const RIGID_MATERIAL_ICONS: Record<string, string> = {
 const PRINTING_TYPES: Record<string, PriceLabel> = {
   sem_impressao: { name: "Sem impressao", pricePerM2: 0 },
   eco_solvente: { name: "Eco-solvente", pricePerM2: 55 },
-  uv: { name: "Imp. UV", pricePerM2: 60 },
+  uv: { name: "Imp. UV", pricePerM2: 85 },
 };
 
 const PRINTING_ICONS: Record<string, string> = {
