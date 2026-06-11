@@ -65,12 +65,12 @@ const RIGID_MATERIALS: Record<string, PriceLabel> = {
   sem_rigido: { name: "Nao", pricePerM2: 0 },
   forn_cliente: { name: "Material Cliente", pricePerM2: 200 },
   ps_1mm: { name: "PS 1mm", pricePerM2: 200 },
-  ps_2mm: { name: "PS 2mm", pricePerM2: 250 },
-  ps_3mm: { name: "PS 3mm", pricePerM2: 380 },
-  acrilico_2mm: { name: "Acrilico 2mm", pricePerM2: 400 },
-  acrilico_3mm: { name: "Acrilico 3mm", pricePerM2: 500 },
+  ps_2mm: { name: "PS 2mm", pricePerM2: 300 },
+  ps_3mm: { name: "PS 3mm", pricePerM2: 420 },
+  acrilico_2mm: { name: "Acrilico 2mm", pricePerM2: 450 },
+  acrilico_3mm: { name: "Acrilico 3mm", pricePerM2: 580 },
   //acrilico_6mm: { name: "Acrilico 6mm", pricePerM2: 1250 },
-  c2s_triplex: { name: "Papel C2S Triplex", pricePerM2: 35 },
+  c2s_triplex: { name: "Papel C2S Triplex", pricePerM2: 45 },
 };
 
 const RIGID_MATERIAL_ICONS: Record<string, string> = {
@@ -86,7 +86,7 @@ const RIGID_MATERIAL_ICONS: Record<string, string> = {
 
 const PRINTING_TYPES: Record<string, PriceLabel> = {
   sem_impressao: { name: "Sem impressao", pricePerM2: 0 },
-  eco_solvente: { name: "Eco-solvente", pricePerM2: 55 },
+  eco_solvente: { name: "Eco-solvente", pricePerM2: 60 },
   uv: { name: "Imp. UV", pricePerM2: 95 },
 };
 
@@ -120,7 +120,7 @@ const FINISHING_ICONS: Record<string, string> = {
 
 const VERSO_TYPES: Record<string, PriceLabel> = {
   sem_verso: { name: "Sem verso", pricePerM2: 0 },
-  com_verso: { name: "Com verso", pricePerM2: 50 },
+  com_verso: { name: "Com verso", pricePerM2: 60 },
 };
 
 const MINIMUM_PURCHASE = 60;
