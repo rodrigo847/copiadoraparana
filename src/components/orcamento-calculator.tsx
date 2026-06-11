@@ -87,7 +87,7 @@ const RIGID_MATERIAL_ICONS: Record<string, string> = {
 const PRINTING_TYPES: Record<string, PriceLabel> = {
   sem_impressao: { name: "Sem impressao", pricePerM2: 0 },
   eco_solvente: { name: "Eco-solvente", pricePerM2: 55 },
-  uv: { name: "Imp. UV", pricePerM2: 85 },
+  uv: { name: "Imp. UV", pricePerM2: 95 },
 };
 
 const PRINTING_ICONS: Record<string, string> = {
@@ -120,7 +120,7 @@ const FINISHING_ICONS: Record<string, string> = {
 
 const VERSO_TYPES: Record<string, PriceLabel> = {
   sem_verso: { name: "Sem verso", pricePerM2: 0 },
-  com_verso: { name: "Com verso", pricePerM2: 35 },
+  com_verso: { name: "Com verso", pricePerM2: 50 },
 };
 
 const MINIMUM_PURCHASE = 60;
