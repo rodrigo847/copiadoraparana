@@ -985,8 +985,8 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
           <div className="rounded-xl border border-[#f1d486] bg-[#fff9e8] px-4 py-3 text-sm text-[#87621a] sm:col-span-2 lg:col-span-3">
             <p className="font-semibold">(i) Valor mínimo deste serviço: {formatCurrency(minimumPerServiceHint.minimumPurchase)}.</p>
             <p>
-              Com a quantidade atual, o item ficaria em {formatCurrency(minimumPerServiceHint.currentTotal)}.
-              Sugestao: aumentar para {minimumPerServiceHint.suggestedQty} un. (estimativa de {formatCurrency(minimumPerServiceHint.suggestedTotal)}).
+              Com a quantidade atual, o item fica em {formatCurrency(minimumPerServiceHint.currentTotal)}.
+              Sugestão: aumentar para {minimumPerServiceHint.suggestedQty} un. (estimativa de {formatCurrency(minimumPerServiceHint.suggestedTotal)}).
             </p>
           </div>
         ) : null}
@@ -998,7 +998,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
             className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#79a2e3] px-7 text-[1.05rem] font-semibold text-white transition hover:bg-[#668fd3] sm:text-[1.1rem]"
           >
             <span className="text-[1.25rem] leading-none">{editingItemId !== null ? "✓" : "+"}</span>
-            {editingItemId !== null ? "Salvar edicao" : "Adicionar item"}
+            {editingItemId !== null ? "Salvar edição" : "Adicionar item"}
           </button>
 
           {editingItemId !== null ? (
