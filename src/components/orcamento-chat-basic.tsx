@@ -385,6 +385,10 @@ function buildQuote(raw: string): QuoteResult {
   const totalPrice = Math.max(rawTotalPrice, itemMinimumPurchase);
   const finalUnitPrice = totalPrice / safeQuantity;
   const minimumWasApplied = rawTotalPrice < itemMinimumPurchase;
+  const suggestedQuantityForMinimum =
+    minimumWasApplied && unitPrice > 0
+      ? Math.ceil(itemMinimumPurchase / unitPrice)
+      : null;
   const finishingLabel = FINISHING_TYPES[finishing]?.name || finishing;
   const printingLabel = PRINTING_TYPES[printingType]?.name || printingType;
   const materialLabel = MATERIALS[material]?.name || material;
@@ -405,6 +409,13 @@ function buildQuote(raw: string): QuoteResult {
     summaryLines.push(
       `Obs: valor minimo deste servico e ${formatCurrency(itemMinimumPurchase)}.`,
     );
+
+    if (suggestedQuantityForMinimum && suggestedQuantityForMinimum > safeQuantity) {
+      const suggestedTotalPrice = unitPrice * suggestedQuantityForMinimum;
+      summaryLines.push(
+        `Sugestao: para aproveitar melhor o minimo, considere ${suggestedQuantityForMinimum}un (total aprox. ${formatCurrency(suggestedTotalPrice)}).`,
+      );
+    }
   }
 
   const summary = summaryLines.join("\n");
