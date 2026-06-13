@@ -35,17 +35,14 @@ export default function OrcaFacilPage() {
 
             <OrcamentoCalculator whatsappHref={site.whatsappHref} />
 
-            <div className="mt-8 mb-6">
-              <div className="flex items-center gap-4">
-                <div className="h-px flex-1 bg-[#c6d6ea]" />
-                <h2 className="font-heading text-lg font-semibold tracking-tight text-[#14355a] sm:text-xl">
-                  Orcamento Virtual (Chat)
-                </h2>
-                <div className="h-px flex-1 bg-[#c6d6ea]" />
+            <div className="mt-8 mb-6 rounded-3xl border border-[#bfd3ec] bg-[linear-gradient(140deg,rgba(246,250,255,0.95),rgba(233,242,253,0.92))] p-5 shadow-[0_14px_34px_rgba(19,38,68,0.08)] sm:p-6">
+              <div className="flex flex-col gap-4">
+                <div className="max-w-5xl mx-auto">
+                  <h2 className="mt-3 font-heading text-2xl text-center font-bold tracking-tight text-[#14355a] sm:text-3xl">
+                    Use o chat abaixo para um orçamento automático
+                  </h2>
+                </div>
               </div>
-              <p className="mt-2 text-center text-sm text-[#5d7392]">
-                Digite seu pedido em linguagem natural para receber uma estimativa rapida.
-              </p>
             </div>
 
             <div id="orcamento-virtual" className="mt-6 scroll-mt-28">

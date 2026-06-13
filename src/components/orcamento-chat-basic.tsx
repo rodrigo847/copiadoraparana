@@ -407,13 +407,13 @@ function buildQuote(raw: string): QuoteResult {
 
   if (minimumWasApplied) {
     summaryLines.push(
-      `Obs: valor minimo deste servico e ${formatCurrency(itemMinimumPurchase)}.`,
+      `Obs: valor mínimo deste serviço é ${formatCurrency(itemMinimumPurchase)}.`,
     );
 
     if (suggestedQuantityForMinimum && suggestedQuantityForMinimum > safeQuantity) {
       const suggestedTotalPrice = unitPrice * suggestedQuantityForMinimum;
       summaryLines.push(
-        `Sugestao: para aproveitar melhor o minimo, considere ${suggestedQuantityForMinimum}un (total aprox. ${formatCurrency(suggestedTotalPrice)}).`,
+        `Sugestão: para aproveitar melhor o mínimo, considere ${suggestedQuantityForMinimum}un (total aprox. ${formatCurrency(suggestedTotalPrice)}).`,
       );
     }
   }
@@ -429,12 +429,12 @@ export function OrcamentoChatBasic() {
     {
       id: 1,
       role: "assistant",
-      text: "Escreva seu pedido em linguagem natural para receber uma estimativa rapida. Exemplo: 'Quero 150 adesivos 3x3cm em vinil brilho'.",
+      text: "Escreva seu pedido em linguagem natural para receber uma estimativa rápida. Exemplo: 'Preciso de 150 adesivos 3x3cm em vinil brilho'.",
     },
   ]);
 
   const placeholder = useMemo(
-    () => "Ex: quero 150 adesivos 3x3cm em vinil brilho",
+    () => "Ex: Preciso de 150 adesivos 3x3cm em vinil brilho",
     []
   );
 
@@ -478,47 +478,66 @@ export function OrcamentoChatBasic() {
 
   return (
     <section className="mx-auto w-full max-w-6xl rounded-[1.2rem] border border-[#c7d4e6] bg-[#f7f9fc] px-5 py-7 shadow-[0_12px_28px_rgba(19,38,68,0.08)] sm:px-7 sm:py-8">
-      <div className="mb-5 flex items-center gap-3">
-        <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[#d9e9ff] text-[#165bb8]">
-          <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-            <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" />
-          </svg>
-        </span>
-        <div>
-          <h2 className="font-heading text-2xl tracking-tight text-[#0f1f39]">Chat de Orcamento (MVP)</h2>
-          <p className="text-sm text-[#4a6486]">Em treinamento para respostas automáticas.</p>
+      <div className="space-y-5">
+        <aside className="rounded-2xl border border-[#d3e1f3] bg-white p-5 sm:p-6">
+          <div className="flex items-start gap-3">
+            <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#d9e9ff] text-[#165bb8]">
+              <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" />
+              </svg>
+            </span>
+            <div>
+              <h2 className="font-heading text-2xl tracking-tight text-[#0f1f39]">Chat de Orçamento!</h2>
+              <p className="mt-1 text-sm text-[#4a6486]">Em treinamento para respostas automáticas.</p>
+            </div>
+          </div>
+
+          <div className="mt-5 rounded-2xl border border-[#dbe6f5] bg-[#f2f7ff] p-4">
+            <p className="text-[1.04rem] leading-8 text-[#1f436b]">
+              Descreva seu pedido em linguagem natural para receber o orçamento! Exemplo: &quot;Preciso de 150 adesivos 3x3cm em vinil brilho&quot;.
+            </p>
+          </div>
+
+          <div className="mt-4 rounded-2xl border border-dashed border-[#c8d8ee] bg-[#f8fbff] p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#4a678d]">Dica para respostas melhores</p>
+            <p className="mt-2 text-sm leading-7 text-[#35577f]">
+              Informe quantidade, medidas, material e tipo de impressão na mesma frase.
+            </p>
+          </div>
+        </aside>
+
+        <div className="rounded-2xl border border-[#d3e1f3] bg-white p-4 sm:p-5">
+          <div className="space-y-3">
+            {messages.map((message) => (
+              <div
+                key={message.id}
+                className={`max-w-[92%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+                  message.role === "assistant"
+                    ? "bg-[#eef5ff] text-[#193a62]"
+                    : "ml-auto bg-[#1b63c4] text-white"
+                }`}
+              >
+                <p className="whitespace-pre-line">{message.text}</p>
+              </div>
+            ))}
+          </div>
+
+          <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-3 sm:flex-row">
+            <input
+              className="h-12 w-full rounded-2xl border border-[#c8d2df] bg-white px-4 text-[1rem] text-[#203653] outline-none transition focus:border-[#77a6e7]"
+              value={prompt}
+              onChange={(event) => setPrompt(event.target.value)}
+              placeholder={placeholder}
+            />
+            <button
+              type="submit"
+              className="inline-flex h-12 items-center justify-center rounded-2xl bg-[#79a2e3] px-6 text-[1rem] font-semibold text-white transition hover:bg-[#668fd3]"
+            >
+              Enviar
+            </button>
+          </form>
         </div>
       </div>
-
-      <div className="space-y-3 rounded-2xl border border-[#d3e1f3] bg-white p-4">
-        {messages.map((message) => (
-          <div
-            key={message.id}
-            className={`max-w-[92%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
-              message.role === "assistant"
-                ? "bg-[#eef5ff] text-[#193a62]"
-                : "ml-auto bg-[#1b63c4] text-white"
-            }`}
-          >
-            <p className="whitespace-pre-line">{message.text}</p>
-          </div>
-        ))}
-      </div>
-
-      <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-3 sm:flex-row">
-        <input
-          className="h-12 w-full rounded-2xl border border-[#c8d2df] bg-white px-4 text-[1rem] text-[#203653] outline-none transition focus:border-[#77a6e7]"
-          value={prompt}
-          onChange={(event) => setPrompt(event.target.value)}
-          placeholder={placeholder}
-        />
-        <button
-          type="submit"
-          className="inline-flex h-12 items-center justify-center rounded-2xl bg-[#79a2e3] px-6 text-[1rem] font-semibold text-white transition hover:bg-[#668fd3]"
-        >
-          Enviar
-        </button>
-      </form>
     </section>
   );
 }

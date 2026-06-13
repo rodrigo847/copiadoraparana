@@ -34,10 +34,10 @@ export const PRINTING_TYPES: Record<string, PriceLabel> = {
 
 export const FINISHING_TYPES: Record<string, PriceLabel> = {
   sem_acabamento: { name: "Nenhum", pricePerM2: 0 },
-  com_ilhos: { name: "Com Ilhos", pricePerM2: 10 },
+  com_ilhos: { name: "Com Ilhos", pricePerM2: 15 },
   com_madeira: { name: "Com Madeira", pricePerM2: 10 },
   aplicacao_cavalete: { name: "Aplicacao em cavalete", pricePerM2: 60 },
-  meio_corte: { name: "Meio corte", pricePerM2: 15 },
+  meio_corte: { name: "Meio corte", pricePerM2: 25 },
   corte_total: { name: "Corte Total", pricePerM2: 55 },
   corte_laser: { name: "Corte Laser", pricePerM2: 95 },
   corte_dobra: { name: "Corte + Dobra", pricePerM2: 150 },
