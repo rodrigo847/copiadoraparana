@@ -272,10 +272,10 @@ export default function HomePage() {
                 <div className="rounded-2xl border border-white/16 bg-[linear-gradient(150deg,rgba(255,255,255,0.12),rgba(255,255,255,0.05))] p-4 shadow-[0_10px_24px_rgba(6,22,44,0.22)] sm:p-5">
                   <p className="text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-[#cde5ff]">Cadastro comercial por e-mail</p>
                   <h3 className="mt-2 font-heading text-xl font-bold tracking-tight text-white sm:text-2xl">
-                    Envie sua solicitacao em 1 mensagem
+                    Envie sua solicitação em uma mensagem
                   </h3>
                   <p className="mt-2 text-sm leading-6 text-[#e8f2ff]">
-                    Para iniciar a analise comercial, encaminhe os dados para o e-mail abaixo.
+                    Para iniciar a análise comercial, encaminhe os dados para o e-mail abaixo.
                   </p>
 
                   <div className="mt-4 w-full rounded-xl border border-white/18 bg-[#0f233d]/58 px-4 py-3 sm:w-auto">
@@ -285,14 +285,14 @@ export default function HomePage() {
                 </div>
 
                 <div className="rounded-2xl border border-white/16 bg-white/10 p-4 sm:p-5">
-                  <p className="text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-[#cdddf2]">Dados obrigatorios</p>
+                  <p className="text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-[#cdddf2]">Dados obrigatórios</p>
                   <ul className="mt-3 space-y-2 text-sm leading-6 text-[#e8f2ff]">
-                    <li className="flex items-start gap-2"><span className="mt-1 inline-block h-2 w-2 rounded-full bg-[#9cc1ea]" />Empresa (Razao social)</li>
+                    <li className="flex items-start gap-2"><span className="mt-1 inline-block h-2 w-2 rounded-full bg-[#9cc1ea]" />Empresa (Razão social)</li>
                     <li className="flex items-start gap-2"><span className="mt-1 inline-block h-2 w-2 rounded-full bg-[#9cc1ea]" />CNPJ</li>
-                    <li className="flex items-start gap-2"><span className="mt-1 inline-block h-2 w-2 rounded-full bg-[#9cc1ea]" />Responsavel pelo contato</li>
+                    <li className="flex items-start gap-2"><span className="mt-1 inline-block h-2 w-2 rounded-full bg-[#9cc1ea]" />Responsável pelo contato</li>
                     <li className="flex items-start gap-2"><span className="mt-1 inline-block h-2 w-2 rounded-full bg-[#9cc1ea]" />Telefone</li>
                     <li className="flex items-start gap-2"><span className="mt-1 inline-block h-2 w-2 rounded-full bg-[#9cc1ea]" />E-mail comercial</li>
-                    <li className="flex items-start gap-2"><span className="mt-1 inline-block h-2 w-2 rounded-full bg-[#9cc1ea]" />Observacoes (opcional)</li>
+                    <li className="flex items-start gap-2"><span className="mt-1 inline-block h-2 w-2 rounded-full bg-[#9cc1ea]" />Observações (opcional)</li>
                   </ul>
                 </div>
               </div>
@@ -305,7 +305,7 @@ export default function HomePage() {
             <div className="max-w-3xl">
               <span className="eyebrow">Processos de impressão!</span>
               <h2 className="mt-5 font-heading text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-                Você tem a idéia, nós temos a solução gráfica para tornar realidade. <br /><br />Veja como funciona!
+                Você tem a ideia, nós temos a solução gráfica para tornar realidade. <br /><br />Veja como funciona!
               </h2>
             </div>
             <div className="mt-8 grid gap-5 lg:grid-cols-3">
@@ -326,7 +326,7 @@ export default function HomePage() {
           <div className="max-w-6xl border rounded-4xl border-[#cfe0fb]p-8 text-base leading-7 text-foreground p-4">
             <span className="eyebrow">Quem somos</span>
             <h2 className="mt-4 font-heading text-2xl tracking-tight text-white sm:text-3xl">
-              Uma empresa do ramo de Gráfica Rápida, Impressão Digital, Comunicação Visual e Papelaria fundada em 1997, com foco em agilidade, qualidade e atendimento personalizado para clientes corporativos e individuais em Curitiba.
+              Uma empresa do ramo de Gráfica Rápida, Copiadora, Impressão Digital, Comunicação Visual e Papelaria fundada em 1997, com foco em agilidade, qualidade e atendimento personalizado para clientes corporativos e individuais em Curitiba.
             </h2>
           </div>
         </section>
