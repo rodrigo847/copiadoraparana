@@ -429,7 +429,7 @@ export function OrcamentoChatBasic() {
     {
       id: 1,
       role: "assistant",
-      text: "Escreva seu pedido e clique enviar",
+      text: "Escreva seu orçamento e clique enviar",
     },
   ]);
 
