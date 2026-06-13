@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import Script from "next/script";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import { ServicesProductsCarousel } from "@/components/services-products-carousel";
 import { SiteFooter } from "@/components/site-footer";
@@ -434,6 +435,7 @@ export default function HomePage() {
       </main>
 
       <SiteFooter />
+      <SpeedInsights />
     </div>
   );
 }
