@@ -429,7 +429,7 @@ export function OrcamentoChatBasic() {
     {
       id: 1,
       role: "assistant",
-      text: "Escreva seu pedido em linguagem natural para receber uma estimativa rápida. Exemplo: 'Preciso de 150 adesivos 3x3cm em vinil brilho'.",
+      text: "Escreva seu pedido e clique enviar",
     },
   ]);
 
