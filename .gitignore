@@ -32,6 +32,9 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# arquivos com configurações sensíveis
+configuracoes_bd.txt
+
 # vercel
 .vercel
 
