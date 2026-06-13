@@ -497,13 +497,6 @@ export function OrcamentoChatBasic() {
               Descreva seu pedido em linguagem natural para receber o orçamento! Exemplo: &quot;Preciso de 150 adesivos 3x3cm em vinil brilho&quot;.
             </p>
           </div>
-
-          <div className="mt-4 rounded-2xl border border-dashed border-[#c8d8ee] bg-[#f8fbff] p-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#4a678d]">Dica para respostas melhores</p>
-            <p className="mt-2 text-sm leading-7 text-[#35577f]">
-              Informe quantidade, medidas, material e tipo de impressão na mesma frase.
-            </p>
-          </div>
         </aside>
 
         <div className="rounded-2xl border border-[#d3e1f3] bg-white p-4 sm:p-5">
