@@ -309,14 +309,79 @@ export default function HomePage() {
                 Você tem a ideia, nós temos a solução gráfica para tornar realidade. <br /><br />Veja como funciona!
               </h2>
             </div>
-            <div className="mt-8 grid gap-5 lg:grid-cols-3">
-              {projectSteps.map((step, index) => (
-                <article key={step.title} className="rounded-3xl border border-[#b6d3fb] bg-white/80 p-6">
-                  <p className="text-sm font-semibold uppercase tracking-[0.18em] text-accent-strong">Etapa {index + 1}</p>
-                  <h3 className="mt-3 font-heading text-2xl font-bold text-foreground">{step.title}</h3>
-                  <p className="mt-3 text-base leading-7 text-muted">{step.description}</p>
-                </article>
-              ))}
+            <div className="relative mt-8">
+              <div className="pointer-events-none absolute left-[12%] right-[12%] top-10 hidden h-0.5 bg-[linear-gradient(90deg,rgba(22,100,207,0.18),rgba(22,100,207,0.48),rgba(22,100,207,0.18))] lg:block" />
+
+              <div className="grid gap-5 lg:grid-cols-3">
+                {projectSteps.map((step, index) => {
+                  const variants = [
+                    {
+                      tag: "Preparação",
+                      border: "border-[#b9d4ff]",
+                      glow: "group-hover:shadow-[0_18px_40px_rgba(40,119,232,0.18)]",
+                      iconBg: "bg-[#e8f2ff] text-[#1462c9]",
+                      badgeBg: "bg-[linear-gradient(180deg,#1f84ff,#1664cf)]",
+                    },
+                    {
+                      tag: "Conferência",
+                      border: "border-[#b7dbec]",
+                      glow: "group-hover:shadow-[0_18px_40px_rgba(42,146,171,0.18)]",
+                      iconBg: "bg-[#e6f7fb] text-[#1f7c95]",
+                      badgeBg: "bg-[linear-gradient(180deg,#2aa7c2,#1f7c95)]",
+                    },
+                    {
+                      tag: "Entrega",
+                      border: "border-[#c6d4f7]",
+                      glow: "group-hover:shadow-[0_18px_40px_rgba(88,116,189,0.2)]",
+                      iconBg: "bg-[#eef2ff] text-[#425fb3]",
+                      badgeBg: "bg-[linear-gradient(180deg,#6a86da,#425fb3)]",
+                    },
+                  ] as const;
+
+                  const variant = variants[index % variants.length];
+
+                  return (
+                    <article
+                      key={step.title}
+                      className={`group relative isolate overflow-hidden rounded-[1.9rem] border ${variant.border} bg-[linear-gradient(180deg,rgba(255,255,255,0.94),rgba(247,251,255,0.9))] p-6 transition duration-300 hover:-translate-y-1.5 ${variant.glow}`}
+                    >
+                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_90%_8%,rgba(62,129,225,0.17),transparent_35%)]" />
+
+                      <div className="relative z-10 flex items-center justify-between gap-3">
+                        <span className={`inline-flex h-11 min-w-11 items-center justify-center rounded-full text-sm font-bold text-white ${variant.badgeBg}`}>
+                          {String(index + 1).padStart(2, "0")}
+                        </span>
+                        <span className="rounded-full border border-[#d8e6fb] bg-white/85 px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-[#35669e]">
+                          {variant.tag}
+                        </span>
+                      </div>
+
+                      <div className="relative z-10 mt-5 flex items-start gap-4">
+                        <span className={`inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${variant.iconBg}`}>
+                          {index === 0 ? (
+                            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7h16M4 12h10M4 17h7M17 15l3 3m0 0l-3 3m3-3h-7" />
+                            </svg>
+                          ) : index === 1 ? (
+                            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7 4h10a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V6a2 2 0 012-2z" />
+                            </svg>
+                          ) : (
+                            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" />
+                            </svg>
+                          )}
+                        </span>
+
+                        <div>
+                          <h3 className="font-heading text-3xl font-bold leading-tight tracking-tight text-[#123159]">{step.title}</h3>
+                          <p className="mt-3 text-[1.02rem] leading-8 text-[#365a84]">{step.description}</p>
+                        </div>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </section>
