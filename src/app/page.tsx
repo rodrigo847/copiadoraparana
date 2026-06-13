@@ -4,7 +4,6 @@ import Link from "next/link";
 import Script from "next/script";
 
 import { ServicesProductsCarousel } from "@/components/services-products-carousel";
-import { CommercialRegistrationForm } from "@/components/commercial-registration-form";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import {
@@ -254,10 +253,11 @@ export default function HomePage() {
 
         <section className="mx-auto w-full max-w-7xl scroll-mt-28 px-4 py-8 sm:px-6 lg:px-10 lg:py-10">
           <div>
-            <article className="reveal-up reveal-delay-1 relative isolate overflow-hidden rounded-xl border border-[#6ea5ea] p-5 text-white shadow-[0_16px_32px_rgba(7,22,44,0.32)] sm:p-6">
-              <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,21,42,0.88)_0%,rgba(5,21,42,0.78)_28%,rgba(5,21,42,0.34)_62%,rgba(5,21,42,0.08)_100%),url('/img/Empresas.png')] bg-cover bg-center" />
+            <article className="reveal-up reveal-delay-1 relative isolate overflow-hidden rounded-4xl border border-white/18 p-5 text-white shadow-[0_24px_50px_rgba(4,16,34,0.35)] backdrop-blur-2xl sm:p-6">
+              <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(11,23,40,0.78),rgba(12,28,50,0.62)),url('/img/Empresas.png')] bg-cover bg-center" />
+              <div className="absolute inset-0 bg-[linear-gradient(110deg,rgba(9,24,44,0.78)_0%,rgba(9,24,44,0.64)_38%,rgba(9,24,44,0.4)_68%,rgba(9,24,44,0.22)_100%)]" />
 
-              <span className="relative z-10 inline-flex rounded-sm border border-[#79b3ff]/70 bg-white/10 px-3 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-[#c9e2ff]">
+              <span className="relative z-10 inline-flex rounded-sm border border-white/20 bg-white/8 px-3 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-[#c9d9ee]">
                 Condição especial para empresas
               </span>
 
@@ -268,7 +268,34 @@ export default function HomePage() {
                 {highlights[0]} Mediante cadastro e analise comercial, sua empresa pode centralizar pedidos com mais previsibilidade.
               </p>
 
-              <CommercialRegistrationForm />
+              <div className="relative z-10 mt-5 grid gap-3 sm:gap-4 lg:grid-cols-[1.2fr_0.8fr]">
+                <div className="rounded-2xl border border-white/16 bg-[linear-gradient(150deg,rgba(255,255,255,0.12),rgba(255,255,255,0.05))] p-4 shadow-[0_10px_24px_rgba(6,22,44,0.22)] sm:p-5">
+                  <p className="text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-[#cde5ff]">Cadastro comercial por e-mail</p>
+                  <h3 className="mt-2 font-heading text-xl font-bold tracking-tight text-white sm:text-2xl">
+                    Envie sua solicitacao em 1 mensagem
+                  </h3>
+                  <p className="mt-2 text-sm leading-6 text-[#e8f2ff]">
+                    Para iniciar a analise comercial, encaminhe os dados para o e-mail abaixo.
+                  </p>
+
+                  <div className="mt-4 w-full rounded-xl border border-white/18 bg-[#0f233d]/58 px-4 py-3 sm:w-auto">
+                    <span className="block text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[#bfd3ed]">E-mail financeiro</span>
+                    <span className="mt-0.5 block text-sm font-semibold text-white sm:text-base select-all">{site.financialEmail}</span>
+                  </div>
+                </div>
+
+                <div className="rounded-2xl border border-white/16 bg-white/10 p-4 sm:p-5">
+                  <p className="text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-[#cdddf2]">Dados obrigatorios</p>
+                  <ul className="mt-3 space-y-2 text-sm leading-6 text-[#e8f2ff]">
+                    <li className="flex items-start gap-2"><span className="mt-1 inline-block h-2 w-2 rounded-full bg-[#9cc1ea]" />Empresa (Razao social)</li>
+                    <li className="flex items-start gap-2"><span className="mt-1 inline-block h-2 w-2 rounded-full bg-[#9cc1ea]" />CNPJ</li>
+                    <li className="flex items-start gap-2"><span className="mt-1 inline-block h-2 w-2 rounded-full bg-[#9cc1ea]" />Responsavel pelo contato</li>
+                    <li className="flex items-start gap-2"><span className="mt-1 inline-block h-2 w-2 rounded-full bg-[#9cc1ea]" />Telefone</li>
+                    <li className="flex items-start gap-2"><span className="mt-1 inline-block h-2 w-2 rounded-full bg-[#9cc1ea]" />E-mail comercial</li>
+                    <li className="flex items-start gap-2"><span className="mt-1 inline-block h-2 w-2 rounded-full bg-[#9cc1ea]" />Observacoes (opcional)</li>
+                  </ul>
+                </div>
+              </div>
             </article>
           </div>
         </section>
