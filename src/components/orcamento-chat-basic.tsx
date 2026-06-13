@@ -434,7 +434,7 @@ export function OrcamentoChatBasic() {
   ]);
 
   const placeholder = useMemo(
-    () => "Ex: Preciso de 150 adesivos 3x3cm em vinil brilho",
+    () => "1 Banner 100x180cm com ilhós",
     []
   );
 
