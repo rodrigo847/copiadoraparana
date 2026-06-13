@@ -3,13 +3,22 @@
 import jsPDF from "jspdf";
 import autoTable, { type Styles } from "jspdf-autotable";
 import { useMemo, useState } from "react";
-
-type Unit = "mm" | "cm" | "m2";
-
-type PriceLabel = {
-  name: string;
-  pricePerM2: number;
-};
+import {
+  FINISHING_TYPES,
+  MATERIALS,
+  MAX_QUANTITY,
+  MINIMUM_PURCHASE,
+  MIN_UNIT_PRICE_SMALL_PIECE,
+  PRINTING_TYPES,
+  RIGID_MATERIALS,
+  UV_SMALL_PIECE_LABOR_SURCHARGE,
+  VERSO_TYPES,
+  getMinimumPurchaseForItem,
+  isBannerMaterial,
+  isUvSmallPiece,
+  isValidBannerSize,
+  type Unit,
+} from "@/lib/orcamento-pricing";
 
 type BudgetItem = {
   id: number;
@@ -41,16 +50,6 @@ type SpecialService = {
   verso: string;
 };
 
-const MATERIALS: Record<string, PriceLabel> = {
-  sem_material: { name: "Nao", pricePerM2: 0 },
-  vinil_branco_fosco: { name: "Adesivo Vinil Fosco", pricePerM2: 35 },
-  vinil_branco_brilho: { name: "Adesivo Vinil Brilho", pricePerM2: 35 },
-  vinil_transparente_brilho: { name: "Adesivo Vinil Transparente", pricePerM2: 75 },
-  papel_couche_fosco_150g: { name: "Couche/Offset 150g", pricePerM2: 1 },
-  banner_brilho: { name: "Banner Brilho", pricePerM2: 35 },
-  banner_fosco: { name: "Banner Fosco", pricePerM2: 35 },
-};
-
 const MATERIAL_ICONS: Record<string, string> = {
   sem_material: "🚫",
   vinil_branco_fosco: "⚪",
@@ -59,18 +58,6 @@ const MATERIAL_ICONS: Record<string, string> = {
   papel_couche_fosco_150g: "📄",
   banner_brilho: "🪧",
   banner_fosco: "🪧",
-};
-
-const RIGID_MATERIALS: Record<string, PriceLabel> = {
-  sem_rigido: { name: "Nao", pricePerM2: 0 },
-  forn_cliente: { name: "Material Cliente", pricePerM2: 200 },
-  ps_1mm: { name: "PS 1mm", pricePerM2: 200 },
-  ps_2mm: { name: "PS 2mm", pricePerM2: 300 },
-  ps_3mm: { name: "PS 3mm", pricePerM2: 420 },
-  acrilico_2mm: { name: "Acrilico 2mm", pricePerM2: 450 },
-  acrilico_3mm: { name: "Acrilico 3mm", pricePerM2: 580 },
-  //acrilico_6mm: { name: "Acrilico 6mm", pricePerM2: 1250 },
-  c2s_triplex: { name: "Papel C2S Triplex", pricePerM2: 45 },
 };
 
 const RIGID_MATERIAL_ICONS: Record<string, string> = {
@@ -84,27 +71,10 @@ const RIGID_MATERIAL_ICONS: Record<string, string> = {
   c2s_triplex: "📦",
 };
 
-const PRINTING_TYPES: Record<string, PriceLabel> = {
-  sem_impressao: { name: "Sem impressao", pricePerM2: 0 },
-  eco_solvente: { name: "Eco-solvente", pricePerM2: 60 },
-  uv: { name: "Imp. UV", pricePerM2: 95 },
-};
-
 const PRINTING_ICONS: Record<string, string> = {
   sem_impressao: "🚫",
   eco_solvente: "🖨️",
   uv: "💡",
-};
-
-const FINISHING_TYPES: Record<string, PriceLabel> = {
-  sem_acabamento: { name: "Nenhum", pricePerM2: 0 },
-  com_ilhos: { name: "Com Ilhos", pricePerM2: 10 },
-  com_madeira: { name: "Com Madeira", pricePerM2: 10 },
-  aplicacao_cavalete: { name: "Aplicacao em cavalete", pricePerM2: 60 },
-  meio_corte: { name: "Meio corte", pricePerM2: 15 },
-  corte_total: { name: "Corte Total", pricePerM2: 55 },
-  corte_laser: { name: "Corte Laser", pricePerM2: 95 },
-  corte_dobra: { name: "Corte + Dobra", pricePerM2: 150 },
 };
 
 const FINISHING_ICONS: Record<string, string> = {
@@ -117,18 +87,6 @@ const FINISHING_ICONS: Record<string, string> = {
   corte_laser: "⚡",
   corte_dobra: "📐",
 };
-
-const VERSO_TYPES: Record<string, PriceLabel> = {
-  sem_verso: { name: "Sem verso", pricePerM2: 0 },
-  com_verso: { name: "Com verso", pricePerM2: 60 },
-};
-
-const MINIMUM_PURCHASE = 60;
-const UV_MINIMUM_SMALL_PIECE = 60;
-const UV_MINIMUM_SIZE_LIMIT_CM = 6;
-const UV_SMALL_PIECE_LABOR_SURCHARGE = 2.5;
-const MIN_UNIT_PRICE_SMALL_PIECE = 0.08;
-const MAX_QUANTITY = 100000;
 
 const SPECIAL_SERVICES: Record<string, SpecialService> = {
   rollup_80x200: {
@@ -166,22 +124,6 @@ function formatCurrency(value: number): string {
 
 function sanitizeNonNegativeInput(value: string): string {
   return value.replace(/-/g, "");
-}
-
-function isUvSmallPiece(printingType: string, hCm: number, wCm: number): boolean {
-  return (
-    printingType === "uv" &&
-    hCm <= UV_MINIMUM_SIZE_LIMIT_CM &&
-    wCm <= UV_MINIMUM_SIZE_LIMIT_CM
-  );
-}
-
-function getMinimumPurchaseForItem(printingType: string, hCm: number, wCm: number): number {
-  if (isUvSmallPiece(printingType, hCm, wCm)) {
-    return UV_MINIMUM_SMALL_PIECE;
-  }
-
-  return MINIMUM_PURCHASE;
 }
 
 type OrcamentoCalculatorProps = {
@@ -309,12 +251,18 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
       minimoAviso = `\n\nATENÇÃO: O valor mínimo para pedidos é de ${formatCurrency(MINIMUM_PURCHASE)}. Caso não deseje adicionar mais itens, este será o valor cobrado.`;
     }
 
+    let bannerAviso = "";
+    if (items.some((item) => isBannerMaterial(item.material))) {
+      bannerAviso = "\n\nOBS BANNER: Tamanho mínimo de produção é 60x80cm.";
+    }
+
     const message = `Orca Facil\n` +
       `Cliente: ${nomeCliente}\n` +
       `Data: ${dataAtual}\n\n` +
       `Itens:\n\n` +
       itemsText +
       minimoAviso +
+      bannerAviso +
       `\n\nTotal do Orcamento: ${totalText}` +
       `\n\nAguardando o retorno para validacao e fechamento. Obrigado.`;
 
@@ -463,6 +411,11 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
 
     if (printingType === "eco_solvente" && rigidMaterial !== "sem_rigido") {
       setErrorMessage("Eco-solvente permite apenas Adesivo/Banner (sem material rigido).");
+      return;
+    }
+
+    if (isBannerMaterial(material) && !isValidBannerSize(hCm, wCm)) {
+      setErrorMessage("Para banner, o tamanho minimo e 60cm x 80cm.");
       return;
     }
 
@@ -669,6 +622,18 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
       doc.setTextColor(60, 60, 60);
       doc.text(
         "Material do cliente deve seguir especificações técnicas para garantir qualidade.",
+        14,
+        notesY
+      );
+      notesY += 6;
+    }
+
+    if (items.some((item) => isBannerMaterial(item.material))) {
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(8);
+      doc.setTextColor(120, 28, 28);
+      doc.text(
+        "OBS Banner: tamanho minimo de producao 60x80cm.",
         14,
         notesY
       );

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { OrcamentoChatBasic } from "@/components/orcamento-chat-basic";
 import { OrcamentoCalculator } from "@/components/orcamento-calculator";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
@@ -33,6 +34,23 @@ export default function OrcaFacilPage() {
           <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
 
             <OrcamentoCalculator whatsappHref={site.whatsappHref} />
+
+            <div className="mt-8 mb-6">
+              <div className="flex items-center gap-4">
+                <div className="h-px flex-1 bg-[#c6d6ea]" />
+                <h2 className="font-heading text-lg font-semibold tracking-tight text-[#14355a] sm:text-xl">
+                  Orcamento Virtual (Chat)
+                </h2>
+                <div className="h-px flex-1 bg-[#c6d6ea]" />
+              </div>
+              <p className="mt-2 text-center text-sm text-[#5d7392]">
+                Digite seu pedido em linguagem natural para receber uma estimativa rapida.
+              </p>
+            </div>
+
+            <div id="orcamento-virtual" className="mt-6 scroll-mt-28">
+              <OrcamentoChatBasic />
+            </div>
           </div>
         </section>
       </main>
