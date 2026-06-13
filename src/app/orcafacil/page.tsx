@@ -26,7 +26,7 @@ export default function OrcaFacilPage() {
             Quer saber quanto vai custar seu material e não quer depender de um Atendente? 
           </h1>
           <p className="mx-auto mt-2 mb-3 max-w-3xl text-l leading-8 text-[#5f7390] sm:text-xl">
-            Use nosso Sistema <strong>Orça Fácil</strong> para uma estimativa rápida! Caso tenha dificuldade em montar, utilize o chat abaixo para uma ajuda automática. Lembre-se: orçamentos automáticos são estimativas e podem variar de acordo com detalhes específicos do pedido. Para orçamentos precisos, entre em contato com um de nossos atendentes.
+            Use nosso Sistema <strong>Orça Fácil</strong> para uma estimativa rápida! Caso tenha dificuldade em montar, utilize o chat abaixo para uma ajuda automática. 
           </p>
         </section>
 
@@ -41,6 +41,9 @@ export default function OrcaFacilPage() {
                   <h2 className="mt-3 font-heading text-2xl text-center font-bold tracking-tight text-[#14355a] sm:text-3xl">
                     Use o chat abaixo para um orçamento automático
                   </h2>
+                  <p className="mt-4 text-center text-[#4a6486] text-lg leading-8">
+                    Nosso sistema de chat de orçamento está em treinamento para fornecer respostas automáticas. Sinta-se à vontade para experimentar e obter uma estimativa rápida para o seu pedido!
+                  </p>
                 </div>
               </div>
             </div>
