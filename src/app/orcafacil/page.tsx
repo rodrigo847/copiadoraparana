@@ -23,10 +23,10 @@ export default function OrcaFacilPage() {
       <main className="pb-10">
         <section className="mx-auto w-full max-w-6xl pb-2 px-4 pt-10 text-center sm:px-6 sm:pt-12 mt-5">
           <h1 className="font-heading text-3xl font-bold tracking-tight text-[#0f1f39] sm:text-2xl">
-            Precisa saber quanto vai custar seu material e não quer depender de um Atendente? 
+            Quer saber quanto vai custar seu material e não quer depender de um Atendente? 
           </h1>
           <p className="mx-auto mt-2 mb-3 max-w-3xl text-l leading-8 text-[#5f7390] sm:text-xl">
-            Use nosso Sistema <strong>Orça Fácil</strong> e tenha uma estimativa rápida e prática!
+            Use nosso Sistema <strong>Orça Fácil</strong> para uma estimativa rápida! Caso tenha dificuldade em montar, utilize o chat abaixo para uma ajuda automática. Lembre-se: orçamentos automáticos são estimativas e podem variar de acordo com detalhes específicos do pedido. Para orçamentos precisos, entre em contato com um de nossos atendentes.
           </p>
         </section>
 
