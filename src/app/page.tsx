@@ -107,15 +107,6 @@ export default function HomePage() {
                 </span>
 
                 <div className="mt-7 sm:mt-8 flex flex-col gap-3 sm:flex-row sm:gap-5">
-                  <a
-                    href={site.whatsappHref}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center justify-center rounded-full bg-[#1f84ff] px-6 py-3 text-center text-sm font-semibold text-white transition hover:bg-[#136edc] sm:w-auto"
-                  >
-                    <Image src="/img/Whats.png" alt="" width={24} height={24} aria-hidden="true" className="h-5 w-5 object-contain mr-2" />
-                    Orçar por WhatsApp
-                  </a>
                   <Link
                     href="/orcafacil"
                     className="inline-flex items-center justify-center rounded-full border border-[#4f7eb5] bg-[linear-gradient(180deg,rgba(31,132,255,0.24),rgba(16,83,166,0.18))] px-6 py-3 text-center text-sm font-semibold text-[#1f84ff] transition hover:border-[#86b8f5] hover:bg-[linear-gradient(180deg,rgba(31,132,255,0.32),rgba(16,83,166,0.24))] sm:w-auto"

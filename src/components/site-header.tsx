@@ -212,17 +212,6 @@ export function SiteHeader() {
           </nav>
 
           <div className="flex items-center gap-2">
-            <a
-              href={site.whatsappHref}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-full bg-[#1681ff] px-3 py-2 text-xs font-semibold text-white shadow-[0_8px_30px_rgba(22,129,255,0.45)] transition hover:bg-[#0d69d7] sm:px-4 sm:text-sm"
-            >
-              <img src="/img/Whats.png" alt="" width="18" height="18" aria-hidden="true" className="h-4 w-4 object-contain sm:h-4.5 sm:w-4.5" />
-              <span className="hidden sm:inline">Atendimento</span>
-              <span className="sm:hidden">WhatsApp</span>
-            </a>
-
             <button
               type="button"
               aria-expanded={mobileMenuOpen}
