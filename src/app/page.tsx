@@ -4,6 +4,7 @@ import Link from "next/link";
 import Script from "next/script";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
+import { CopyWhatsappCard } from "@/components/copy-whatsapp-card";
 import { ServicesProductsCarousel } from "@/components/services-products-carousel";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -140,20 +141,7 @@ export default function HomePage() {
                       </span>
                     </a>
 
-                    <a
-                      href={site.whatsappHref}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="flex items-center gap-3 rounded-2xl border border-[#4f7eb5] bg-[linear-gradient(180deg,rgba(31,132,255,0.24),rgba(16,83,166,0.18))] px-3 py-3 transition hover:border-[#86b8f5] hover:bg-[linear-gradient(180deg,rgba(31,132,255,0.32),rgba(16,83,166,0.24))]"
-                    >
-                      <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/14 text-[#d9ebff]">
-                        <Image src="/img/Whats.png" alt="" width={20} height={20} aria-hidden="true" className="h-5 w-5 object-contain" />
-                      </span>
-                      <span>
-                        <span className="block text-xs uppercase tracking-[0.12em] text-[#c9e2ff]">WhatsApp</span>
-                        <span className="block font-heading text-xl font-bold text-white">{site.whatsappDisplay}</span>
-                      </span>
-                    </a>
+                    <CopyWhatsappCard whatsappDisplay={site.whatsappDisplay} />
                   </div>
 
                   <div className="mt-5 rounded-2xl border border-white/12 bg-white/7 px-5 py-4">
