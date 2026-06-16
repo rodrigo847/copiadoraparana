@@ -477,7 +477,7 @@ export function OrcamentoChatBasic() {
   };
 
   return (
-    <section className="mx-auto w-full max-w-6xl rounded-[1.2rem] border border-[#c7d4e6] bg-[#f7f9fc] px-5 py-7 shadow-[0_12px_28px_rgba(19,38,68,0.08)] sm:px-7 sm:py-8">
+    <section className="mx-auto w-full max-w-none rounded-[1.2rem] border border-[#c7d4e6] bg-[#f7f9fc] px-5 py-7 shadow-[0_12px_28px_rgba(19,38,68,0.08)] sm:px-7 sm:py-8">
       <div className="space-y-5">
         <aside className="rounded-2xl border border-[#d3e1f3] bg-white p-5 sm:p-6">
           <div className="flex items-start gap-3">

@@ -651,7 +651,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
   };
 
   return (
-    <section className="mx-auto w-full max-w-6xl rounded-[1.2rem] border border-[#c7d4e6] bg-[#f7f9fc] px-5 py-7 shadow-[0_12px_28px_rgba(19,38,68,0.08)] sm:px-7 sm:py-8">
+    <section className="mx-auto w-full max-w-none rounded-[1.2rem] border border-[#c7d4e6] bg-[#f7f9fc] px-5 py-7 shadow-[0_12px_28px_rgba(19,38,68,0.08)] sm:px-7 sm:py-8">
       <div className="flex items-center gap-3">
         <span className="inline-flex h-6 w-6 items-center justify-center text-[#196feb]">
           <svg viewBox="0 0 24 24" className="h-14 w-14" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
