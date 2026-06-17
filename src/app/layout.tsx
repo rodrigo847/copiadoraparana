@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Sans, Space_Grotesk } from "next/font/google";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import { FloatingOrcamentoButton } from "@/components/floating-orcamento-button";
 
@@ -95,6 +97,8 @@ export default function RootLayout({
         </noscript>
         {children}
         <FloatingOrcamentoButton />
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
