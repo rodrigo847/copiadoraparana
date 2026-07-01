@@ -83,23 +83,38 @@ function toCmFromLength(value: number, unit: "mm" | "cm" | "m"): number {
 }
 
 function detectMaterial(text: string): string | null {
-  if (/\bban+n?er(?:es)?\b/.test(text)) return "banner_brilho";
-  if (text.includes("vinil transparente")) return "vinil_transparente_brilho";
-  if (text.includes("vinil fosco")) return "vinil_branco_fosco";
-  if (text.includes("vinil brilho")) return "vinil_branco_brilho";
-  if (text.includes("couche") || text.includes("offset 150")) return "papel_couche_fosco_150g";
-  if (text.includes("banner fosco")) return "banner_fosco";
-  if (text.includes("banner brilho")) return "banner_brilho";
-  if (text.includes("adesivo")) return "vinil_branco_brilho";
-  if (text.includes("banner")) return "banner_brilho";
+  // Banner must be checked before generic patterns
+  if (/\bban+n?er fosco\b/.test(text)) return "banner_fosco";
+  if (/\bban+n?er brilho\b/.test(text)) return "banner_brilho";
+  if (/\bban+n?er\b/.test(text)) return "banner_brilho"; // default to shiny if not specified
+  
+  // Vinyl materials - order matters for specificity
+  if (/\bvinil\s+transparente\b/.test(text)) return "vinil_transparente_brilho";
+  if (/\bvinil\s+fosco\b/.test(text)) return "vinil_branco_fosco";
+  if (/\bvinil\s+brilho\b/.test(text)) return "vinil_branco_brilho";
+  if (/\badesivo\s+vinil\b/.test(text)) return "vinil_branco_brilho";
+  if (/\bvinil\b/.test(text)) return "vinil_branco_brilho"; // default to shiny
+  if (/\badesivo\b/.test(text)) return "vinil_branco_brilho";
+  
+  // Paper materials
+  if (/\b(?:couche|offset)\s*150/.test(text)) return "papel_couche_fosco_150g";
+  if (/\bcouche\b/.test(text)) return "papel_couche_fosco_150g";
+  if (/\bpapel\b/.test(text)) return "papel_couche_fosco_150g";
+  
   return null;
 }
 
 function detectPrintingType(text: string, material: string | null): string | null {
-  if (text.includes("imp uv") || text.includes("impressao uv") || text.includes(" uv ")) return "uv";
-  if (text.includes("eco") || text.includes("solvente")) return "eco_solvente";
-
-  if (material && material !== "sem_material") {
+  // UV first - explicit detection
+  if (/\b(?:imp\s+)?uv\b/.test(text) || /\bimpressao\s+uv\b/.test(text)) return "uv";
+  
+  // Eco-solvente - multiple patterns
+  if (/\beco[\s-]?solvente\b/.test(text) || /\becosolv\b/.test(text)) return "eco_solvente";
+  if (/\bsolvente\b/.test(text) && !text.includes("uv")) return "eco_solvente";
+  if (text.includes("eco ") || text.includes("ecologico")) return "eco_solvente";
+  
+  // Banner and vinyl materials default to eco-solvente if they have printing
+  if (material && material !== "sem_material" && material !== "papel_couche_fosco_150g") {
     return "eco_solvente";
   }
 
@@ -107,34 +122,39 @@ function detectPrintingType(text: string, material: string | null): string | nul
 }
 
 function detectRigidMaterial(text: string): string | null {
-  if (/\bps\s*1\b/.test(text)) return "ps_1mm";
-  if (/\bps\s*2\b/.test(text)) return "ps_2mm";
-  if (/\bps\s*3\b/.test(text)) return "ps_3mm";
-  if (/\bacrilico\s*2\b/.test(text)) return "acrilico_2mm";
-  if (/\bacrilico\s*3\b/.test(text)) return "acrilico_3mm";
-
-  // Mensagens de WhatsApp costumam vir apenas com "acrilico" sem espessura.
-  // Para nao bloquear o fluxo, assume 2mm como padrao inicial de estimativa.
-  if (text.includes("acrilico")) return "acrilico_2mm";
-
-  if (text.includes("triplex")) return "c2s_triplex";
-  if (text.includes("material cliente")) return "forn_cliente";
+  // Acrylic - check for explicit thickness first
+  if (/\bacrilico\s*2(?:\s*mm)?\b/.test(text)) return "acrilico_2mm";
+  if (/\bacrilico\s*3(?:\s*mm)?\b/.test(text)) return "acrilico_3mm";
+  if (/\bacrilico\b/.test(text)) return "acrilico_2mm"; // Default to 2mm if no thickness specified
+  
+  // PS - polystyrene with thickness
+  if (/\bps\s*1(?:\s*mm)?\b/.test(text)) return "ps_1mm";
+  if (/\bps\s*2(?:\s*mm)?\b/.test(text)) return "ps_2mm";
+  if (/\bps\s*3(?:\s*mm)?\b/.test(text)) return "ps_3mm";
+  
+  // Other rigid materials
+  if (/\b(?:c2s\s+)?triplex\b/.test(text)) return "c2s_triplex";
+  if (/\bmaterial\s+cliente|cliente\s+fornece\b/.test(text)) return "forn_cliente";
+  
   return null;
 }
 
 function detectFinishing(text: string): string | null {
-  if (text.includes("meio corte")) return "meio_corte";
-  if (text.includes("corte total")) return "corte_total";
-  if (text.includes("corte laser")) return "corte_laser";
-  if (text.includes("corte dobra") || text.includes("corte e dobra")) return "corte_dobra";
-  if (text.includes("ilhos")) return "com_ilhos";
-  if (text.includes("madeira")) return "com_madeira";
-  if (text.includes("cavalete")) return "aplicacao_cavalete";
+  // Check specific patterns first
+  if (/\b(?:corte\s+)?laser\b/.test(text)) return "corte_laser";
+  if (/\b(?:corte\s+)?dobra\b/.test(text) || /\bdobragem\b/.test(text)) return "corte_dobra";
+  if (/\bcorte\s+total\b/.test(text) || /\bcorte\s+tudo\b/.test(text)) return "corte_total";
+  if (/\bmeio\s+corte\b/.test(text)) return "meio_corte";
+  if (/\b(?:com\s+)?ilhos?\b/.test(text) || /\bollhos\b/.test(text)) return "com_ilhos";
+  if (/\bmadeira\b/.test(text)) return "com_madeira";
+  if (/\bcavalete\b/.test(text)) return "aplicacao_cavalete";
+  
   return "sem_acabamento";
 }
 
 function detectVerso(text: string): string | null {
-  if (text.includes("com verso") || text.includes("frente e verso")) return "com_verso";
+  if (/\bcom\s+verso\b/.test(text) || /\bfrente\s+e\s+verso\b/.test(text) || /\bfrente.verso\b/.test(text)) return "com_verso";
+  if (/\bfrente\b/.test(text) && /\bverso\b/.test(text)) return "com_verso";
   return "sem_verso";
 }
 
@@ -192,18 +212,22 @@ function parseRequest(raw: string): ParsedRequest {
   const text = ` ${normalizeText(raw)} `;
   const material = detectMaterial(text);
 
+  // Enhanced regex to capture dimensions with optional units
+  // Supports: 3x3cm, 3x3, 100x180cm, 1x1.80m, 2x3m, 0.5x1.5m, etc.
   const dimensionMatch = text.match(
-    /(\d+(?:[.,]\d+)?)\s*(mm|cm|m)?\s*(?:x|por|\*)\s*(\d+(?:[.,]\d+)?)\s*(mm|cm|m|m2)?/,
+    /(\d+(?:[.,]\d+)?)\s*(mm|cm|m)?\s*(?:x|por|×|\*|a)\s*(\d+(?:[.,]\d+)?)\s*(mm|cm|m|m2)?/i,
   );
+  
   let height: number | null = null;
   let width: number | null = null;
   let unit: Unit = "cm";
 
   if (dimensionMatch) {
     const rawHeight = parseNumber(dimensionMatch[1]);
-    const rawHeightUnit = dimensionMatch[2] as "mm" | "cm" | "m" | undefined;
+    const rawHeightUnit = (dimensionMatch[2]?.toLowerCase() ?? "") as "mm" | "cm" | "m" | "";
     const rawWidth = parseNumber(dimensionMatch[3]);
-    const rawWidthUnit = dimensionMatch[4] as "mm" | "cm" | "m" | "m2" | undefined;
+    const rawWidthUnit = (dimensionMatch[4]?.toLowerCase() ?? "") as "mm" | "cm" | "m" | "m2" | "";
+    
     const hasDecimalDimension = /[.,]\d+/.test(dimensionMatch[1]) || /[.,]\d+/.test(dimensionMatch[3]);
     const bothUnitsMissing = !rawHeightUnit && !rawWidthUnit;
     const shouldInferMetersForBanner =
@@ -212,27 +236,29 @@ function parseRequest(raw: string): ParsedRequest {
       isBannerMaterial(material) &&
       (hasDecimalDimension || (rawHeight <= 10 && rawWidth <= 10));
 
-    // Mantem suporte de area m2 quando informada no final (ex.: 2x3m2).
+    // Handle m2 area format (ex.: 2x3m2)
     if (!rawHeightUnit && rawWidthUnit === "m2") {
       unit = "m2";
       height = rawHeight;
       width = rawWidth;
     } else if (shouldInferMetersForBanner) {
+      // For banners without explicit units and small numbers, infer meters
       unit = "cm";
       height = rawHeight * 100;
       width = rawWidth * 100;
     } else {
-      const defaultLengthUnit = rawHeightUnit ?? (rawWidthUnit && rawWidthUnit !== "m2" ? rawWidthUnit : "cm");
-      const safeHeightUnit = rawHeightUnit ?? defaultLengthUnit;
-      const safeWidthUnit = rawWidthUnit && rawWidthUnit !== "m2" ? rawWidthUnit : defaultLengthUnit;
+      // Use provided units or default to cm
+      const defaultUnit = rawHeightUnit || rawWidthUnit || "cm";
+      const safeHeightUnit = rawHeightUnit || defaultUnit;
+      const safeWidthUnit = (rawWidthUnit && rawWidthUnit !== "m2") ? rawWidthUnit : defaultUnit;
 
       unit = "cm";
-      height = toCmFromLength(rawHeight, safeHeightUnit);
-      width = toCmFromLength(rawWidth, safeWidthUnit);
+      height = toCmFromLength(rawHeight, safeHeightUnit as "mm" | "cm" | "m");
+      width = toCmFromLength(rawWidth, safeWidthUnit as "mm" | "cm" | "m");
     }
   }
 
-  const quantityMatch = text.match(/(\d{1,6})\s*(?:un|unds|unidades|pecas|adesivos|banners|placas)?\b/);
+  const quantityMatch = text.match(/(\d{1,6})\s*(?:un|unds|unidades|pecas|adesivos|banners|placas|folhas|cópias|exemplares)?\b/);
   let quantity: number | null = null;
 
   if (quantityMatch) {
@@ -242,7 +268,7 @@ function parseRequest(raw: string): ParsedRequest {
     }
   }
 
-  if (!quantity && /\b(um|uma)\b/.test(text)) {
+  if (!quantity && /\b(um|uma|1|1un|1pc)\b/.test(text)) {
     quantity = 1;
   }
 
@@ -395,25 +421,32 @@ function buildQuote(raw: string): QuoteResult {
   const rigidLabel = RIGID_MATERIALS[rigidMaterial]?.name || rigidMaterial;
   const versoLabel = VERSO_TYPES[verso]?.name || verso;
   const substrateLabel = material !== "sem_material" ? materialLabel : rigidLabel;
-  const descricao = `${safeHeight}x${safeWidth}${unit}, ${substrateLabel}, ${printingLabel}, ${versoLabel}`;
+  
+  // More detailed description with all specifications
+  const specs = [
+    `${safeHeight}x${safeWidth}${unit}`,
+    substrateLabel,
+    printingLabel !== "Sem impressao" ? printingLabel : null,
+    finishing !== "sem_acabamento" ? finishingLabel : null,
+    verso !== "sem_verso" ? versoLabel : null,
+  ].filter(Boolean).join(", ");
 
   const summaryLines = [
-    `Descricao: ${descricao};`,
-    `Quantidade: ${safeQuantity}un;`,
-    `Acabamento: ${finishingLabel};`,
-    `Valor Unit: ${formatCurrency(finalUnitPrice)};`,
-    `Valor total: ${formatCurrency(totalPrice)};`,
+    `📋 **Especificação:** ${specs}`,
+    `📦 **Quantidade:** ${safeQuantity} un.`,
+    `💵 **Valor Unitário:** ${formatCurrency(finalUnitPrice)}`,
+    `💰 **Valor Total:** ${formatCurrency(totalPrice)}`,
   ];
 
   if (minimumWasApplied) {
     summaryLines.push(
-      `Obs: valor mínimo deste serviço é ${formatCurrency(itemMinimumPurchase)}.`,
+      `⚠️ Aplicado valor mínimo de serviço: ${formatCurrency(itemMinimumPurchase)}.`,
     );
 
     if (suggestedQuantityForMinimum && suggestedQuantityForMinimum > safeQuantity) {
       const suggestedTotalPrice = unitPrice * suggestedQuantityForMinimum;
       summaryLines.push(
-        `Sugestão: para aproveitar melhor o mínimo, considere ${suggestedQuantityForMinimum}un (total aprox. ${formatCurrency(suggestedTotalPrice)}).`,
+        `💡 **Dica:** Para melhor aproveitamento, considere ${suggestedQuantityForMinimum} un. (total aprox. ${formatCurrency(suggestedTotalPrice)}).`,
       );
     }
   }
