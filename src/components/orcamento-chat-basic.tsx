@@ -576,12 +576,15 @@ function buildQuote(raw: string): QuoteResult {
         `🧱 Material: ${materialLabel}`,
         printingLabel !== "Sem impressao" ? `🖨️ Impressao: ${printingLabel}` : null,
         `✂️ Acabamento: ${finishingLabel}`,
-        `💵 Unitario: ${formatCurrency(finalUnitPrice)}`,
+        minimumWasApplied
+          ? `💵 Unitario real: ${formatCurrency(optionUnitPrice)}`
+          : `💵 Unitario: ${formatCurrency(finalUnitPrice)}`,
         `💰 Total: ${formatCurrency(totalPrice)}`,
       ].filter((line): line is string => Boolean(line));
 
       if (minimumWasApplied) {
         lines.push(`⚠️ Minimo aplicado: ${formatCurrency(itemMinimumPurchase)}.`);
+        lines.push(`🧾 Unitario neste orcamento (com minimo): ${formatCurrency(finalUnitPrice)}.`);
 
         if (suggestedQuantityForMinimum && suggestedQuantityForMinimum > safeQuantity) {
           const suggestedTotalPrice = optionUnitPrice * suggestedQuantityForMinimum;
@@ -659,7 +662,9 @@ function buildQuote(raw: string): QuoteResult {
   const summaryLines = [
     `📋 **Especificação:** ${specs}`,
     `📦 **Quantidade:** ${safeQuantity} un.`,
-    `💵 **Valor Unitário:** ${formatCurrency(finalUnitPrice)}`,
+    minimumWasApplied
+      ? `💵 **Valor Unitário (real):** ${formatCurrency(unitPrice)}`
+      : `💵 **Valor Unitário:** ${formatCurrency(finalUnitPrice)}`,
     `💰 **Valor Total:** ${formatCurrency(totalPrice)}`,
   ];
 
@@ -682,6 +687,9 @@ function buildQuote(raw: string): QuoteResult {
   if (minimumWasApplied) {
     summaryLines.push(
       `⚠️ Aplicado valor mínimo de serviço: ${formatCurrency(itemMinimumPurchase)}.`,
+    );
+    summaryLines.push(
+      `🧾 **Unitário neste orçamento (com mínimo):** ${formatCurrency(finalUnitPrice)}.`,
     );
 
     if (suggestedQuantityForMinimum && suggestedQuantityForMinimum > safeQuantity) {
