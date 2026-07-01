@@ -85,7 +85,7 @@ function toCmFromLength(value: number, unit: "mm" | "cm" | "m"): number {
 }
 
 const QUANTITY_CONTEXT_PATTERN =
-  "(?:un|unds|unidade(?:s)?|peca(?:s)?|adesivo(?:s)?|banner(?:es|s)?|placa(?:s)?|folha(?:s)?|copia(?:s)?|exemplar(?:es)?)";
+  "(?:un|unds|unidade(?:s)?|peca(?:s)?|adesivo(?:s)?|banner(?:es|s)?|placa(?:s)?|chaveiro(?:s)?|pix|folha(?:s)?|copia(?:s)?|exemplar(?:es)?)";
 
 const NUMBER_WORD_VALUES: Record<string, number> = {
   um: 1,
