@@ -1,0 +1,74 @@
+PASSO A PASSO RAPIDO - NOVA FUNCAO (COPIADORA)
+
+1) Abrir a pasta do projeto
+cd C:\PROJETOS\Copiadora
+
+2) Atualizar branch principal local
+git checkout main
+git pull origin main
+
+3) Criar branch da nova funcao
+git checkout -b feat/nome-da-funcao
+
+4) Rodar o projeto local
+npm install
+npm run dev
+
+5) Implementar a nova funcao no codigo
+- Edite os arquivos necessarios
+- Salve tudo
+
+6) Validar antes de enviar
+npm run build
+
+7) Verificar alteracoes
+git status
+
+8) Adicionar arquivos alterados
+git add .
+
+9) Criar commit
+git commit -m "feat: descricao curta da nova funcao"
+
+10) Enviar branch para o GitHub
+git push origin feat/nome-da-funcao
+
+11) Abrir Pull Request
+- Base: main
+- Compare: feat/nome-da-funcao
+- Revisar e fazer merge
+
+12) Atualizar main local apos merge
+git checkout main
+git pull origin main
+
+13) Deploy
+- Se a Vercel estiver conectada na main, o deploy e automatico apos merge/push.
+
+--------------------------------------------
+COMANDOS MINIMOS (RESUMO)
+
+cd C:\PROJETOS\Copiadora
+git checkout main
+git pull origin main
+git checkout -b feat/nome-da-funcao
+npm run dev
+npm run build
+git add .
+git commit -m "feat: nome da funcao"
+git push origin feat/nome-da-funcao
+
+--------------------------------------------
+QUANDO FOR AJUSTE PEQUENO DIRETO NA MAIN
+
+cd C:\PROJETOS\Copiadora
+git checkout main
+git pull origin main
+npm run build
+git add .
+git commit -m "fix: descricao do ajuste"
+git push origin main
+
+Observacao:
+- npm run build local NAO publica na Vercel.
+- Publica quando fizer push (ou merge) na branch monitorada pela Vercel.

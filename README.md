@@ -2,6 +2,10 @@
 
 Projeto institucional em Next.js para substituir o site atual em WordPress por uma base mais moderna, rápida e preparada para SEO local.
 
+## Guia rapido de execucao
+
+- Passo a passo para novas funcoes: PASSO-A-PASSO-NOVA-FUNCAO.txt
+
 ## Stack
 
 - Next.js com App Router

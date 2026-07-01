@@ -24,6 +24,7 @@ type ParsedRequest = {
   height: number | null;
   width: number | null;
   unit: Unit;
+  productType: "chaveiro" | "placa_pix" | null;
   material: string | null;
   printingType: string | null;
   rigidMaterial: string | null;
@@ -36,6 +37,7 @@ type QuoteResult = {
   error?: string;
   missing?: string[];
   summary?: string;
+  hint?: string;
 };
 
 type ChatMessage = {
@@ -214,6 +216,12 @@ function detectVerso(text: string): string | null {
   return "sem_verso";
 }
 
+function detectProductType(text: string): "chaveiro" | "placa_pix" | null {
+  if (/\bchaveiro(?:s)?\b/.test(text)) return "chaveiro";
+  if (/\bplaca\s+(?:de\s+)?pix\b/.test(text)) return "placa_pix";
+  return null;
+}
+
 function isPriceInquiry(text: string): boolean {
   return /(quanto|valor|preco|custa|sai)/.test(text) && /(metro|m2|m²)/.test(text);
 }
@@ -267,6 +275,7 @@ function buildBasePriceSummary(
 function parseRequest(raw: string): ParsedRequest {
   const text = ` ${normalizeText(raw)} `;
   const material = detectMaterial(text);
+  const productType = detectProductType(text);
 
   // Enhanced regex to capture dimensions with optional units
   // Supports: 3x3cm, 3x3, 100x180cm, 1x1.80m, 2x3m, 0.5x1.5m, etc.
@@ -347,6 +356,7 @@ function parseRequest(raw: string): ParsedRequest {
     height,
     width,
     unit,
+    productType,
     material,
     printingType,
     rigidMaterial,
@@ -367,11 +377,30 @@ function buildQuote(raw: string): QuoteResult {
   const height = parsed.height;
   const width = parsed.width;
   const unit = parsed.unit;
+  const productType = parsed.productType;
   const material = parsed.material ?? "sem_material";
-  const rigidMaterial = parsed.rigidMaterial ?? "sem_rigido";
+  let rigidMaterial = parsed.rigidMaterial ?? "sem_rigido";
   const printingType = parsed.printingType ?? "sem_impressao";
-  const finishing = parsed.finishing ?? "sem_acabamento";
+  let finishing = parsed.finishing ?? "sem_acabamento";
   const verso = parsed.verso ?? "sem_verso";
+  let appliedRecommendation = false;
+
+  if (productType === "chaveiro") {
+    if (rigidMaterial === "sem_rigido") {
+      rigidMaterial = "acrilico_2mm";
+      appliedRecommendation = true;
+    }
+
+    if (finishing === "sem_acabamento") {
+      finishing = "corte_laser";
+      appliedRecommendation = true;
+    }
+  }
+
+  if (productType === "placa_pix" && finishing === "sem_acabamento") {
+    finishing = "corte_dobra";
+    appliedRecommendation = true;
+  }
 
   if (isMeterPriceQuestion) {
     const priceSummary = buildBasePriceSummary(material, rigidMaterial, printingType, finishing);
@@ -383,7 +412,9 @@ function buildQuote(raw: string): QuoteResult {
   const missing: string[] = [];
   if (!quantity) missing.push("quantidade");
   if (!height || !width) missing.push("tamanho (ex: 3x3cm)");
-  if (material === "sem_material" && rigidMaterial === "sem_rigido") missing.push("material");
+  if (material === "sem_material" && rigidMaterial === "sem_rigido" && productType !== "placa_pix") {
+    missing.push("material");
+  }
 
   if (missing.length > 0) {
     if (isAvailabilityQuestion && (material !== "sem_material" || rigidMaterial !== "sem_rigido")) {
@@ -398,6 +429,12 @@ function buildQuote(raw: string): QuoteResult {
         ok: false,
         missing,
         error: `Sim, fazemos ${serviceLabel?.toLowerCase() || "esse material"}! Para calcular certinho, preciso de: ${missingHint}.`,
+        hint:
+          productType === "chaveiro"
+            ? "Exemplo recomendado: 50 chaveiros 5x7cm em acrilico 2mm com corte laser."
+            : productType === "placa_pix"
+              ? "Podemos cotar em duas opcoes: PS 2mm e Acrilico 2mm. O corte laser e indispensavel para montagem; a dobra e aplicada nas plaquinhas desses materiais. Exemplo: 10 placas de pix 20x30cm."
+            : undefined,
       };
     }
 
@@ -405,6 +442,12 @@ function buildQuote(raw: string): QuoteResult {
       ok: false,
       missing,
       error: `Preciso de mais dados para calcular: ${missing.join(", ")}.`,
+      hint:
+        productType === "chaveiro"
+          ? "Exemplo recomendado: 50 chaveiros 5x7cm em acrilico 2mm com corte laser."
+          : productType === "placa_pix"
+            ? "Podemos cotar em duas opcoes: PS 2mm e Acrilico 2mm. O corte laser e indispensavel para montagem; a dobra e aplicada nas plaquinhas desses materiais. Exemplo: 10 placas de pix 20x30cm."
+          : undefined,
     };
   }
 
@@ -448,6 +491,75 @@ function buildQuote(raw: string): QuoteResult {
       error:
         "Para banner, o tamanho minimo e 60x80cm. Se estiver informando em metros, use por exemplo 1x1.80m.",
     };
+  }
+
+  if (productType === "placa_pix" && rigidMaterial === "sem_rigido") {
+    if (printingType === "eco_solvente") {
+      return {
+        ok: false,
+        error: "Para placa de pix em material rigido, use UV ou sem impressao.",
+      };
+    }
+
+    const areaM2ForOptions = toAreaM2(safeHeight, safeWidth, unit);
+    const optionFinishing = finishing === "sem_acabamento" ? "corte_dobra" : finishing;
+
+    const buildPlacaPixOption = (optionRigid: "ps_2mm" | "acrilico_2mm", title: string): string => {
+      const materialPrice = MATERIALS[material]?.pricePerM2 ?? 0;
+      const printingPrice = PRINTING_TYPES[printingType]?.pricePerM2 || 0;
+      const rigidPrice = RIGID_MATERIALS[optionRigid]?.pricePerM2 || 0;
+      const finishingPrice = FINISHING_TYPES[optionFinishing]?.pricePerM2 || 0;
+      const smallPieceMultiplier = areaM2ForOptions < 0.0009 ? 1.4 : 1;
+      const versoPrice = (VERSO_TYPES[verso]?.pricePerM2 || 0) * areaM2ForOptions;
+
+      const calculatedUnitPrice =
+        areaM2ForOptions * (materialPrice + printingPrice + rigidPrice + finishingPrice) * smallPieceMultiplier +
+        versoPrice;
+
+      const isSmallerThanTwoByTwoCm = hCm < 2 && wCm < 2;
+      let optionUnitPrice = isSmallerThanTwoByTwoCm
+        ? Math.max(calculatedUnitPrice, MIN_UNIT_PRICE_SMALL_PIECE)
+        : calculatedUnitPrice;
+
+      if (isUvSmallPiece(printingType, hCm, wCm)) {
+        optionUnitPrice += UV_SMALL_PIECE_LABOR_SURCHARGE;
+      }
+
+      const itemMinimumPurchase = getMinimumPurchaseForItem(printingType, hCm, wCm);
+      const rawTotalPrice = optionUnitPrice * safeQuantity;
+      const totalPrice = Math.max(rawTotalPrice, itemMinimumPurchase);
+      const finalUnitPrice = totalPrice / safeQuantity;
+      const finishingLabel = FINISHING_TYPES[optionFinishing]?.name || optionFinishing;
+      const printingLabel = PRINTING_TYPES[printingType]?.name || printingType;
+
+      const optionSpecs = [
+        `${safeHeight}x${safeWidth}${unit}`,
+        RIGID_MATERIALS[optionRigid]?.name || optionRigid,
+        printingLabel !== "Sem impressao" ? printingLabel : null,
+        finishingLabel,
+      ]
+        .filter(Boolean)
+        .join(", ");
+
+      return [
+        `➡️ **${title}**`,
+        `📋 ${optionSpecs}`,
+        `💵 Unitario: ${formatCurrency(finalUnitPrice)}`,
+        `💰 Total: ${formatCurrency(totalPrice)}`,
+      ].join("\n");
+    };
+
+    const summary = [
+      "Para placa de pix, trabalhamos com duas opcoes recomendadas:",
+      "",
+      buildPlacaPixOption("ps_2mm", "Opcao Economica: PS 2mm"),
+      "",
+      buildPlacaPixOption("acrilico_2mm", "Opcao Premium: Acrilico 2mm"),
+      "",
+      "Obs: o corte laser e indispensavel para montagem; a dobra e aplicada nas plaquinhas de PS e Acrilico.",
+    ].join("\n");
+
+    return { ok: true, summary };
   }
 
   const areaM2 = toAreaM2(safeHeight, safeWidth, unit);
@@ -503,6 +615,12 @@ function buildQuote(raw: string): QuoteResult {
     `💰 **Valor Total:** ${formatCurrency(totalPrice)}`,
   ];
 
+  if (productType === "chaveiro" && appliedRecommendation) {
+    summaryLines.push(
+      "💡 Recomendacao aplicada para chaveiro: Acrilico 2mm + Corte Laser.",
+    );
+  }
+
   if (minimumWasApplied) {
     summaryLines.push(
       `⚠️ Aplicado valor mínimo de serviço: ${formatCurrency(itemMinimumPurchase)}.`,
@@ -532,7 +650,7 @@ export function OrcamentoChatBasic() {
   ]);
 
   const placeholder = useMemo(
-    () => "1 Banner 100x180cm com ilhós",
+    () => "50 chaveiros 5x7cm",
     []
   );
 
@@ -551,7 +669,7 @@ export function OrcamentoChatBasic() {
     const quote = buildQuote(clean);
     const assistantText = quote.ok
       ? `${quote.summary}`
-      : `${quote.error}\n\nTente algo como: 150 adesivos 3x3cm em vinil brilho.`;
+      : `${quote.error}\n\n${quote.hint ?? "Tente algo como: 150 adesivos 3x3cm em vinil brilho."}`;
 
     const assistantMessage: ChatMessage = {
       id: Date.now() + 1,
@@ -592,7 +710,7 @@ export function OrcamentoChatBasic() {
 
           <div className="mt-5 rounded-2xl border border-[#dbe6f5] bg-[#f2f7ff] p-4">
             <p className="text-[1.04rem] leading-8 text-[#1f436b]">
-              Descreva seu pedido em linguagem natural para receber o orçamento! Exemplo: &quot;Preciso de 150 adesivos 3x3cm em vinil brilho&quot;.
+              Descreva seu pedido em linguagem natural para receber o orçamento! Exemplos: &quot;50 chaveiros 5x7cm&quot; ou &quot;10 placas de pix 20x30cm&quot; (neste caso mostramos PS 2mm e acrilico 2mm).
             </p>
           </div>
         </aside>
