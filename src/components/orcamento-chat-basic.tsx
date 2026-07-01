@@ -4,6 +4,8 @@ import { FormEvent, useMemo, useState } from "react";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import {
+  BANNER_MIN_SIDE_LARGE_CM,
+  BANNER_MIN_SIDE_SMALL_CM,
   FINISHING_TYPES,
   MATERIALS,
   MAX_QUANTITY,
@@ -76,6 +78,11 @@ function normalizeText(input: string): string {
 
 function parseNumber(value: string): number {
   return Number.parseFloat(value.replace(",", "."));
+}
+
+function formatSizeCm(value: number): string {
+  const rounded = Number(value.toFixed(2));
+  return Number.isInteger(rounded) ? `${rounded}` : `${rounded}`.replace(".", ",");
 }
 
 function toCmFromLength(value: number, unit: "mm" | "cm" | "m"): number {
@@ -373,7 +380,7 @@ function buildQuote(raw: string): QuoteResult {
   );
   const parsed = parseRequest(raw);
 
-  const quantity = parsed.quantity;
+  let quantity = parsed.quantity;
   const height = parsed.height;
   const width = parsed.width;
   const unit = parsed.unit;
@@ -384,6 +391,15 @@ function buildQuote(raw: string): QuoteResult {
   let finishing = parsed.finishing ?? "sem_acabamento";
   const verso = parsed.verso ?? "sem_verso";
   let appliedRecommendation = false;
+  let assumedBannerQuantity = false;
+  let bannerMinimumApplied = false;
+  let bannerMinimumRequestedLabel: string | null = null;
+  let bannerMinimumChargedLabel: string | null = null;
+
+  if (!quantity && material !== "sem_material" && isBannerMaterial(material)) {
+    quantity = 1;
+    assumedBannerQuantity = true;
+  }
 
   if (productType === "chaveiro") {
     if (rigidMaterial === "sem_rigido") {
@@ -485,12 +501,26 @@ function buildQuote(raw: string): QuoteResult {
     return { ok: false, error: "Para incluir verso, informe um tipo de impressao." };
   }
 
+  let pricingHCm = hCm;
+  let pricingWCm = wCm;
+
   if (isBannerMaterial(material) && !isValidBannerSize(hCm, wCm)) {
-    return {
-      ok: false,
-      error:
-        "Para banner, o tamanho minimo e 60x80cm. Se estiver informando em metros, use por exemplo 1x1.80m.",
-    };
+    const requestedSmall = Math.min(hCm, wCm);
+    const requestedLarge = Math.max(hCm, wCm);
+    const chargedSmall = Math.max(requestedSmall, BANNER_MIN_SIDE_SMALL_CM);
+    const chargedLarge = Math.max(requestedLarge, BANNER_MIN_SIDE_LARGE_CM);
+
+    bannerMinimumApplied = true;
+    bannerMinimumRequestedLabel = `${formatSizeCm(requestedSmall)}x${formatSizeCm(requestedLarge)}cm`;
+    bannerMinimumChargedLabel = `${formatSizeCm(chargedSmall)}x${formatSizeCm(chargedLarge)}cm`;
+
+    if (hCm <= wCm) {
+      pricingHCm = chargedSmall;
+      pricingWCm = chargedLarge;
+    } else {
+      pricingHCm = chargedLarge;
+      pricingWCm = chargedSmall;
+    }
   }
 
   if (productType === "placa_pix" && rigidMaterial === "sem_rigido") {
@@ -578,7 +608,9 @@ function buildQuote(raw: string): QuoteResult {
     return { ok: true, summary };
   }
 
-  const areaM2 = toAreaM2(safeHeight, safeWidth, unit);
+  const areaM2 = bannerMinimumApplied
+    ? (pricingHCm * pricingWCm) / 10000
+    : toAreaM2(safeHeight, safeWidth, unit);
   const materialPrice = MATERIALS[material]?.pricePerM2 ?? 0;
   const printingPrice = PRINTING_TYPES[printingType]?.pricePerM2 || 0;
   const rigidPrice = RIGID_MATERIALS[rigidMaterial]?.pricePerM2 || 0;
@@ -634,6 +666,16 @@ function buildQuote(raw: string): QuoteResult {
   if (productType === "chaveiro" && appliedRecommendation) {
     summaryLines.push(
       "💡 Recomendacao aplicada para chaveiro: Acrilico 2mm + Corte Laser.",
+    );
+  }
+
+  if (assumedBannerQuantity) {
+    summaryLines.push("ℹ️ Quantidade nao informada: considerei 1 unidade para o calculo.");
+  }
+
+  if (bannerMinimumApplied && bannerMinimumRequestedLabel && bannerMinimumChargedLabel) {
+    summaryLines.push(
+      `⚠️ Banner com tamanho minimo de ${BANNER_MIN_SIDE_SMALL_CM}x${BANNER_MIN_SIDE_LARGE_CM}cm. Pedido ${bannerMinimumRequestedLabel}; valor calculado em ${bannerMinimumChargedLabel}.`,
     );
   }
 
