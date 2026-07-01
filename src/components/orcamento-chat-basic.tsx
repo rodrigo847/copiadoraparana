@@ -82,11 +82,67 @@ function toCmFromLength(value: number, unit: "mm" | "cm" | "m"): number {
   return value;
 }
 
+const QUANTITY_CONTEXT_PATTERN =
+  "(?:un|unds|unidade(?:s)?|peca(?:s)?|adesivo(?:s)?|banner(?:es|s)?|placa(?:s)?|folha(?:s)?|copia(?:s)?|exemplar(?:es)?)";
+
+const NUMBER_WORD_VALUES: Record<string, number> = {
+  um: 1,
+  uma: 1,
+  dois: 2,
+  duas: 2,
+  tres: 3,
+  quatro: 4,
+  cinco: 5,
+  seis: 6,
+  sete: 7,
+  oito: 8,
+  nove: 9,
+  dez: 10,
+  onze: 11,
+  doze: 12,
+  treze: 13,
+  catorze: 14,
+  quatorze: 14,
+  quinze: 15,
+  dezesseis: 16,
+  dezessete: 17,
+  dezoito: 18,
+  dezenove: 19,
+  vinte: 20,
+  trinta: 30,
+  quarenta: 40,
+  cinquenta: 50,
+  sessenta: 60,
+  setenta: 70,
+  oitenta: 80,
+  noventa: 90,
+  cem: 100,
+  cento: 100,
+};
+
+function parseWrittenQuantity(text: string): number | null {
+  const baseWords = Object.keys(NUMBER_WORD_VALUES).join("|");
+  const writtenPattern = new RegExp(
+    `\\b(${baseWords})(?:\\s+e\\s+(${baseWords}))?\\s*(?:${QUANTITY_CONTEXT_PATTERN})?\\b`,
+    "i",
+  );
+
+  const match = text.match(writtenPattern);
+  if (!match) return null;
+
+  const first = NUMBER_WORD_VALUES[match[1].toLowerCase()];
+  const second = match[2] ? NUMBER_WORD_VALUES[match[2].toLowerCase()] : 0;
+
+  if (!Number.isFinite(first)) return null;
+  const total = first + second;
+  return total > 0 ? Math.min(total, MAX_QUANTITY) : null;
+}
+
 function detectMaterial(text: string): string | null {
   // Banner must be checked before generic patterns
-  if (/\bban+n?er fosco\b/.test(text)) return "banner_fosco";
-  if (/\bban+n?er brilho\b/.test(text)) return "banner_brilho";
-  if (/\bban+n?er\b/.test(text)) return "banner_brilho"; // default to shiny if not specified
+  if (/\bban+n?er(?:es|s)?\s+fosco\b/.test(text)) return "banner_fosco";
+  if (/\bban+n?er(?:es|s)?\s+brilho\b/.test(text)) return "banner_brilho";
+  if (/\bban+n?er(?:es|s)?\b/.test(text)) return "banner_brilho"; // default to shiny if not specified
   
   // Vinyl materials - order matters for specificity
   if (/\bvinil\s+transparente\b/.test(text)) return "vinil_transparente_brilho";
@@ -258,8 +314,14 @@ function parseRequest(raw: string): ParsedRequest {
     }
   }
 
-  const quantityMatch = text.match(/(\d{1,6})\s*(?:un|unds|unidades|pecas|adesivos|banners|placas|folhas|cópias|exemplares)?\b/);
   let quantity: number | null = null;
+
+  // Remove dimensoes para nao confundir tamanho com quantidade (ex.: 100x100).
+  const textWithoutDimensions = dimensionMatch ? text.replace(dimensionMatch[0], " ") : text;
+
+  const quantityMatch = textWithoutDimensions.match(
+    new RegExp(`\\b(\\d{1,6})\\s*${QUANTITY_CONTEXT_PATTERN}\\b`, "i"),
+  );
 
   if (quantityMatch) {
     const parsedQty = Number.parseInt(quantityMatch[1], 10);
@@ -268,8 +330,11 @@ function parseRequest(raw: string): ParsedRequest {
     }
   }
 
-  if (!quantity && /\b(um|uma|1|1un|1pc)\b/.test(text)) {
-    quantity = 1;
+  if (!quantity) {
+    const writtenQty = parseWrittenQuantity(textWithoutDimensions);
+    if (writtenQty) {
+      quantity = writtenQty;
+    }
   }
 
   const rigidMaterial = detectRigidMaterial(text);
