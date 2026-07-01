@@ -529,6 +529,11 @@ function buildQuote(raw: string): QuoteResult {
       const rawTotalPrice = optionUnitPrice * safeQuantity;
       const totalPrice = Math.max(rawTotalPrice, itemMinimumPurchase);
       const finalUnitPrice = totalPrice / safeQuantity;
+      const minimumWasApplied = rawTotalPrice < itemMinimumPurchase;
+      const suggestedQuantityForMinimum =
+        minimumWasApplied && optionUnitPrice > 0
+          ? Math.ceil(itemMinimumPurchase / optionUnitPrice)
+          : null;
       const finishingLabel = FINISHING_TYPES[optionFinishing]?.name || optionFinishing;
       const printingLabel = PRINTING_TYPES[printingType]?.name || printingType;
 
@@ -541,12 +546,26 @@ function buildQuote(raw: string): QuoteResult {
         .filter(Boolean)
         .join(", ");
 
-      return [
+      const lines = [
         `➡️ **${title}**`,
         `📋 ${optionSpecs}`,
         `💵 Unitario: ${formatCurrency(finalUnitPrice)}`,
         `💰 Total: ${formatCurrency(totalPrice)}`,
-      ].join("\n");
+      ];
+
+      if (minimumWasApplied) {
+        lines.push(`⚠️ Minimo aplicado: ${formatCurrency(itemMinimumPurchase)}.`);
+
+        if (suggestedQuantityForMinimum && suggestedQuantityForMinimum > safeQuantity) {
+          const suggestedTotalPrice = optionUnitPrice * suggestedQuantityForMinimum;
+          const suggestedUnitPrice = suggestedTotalPrice / suggestedQuantityForMinimum;
+          lines.push(
+            `💡 Dica: com ${suggestedQuantityForMinimum} un., o unitario fica aprox. ${formatCurrency(suggestedUnitPrice)} (total aprox. ${formatCurrency(suggestedTotalPrice)}).`,
+          );
+        }
+      }
+
+      return lines.join("\n");
     };
 
     const summary = [
