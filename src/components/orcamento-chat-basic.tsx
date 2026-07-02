@@ -154,14 +154,17 @@ function detectMaterial(text: string): string | null {
   if (/\bban+n?er(?:es|s)?\b/.test(text)) return "banner_brilho"; // default to shiny if not specified
   
   // Vinyl materials - order matters for specificity
+  if (/\badesivo(?:s)?\b/.test(text) && /\btransparente\b/.test(text)) return "vinil_transparente_brilho";
+  if (/\badesivo(?:s)?\b/.test(text) && /\bfosco\b/.test(text)) return "vinil_branco_fosco";
+  if (/\badesivo(?:s)?\b/.test(text) && /\bbrilho\b/.test(text)) return "vinil_branco_brilho";
   if (/\bvinil\s+transparente\b/.test(text)) return "vinil_transparente_brilho";
   if (/\bvinil\s+fosco\b/.test(text)) return "vinil_branco_fosco";
   if (/\bvinil\s+brilho\b/.test(text)) return "vinil_branco_brilho";
-  if (/\badesivo\s+vinil\b/.test(text)) return "vinil_branco_brilho";
+  if (/\badesivo(?:s)?\s+vinil\b/.test(text)) return "vinil_branco_brilho";
   if (/\bcartela(?:s)?\s+de\s+adesivo(?:s)?\b/.test(text)) return "vinil_branco_brilho";
   if (/\bcartela(?:s)?\b/.test(text)) return "vinil_branco_brilho";
   if (/\bvinil\b/.test(text)) return "vinil_branco_brilho"; // default to shiny
-  if (/\badesivo\b/.test(text)) return "vinil_branco_brilho";
+  if (/\badesivo(?:s)?\b/.test(text)) return "vinil_branco_brilho";
   
   // Paper materials
   if (/\b(?:couche|offset)\s*150/.test(text)) return "papel_couche_fosco_150g";
