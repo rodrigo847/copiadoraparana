@@ -716,12 +716,12 @@ export function OrcamentoChatBasic() {
     {
       id: 1,
       role: "assistant",
-      text: "Escreva seu orçamento e clique orçar",
+      text: "Escreva seu orçamento e clique em 'Solicitar Orçamento'",
     },
   ]);
 
   const placeholder = useMemo(
-    () => "50 chaveiros 5x7cm",
+    () => "100 adesivos 3x3cm em vinil brilho",
     []
   );
 
