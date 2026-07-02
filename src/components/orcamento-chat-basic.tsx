@@ -780,14 +780,14 @@ export function OrcamentoChatBasic() {
           </div>
 
           <div className="mt-5 rounded-2xl border border-[#dbe6f5] bg-[#f2f7ff] p-4">
-            <p className="text-[1.02rem] leading-7 text-[#1f436b]">
-              Descreva seu pedido com:
+            <p className="text-[1.02rem] leading-7 text-[#1f436b] font-bold">
+              Descreva seu orçamento com:
             </p>
             <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.99rem] leading-7 text-[#1f436b]">
-              <span>Quantidade: 10 un.</span>
+              <span>Quantidade: 10un.</span>
               <span>Tamanho: 20x30cm</span>
-              <span>Material: PS 2mm ou acrilico 2mm</span>
-              <span className="text-[#3a5a82]">Exemplo rapido: &quot;10 placas de pix 20x30cm&quot;.</span>
+              <span>Material: PS2mm ou acrilico</span>
+              <span className="text-[#3a5a82]">Exemplo rapido: &quot;10 placas de pix 10x15cm&quot;.</span>
             </div>
           </div>
         </aside>
