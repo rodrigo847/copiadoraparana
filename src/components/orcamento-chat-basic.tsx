@@ -716,7 +716,7 @@ export function OrcamentoChatBasic() {
     {
       id: 1,
       role: "assistant",
-      text: "Escreva seu orçamento e clique enviar",
+      text: "Escreva seu orçamento e clique orçar",
     },
   ]);
 
@@ -819,7 +819,7 @@ export function OrcamentoChatBasic() {
               type="submit"
               className="inline-flex h-12 items-center justify-center rounded-2xl bg-[#79a2e3] px-6 text-[1rem] font-semibold text-white transition hover:bg-[#668fd3]"
             >
-              Orcar
+              Solicitar Orçamento
             </button>
           </form>
         </div>
