@@ -32,13 +32,13 @@ export default function OrcaFacilPage() {
 
         <section className="mt-2">
           <div className="mx-auto w-full max-w-screen-2xl px-4 sm:px-6 min-[900px]:max-w-[94vw]">
-            <div className="grid grid-cols-1 gap-6 min-[900px]:grid-cols-[1.7fr_1fr] min-[900px]:items-start">
-              <div>
-                <OrcamentoCalculator whatsappHref={site.whatsappHref} />
+            <div className="flex flex-col gap-6 min-[900px]:items-center">
+              <div id="orcamento-virtual" className="scroll-mt-28 w-full min-[900px]:w-[80%]">
+                <OrcamentoChatBasic />
               </div>
 
-              <div id="orcamento-virtual" className="scroll-mt-28">
-                <OrcamentoChatBasic />
+              <div className="w-full min-[900px]:w-[80%]">
+                <OrcamentoCalculator whatsappHref={site.whatsappHref} />
               </div>
             </div>
           </div>
