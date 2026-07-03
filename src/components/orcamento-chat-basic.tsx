@@ -716,12 +716,12 @@ export function OrcamentoChatBasic() {
     {
       id: 1,
       role: "assistant",
-      text: "Descreva seu orçamento e clique: 'Solicitar Orçamento'",
+      text: "Descreva seu orçamento abaixo:",
     },
   ]);
 
   const placeholder = useMemo(
-    () => "100 adesivos 3x3cm em vinil brilho",
+    () => "Ex: 100 adesivos 3x3cm em vinil...",
     []
   );
 
@@ -775,8 +775,8 @@ export function OrcamentoChatBasic() {
             </span>
             <div>
               <h2 className="font-heading text-2xl tracking-tight text-[#0f1f39]">Chat de Orçamento!</h2>
-              <p className="mt-1 text-sm text-[#4a6486]">Em treinamento para respostas automáticas.</p>
-              <p>Em primeira fase, apenas para adesivos, banners e placas. Para outros produtos, entre em contato pelo WhatsApp.</p>
+              <p className="mt-1 text-l text-[#4a6486]">Em treinamento para respostas automáticas.</p>
+              <p className="text-sm text-[#4a6486]">Em primeira fase, apenas para adesivos, banners e placas. Para outros produtos, entre em contato pelo WhatsApp.</p>
             </div>
           </div>
 
@@ -809,7 +809,7 @@ export function OrcamentoChatBasic() {
               type="submit"
               className="inline-flex h-12 items-center justify-center rounded-2xl bg-[#79a2e3] px-6 text-[1rem] font-semibold text-white transition hover:bg-[#668fd3]"
             >
-              Solicitar Orçamento
+              Orçar
             </button>
           </form>
         </div>
