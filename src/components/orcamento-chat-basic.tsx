@@ -775,8 +775,8 @@ export function OrcamentoChatBasic() {
             </span>
             <div>
               <h2 className="font-heading text-2xl tracking-tight text-[#0f1f39]">Chat de Orçamento!</h2>
-              <p className="mt-1 text-l text-[#4a6486]">Em treinamento para respostas automáticas.</p>
-              <p className="text-sm text-[#4a6486]">Em primeira fase, apenas para adesivos, banners e placas. Para outros produtos, entre em contato pelo WhatsApp.</p>
+              <p className="mt-1 text-l text-[#4a6486]">Respostas Automáticas! App em desenvolvimento, erros e/ou falhas podem ocorrer!</p>
+              <p className="text-sm text-[#4a6486]">Em primeira fase, apenas para adesivos, banners, acrílico e placas.</p>
             </div>
           </div>
 
