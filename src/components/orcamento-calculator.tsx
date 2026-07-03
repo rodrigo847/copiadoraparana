@@ -659,7 +659,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
             <path d="M8 7.2h8M8 10.2h8M8 13.2h8M12 17.2h.01" />
           </svg>
         </span>
-        <h2 className="font-heading text-[0.9rem] tracking-tight text-[#0f1f39] sm:text-[1.5rem]">Dimensione o Material para Calcular</h2>
+        <h2 className="font-heading text-[0.9rem] tracking-tight text-[#0f1f39] sm:text-[1.5rem]">CALCULADORA DE ORÇAMENTO</h2>
       </div>
 
       <div className="mt-7 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">

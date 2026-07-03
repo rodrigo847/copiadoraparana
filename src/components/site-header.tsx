@@ -110,11 +110,11 @@ export function SiteHeader() {
         <div className="flex items-center justify-between gap-3 lg:gap-6">
           <Link href="/" className="flex items-center" onClick={(event) => handleSectionNavigation("inicio", event)}>
             {!logoError ? (
-              <img
+              <Image
                 src="/img/logo.png"
                 alt="Paraná Laser Copy"
-                width="260"
-                height="56"
+                width={260}
+                height={56}
                 className="h-10 w-auto object-contain sm:h-12"
                 onError={() => setLogoError(true)}
               />
@@ -287,7 +287,7 @@ export function SiteHeader() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  onClick={(e) => {
+                  onClick={() => {
                     closeMobileMenu();
                   }}
                   aria-current={active ? "page" : undefined}

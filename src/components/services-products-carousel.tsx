@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useRef } from "react";
 
 type RequestedItem = {
@@ -100,12 +101,13 @@ export function ServicesProductsCarousel({ items, imageMap }: ServicesProductsCa
                 className={`relative overflow-hidden ${isRoundSticker ? "bg-[#eef5ff] p-3 ring-1 ring-[#cfe0fb]" : ""}`}
                 style={{ aspectRatio: "4 / 3" }}
               >
-                <img
+                <Image
                   src={resolveImageSrc(item.title)}
                   alt={item.title}
-                  style={{ width: '100%', height: '100%', objectFit: isRoundSticker ? 'contain' : 'cover', borderRadius: isRoundSticker ? '50%' : undefined }}
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 20vw"
+                  style={{ objectFit: isRoundSticker ? 'contain' : 'cover', borderRadius: isRoundSticker ? '50%' : undefined }}
                   className={isRoundSticker ? "object-contain scale-90" : "object-cover"}
-                  loading="lazy"
                   onError={(event) => {
                     const target = event.currentTarget;
                     if (target.src.endsWith("/img/banner.jpg")) {

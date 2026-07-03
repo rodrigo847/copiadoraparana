@@ -716,7 +716,7 @@ export function OrcamentoChatBasic() {
     {
       id: 1,
       role: "assistant",
-      text: "Escreva seu orçamento e clique em 'Solicitar Orçamento'",
+      text: "Descreva seu orçamento e clique: Solicitar Orçamento",
     },
   ]);
 
