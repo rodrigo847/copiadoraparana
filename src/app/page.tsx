@@ -81,9 +81,9 @@ export default function HomePage() {
               fill
               priority
               sizes="100vw"
-              className="object-cover object-[70%_22%] opacity-50 brightness-110 sm:object-cover sm:object-center sm:opacity-85 sm:brightness-100"
+              className="object-cover object-[75%_22%] opacity-60 brightness-110 sm:object-cover sm:object-center sm:opacity-60 sm:brightness-110"
             />
-            <div className="absolute inset-0 bg-[linear-gradient(105deg,rgba(10,28,49,0.72)_10%,rgba(12,37,62,0.64)_55%,rgba(14,48,78,0.56)_100%)] sm:bg-[linear-gradient(105deg,rgba(8,26,49,0.58)_10%,rgba(10,37,68,0.42)_55%,rgba(12,48,88,0.34)_100%)]" />
+            <div className="absolute inset-0 bg-[linear-gradient(105deg,rgba(10,28,49,0.72)_10%,rgba(12,37,62,0.64)_55%,rgba(14,48,78,0.56)_100%)]" />
 
             <div className="relative z-10 grid gap-6 sm:gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
               <div>
