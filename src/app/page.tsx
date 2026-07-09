@@ -80,27 +80,21 @@ export default function HomePage() {
               aria-hidden="true"
               fill
               priority
-              sizes="(min-width: 640px) 100vw, 0px"
-              style={{
-                objectFit: "cover",
-                objectPosition: "center",
-                opacity: 0.85,
-                borderRadius: "2.1rem",
-              }}
-              className="hidden object-contain object-center opacity-85 sm:block sm:object-cover"
+              sizes="100vw"
+              className="object-cover object-[70%_22%] opacity-50 brightness-110 sm:object-cover sm:object-center sm:opacity-85 sm:brightness-100"
             />
-            <div className="absolute inset-0 bg-[linear-gradient(105deg,rgba(8,26,49,0.58)_10%,rgba(10,37,68,0.42)_55%,rgba(12,48,88,0.34)_100%)]" />
+            <div className="absolute inset-0 bg-[linear-gradient(105deg,rgba(10,28,49,0.72)_10%,rgba(12,37,62,0.64)_55%,rgba(14,48,78,0.56)_100%)] sm:bg-[linear-gradient(105deg,rgba(8,26,49,0.58)_10%,rgba(10,37,68,0.42)_55%,rgba(12,48,88,0.34)_100%)]" />
 
             <div className="relative z-10 grid gap-6 sm:gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
               <div>
 
-                <p className="text-3xl mb-3">Bem vindo a <br></br> Copiadora Paraná Laser</p>
-                <h1 className="mb-4 max-w-2xl font-heading text-2xl font-bold tracking-tight text-balance sm:mb-6 sm:text-5xl lg:text-6xl">
+                <p className="text-2xl mb-3">Bem vindo a <br></br> Copiadora Paraná Laser</p>
+                <h1 className="mb-4 max-w-2xl font-heading text-4xl font-bold tracking-tight text-balance sm:mb-6 sm:text-5xl lg:text-6xl">
                   Soluções gráficas em tempo recorde
                 </h1>
 
                 <p className="mt-4 max-w-2xl text-base leading-7 text-[#c5dcfb] sm:mt-6 sm:text-xl sm:leading-8">
-                  Impressões em alta Gramatura, Adesivos com Recorte Eletrônico, banners, Digitalizações até A0, Impressões em Acrílico, PS, Vidro e Metal, tudo com a agilidade que sua marca precisa para se destacar em Curitiba.
+                  Impressões Laser em alta Gramatura, Jato de Tinta e PB, Adesivos com Recorte especial, banners, Digitalizações/Scanner de documentos até A0, Impressões em Acrílico, PS, Vidro e Metal, tudo com a agilidade que sua marca precisa para se destacar.
                 </p>
 
                 <span className="mt-4 inline-flex rounded-full bg-white/5 px-4 py-2 text-[0.72rem] tracking-[0.24em] text-[#a9cbfb]">
