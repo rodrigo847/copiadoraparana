@@ -48,6 +48,7 @@ const productImageMap: Record<string, string> = {
   "Papel timbrado": "/img/papel%20timbrado.jpg",
   "Calendário": "/img/calendario.jpg",
   "Crachás personalizados": "/img/cracha.jpg",
+  "Crachás e Credenciais em PS ou PVC": "/img/cracha.jpg",
   "Canetas personalizadas": "/img/caneta.png",
   "Displays de mesa": "/img/display.jpg",
   "Caixas em acrílico": "/img/caixa.png",
