@@ -177,10 +177,10 @@ export const serviceLandingPages: ServiceLandingPage[] = [
     title: "Crachás e Brindes em Curitiba",
     headline: "Crachás, canetas e itens promocionais para eventos e empresas",
     metaDescription:
-      "Crachás personalizados e brindes em Curitiba para eventos, equipes e ações de relacionamento com clientes.",
+      "Crachás e credenciais personalizados e brindes em Curitiba para eventos, equipes e ações de relacionamento com clientes.",
     summary:
       "Materiais de identificação e promoção para feiras, treinamentos, campanhas internas e experiências de marca.",
-    keywords: ["crachás curitiba", "brindes personalizados curitiba", "canetas personalizadas curitiba"],
+    keywords: ["crachás curitiba", "credenciais curitiba", "credenciais eventos", "brindes personalizados curitiba", "canetas personalizadas curitiba"],
     highlights: [
       "Identificação visual para equipes",
       "Brindes corporativos para campanhas",
@@ -251,7 +251,7 @@ export const mostRequested = [
     description: "Material útil para marcação de datas e fortalecimento de marca ao longo do ano.",
   },
   {
-    title: "Crachás personalizados",
+    title: "Crachás e Credenciais em PS ou PVC",
     demand: "Muito usados em eventos, empresas e credenciamento",
     description: "Identificação visual com acabamento limpo para equipes, visitantes e ações promocionais.",
   },
