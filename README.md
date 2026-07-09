@@ -33,7 +33,7 @@ Nao usamos pasta `out/` nem `next export`.
 - Páginas indexáveis para serviços, produtos, projetos, quem somos e contato
 - Metadata por página
 - JSON-LD de LocalBusiness
-- sitemap.xml e robots.txt gerados pelo App Router
+- sitemap.xml e robots.txt servidos como arquivos estaticos na raiz de public
 
 ## Desenvolvimento
 

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://copiadoraparana.com.br/sitemap.xml

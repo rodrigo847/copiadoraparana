@@ -46,12 +46,21 @@ export const metadata: Metadata = {
     title: "Paraná Laser Copy | Copiadora Paraná Laser",
     description:
       "Soluções gráficas em tempo recorde para empresas, profissionais e demandas sob medida em Curitiba.",
+    images: [
+      {
+        url: "/img/Fundo.png",
+        width: 1200,
+        height: 630,
+        alt: "Paraná Laser Copy em Curitiba",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Paraná Laser Copy | Copiadora Paraná Laser",
     description:
       "Produção gráfica com agilidade, acabamento profissional e atendimento local em Curitiba.",
+    images: ["/img/Fundo.png"],
   },
   icons: {
     icon: [{ url: "/favicon.webp", type: "image/webp" }],

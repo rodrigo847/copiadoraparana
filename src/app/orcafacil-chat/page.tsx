@@ -11,6 +11,10 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/orcafacil-chat",
   },
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function OrcaFacilChatPage() {

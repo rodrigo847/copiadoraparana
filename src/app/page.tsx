@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import Script from "next/script";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import { CopyWhatsappCard } from "@/components/copy-whatsapp-card";
 import { ServicesProductsCarousel } from "@/components/services-products-carousel";
@@ -94,7 +93,7 @@ export default function HomePage() {
             <div className="relative z-10 grid gap-6 sm:gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
               <div>
 
-                <h1 className="text-3xl mb-3">Bem vindo a <br></br> Copiadora Paraná Laser</h1>
+                <p className="text-3xl mb-3">Bem vindo a <br></br> Copiadora Paraná Laser</p>
                 <h1 className="mb-4 max-w-2xl font-heading text-2xl font-bold tracking-tight text-balance sm:mb-6 sm:text-5xl lg:text-6xl">
                   Soluções gráficas em tempo recorde
                 </h1>
@@ -179,7 +178,7 @@ export default function HomePage() {
 
         <ServicesProductsCarousel items={mostRequested} imageMap={productImageMap} />
 
-        <section className="mx-auto w-full max-w-7xl scroll-mt-28 px-4 py-8 sm:px-6 lg:px-10 lg:py-10">
+        <section id="servicos" className="mx-auto w-full max-w-7xl scroll-mt-28 px-4 py-8 sm:px-6 lg:px-10 lg:py-10">
           <div className="grid gap-6 lg:grid-cols-2">
             {services.map((service) => (
               <article
@@ -479,7 +478,6 @@ export default function HomePage() {
       </main>
 
       <SiteFooter />
-      <SpeedInsights />
     </div>
   );
 }

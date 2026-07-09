@@ -328,7 +328,7 @@ export const faqEntries = [
   {
     question: "Como solicitar orçamento de impressão?",
     answer:
-      "Você pode solicitar orçamento pelo WhatsApp, email ou presencialmente em nossa loja: contato@copiadoraparanalase.com.br",
+      "Você pode solicitar orçamento pelo WhatsApp, email ou presencialmente em nossa loja: contato@copiadoraparanalaser.com.br",
   },
   {
     question: "Como devo enviar meus arquivos para impressão?",
