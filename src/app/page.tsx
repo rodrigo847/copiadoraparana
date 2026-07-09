@@ -291,28 +291,31 @@ export default function HomePage() {
             <div className="relative mt-8">
               <div className="pointer-events-none absolute left-[12%] right-[12%] top-10 hidden h-0.5 bg-[linear-gradient(90deg,rgba(22,100,207,0.18),rgba(22,100,207,0.48),rgba(22,100,207,0.18))] lg:block" />
 
-              <div className="grid gap-5 lg:grid-cols-3">
+              <div className="grid gap-5 lg:grid-cols-4">
                 {projectSteps.map((step, index) => {
                   const variants = [
                     {
                       tag: "Preparação",
                       border: "border-[#b9d4ff]",
                       glow: "group-hover:shadow-[0_18px_40px_rgba(40,119,232,0.18)]",
-                      iconBg: "bg-[#e8f2ff] text-[#1462c9]",
                       badgeBg: "bg-[linear-gradient(180deg,#1f84ff,#1664cf)]",
                     },
                     {
                       tag: "Conferência",
                       border: "border-[#b7dbec]",
                       glow: "group-hover:shadow-[0_18px_40px_rgba(42,146,171,0.18)]",
-                      iconBg: "bg-[#e6f7fb] text-[#1f7c95]",
                       badgeBg: "bg-[linear-gradient(180deg,#2aa7c2,#1f7c95)]",
+                    },
+                    {
+                      tag: "Execução",
+                      border: "border-[#c7dbef]",
+                      glow: "group-hover:shadow-[0_18px_40px_rgba(60,104,155,0.2)]",
+                      badgeBg: "bg-[linear-gradient(180deg,#4b7eb8,#2b5f96)]",
                     },
                     {
                       tag: "Entrega",
                       border: "border-[#c6d4f7]",
                       glow: "group-hover:shadow-[0_18px_40px_rgba(88,116,189,0.2)]",
-                      iconBg: "bg-[#eef2ff] text-[#425fb3]",
                       badgeBg: "bg-[linear-gradient(180deg,#6a86da,#425fb3)]",
                     },
                   ] as const;
@@ -335,23 +338,7 @@ export default function HomePage() {
                         </span>
                       </div>
 
-                      <div className="relative z-10 mt-5 flex items-start gap-4">
-                        <span className={`inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${variant.iconBg}`}>
-                          {index === 0 ? (
-                            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7h16M4 12h10M4 17h7M17 15l3 3m0 0l-3 3m3-3h-7" />
-                            </svg>
-                          ) : index === 1 ? (
-                            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7 4h10a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V6a2 2 0 012-2z" />
-                            </svg>
-                          ) : (
-                            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" />
-                            </svg>
-                          )}
-                        </span>
-
+                      <div className="relative z-10 mt-5">
                         <div>
                           <h3 className="font-heading text-3xl font-bold leading-tight tracking-tight text-[#123159]">{step.title}</h3>
                           <p className="mt-3 text-[1.02rem] leading-8 text-[#365a84]">{step.description}</p>

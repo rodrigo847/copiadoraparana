@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import { FloatingOrcamentoButton } from "@/components/floating-orcamento-button";
+import { FontSizeToggle } from "@/components/font-size-toggle";
 
 import "./globals.css";
 
@@ -105,6 +106,7 @@ export default function RootLayout({
           />
         </noscript>
         {children}
+        <FontSizeToggle />
         <FloatingOrcamentoButton />
         <Analytics />
         <SpeedInsights />

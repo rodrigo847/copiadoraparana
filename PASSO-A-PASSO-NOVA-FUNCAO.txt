@@ -53,6 +53,9 @@ git checkout main
 git pull origin main
 git checkout -b feat/nome-da-funcao
 npm run dev
+
+----------------------------------------
+EXECUÇÃO PADRÃO 
 npm run build
 git add .
 git commit -m "feat: nome da funcao"

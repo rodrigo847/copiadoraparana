@@ -199,8 +199,12 @@ export const projectSteps = [
     description: "Nosso time confere e valida antes de produzir, *Nota: Salve os arquivos em CMYK!!! Bitmap, RGB ou IMG geralmente ficam escuras!",
   },
   {
-    title: "Produção com prazo definido",
-    description: "Execução com transparência no andamento e foco em entrega confiável.",
+    title: "Execução",
+    description: "Após a aprovação, iniciamos a impressão com controle de qualidade em cada etapa para garantir fidelidade no resultado.",
+  },
+  {
+    title: "Entrega com prazo definido",
+    description: "Finalizamos com transparência no andamento e foco em entrega confiável.",
   },
 ];
 
