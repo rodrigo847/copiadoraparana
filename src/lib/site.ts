@@ -322,7 +322,7 @@ export const faqEntries = [
   {
     question: "Quais serviços a Paraná Laser Copy oferece em Curitiba?",
     answer:
-      "Oferecemos impressão digital, materiais institucionais, adesivos, banners, encadernações, materiais promocionais e soluções personalizadas para empresas e profissionais.",
+      "Oferecemos impressão digital/laser, materiais institucionais, adesivos com meio corte: transparente, fosco e brilho, banners, encadernações, impressão em materiais rígidos como acrílico e MDF; Papeis especiais de alta gramatura.",
   },
   {
     question: "Vocês atendem empresas com faturamento?",
