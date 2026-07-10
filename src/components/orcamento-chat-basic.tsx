@@ -454,7 +454,7 @@ function buildQuote(raw: string): QuoteResult {
           productType === "chaveiro"
             ? "Exemplo recomendado: 50 chaveiros 5x7cm em acrilico 2mm com corte laser."
             : productType === "placa_pix"
-              ? "Podemos cotar em duas opcoes: PS 2mm e Acrilico 2mm. O corte laser e indispensavel para montagem; a dobra e aplicada nas plaquinhas desses materiais. Exemplo: 10 placas de pix 20x30cm."
+              ? "Podemos cotar em opcoes como PS 2mm e Acrilico 2mm. O corte laser e indispensavel para montagem; a dobra e aplicada nas plaquinhas desses materiais. Exemplo: 10 placas de pix 20x30cm."
             : undefined,
       };
     }
@@ -467,7 +467,7 @@ function buildQuote(raw: string): QuoteResult {
         productType === "chaveiro"
           ? "Exemplo recomendado: 50 chaveiros 5x7cm em acrilico 2mm com corte laser."
           : productType === "placa_pix"
-            ? "Podemos cotar em duas opcoes: PS 2mm e Acrilico 2mm. O corte laser e indispensavel para montagem; a dobra e aplicada nas plaquinhas desses materiais. Exemplo: 10 placas de pix 20x30cm."
+            ? "Podemos cotar em opcoes como PS 2mm e Acrilico 2mm. O corte laser e indispensavel para montagem; a dobra e aplicada nas plaquinhas desses materiais. Exemplo: 10 placas de pix 20x30cm."
           : undefined,
     };
   }
@@ -604,7 +604,7 @@ function buildQuote(raw: string): QuoteResult {
     };
 
     const summary = [
-      "Para placa de pix, trabalhamos com duas opcoes recomendadas:",
+      "Para placa de pix, trabalhamos com opcoes recomendadas:",
       "",
       buildPlacaPixOption("ps_2mm", "Opcao Economica: PS 2mm"),
       "",
