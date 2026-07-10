@@ -332,7 +332,7 @@ export const faqEntries = [
   {
     question: "Como solicitar orçamento de impressão?",
     answer:
-      "Você pode solicitar orçamento pelo WhatsApp, email ou presencialmente em nossa loja: contato@copiadoraparanalaser.com.br",
+      "Você pode solicitar orçamento pelo WhatsApp 4199679-9517, email: contato@copiadoraparanalaser.com.br ou presencialmente em nossa loja na rua Teixeira Coelho, 61, Batel, Curitiba - PR.",
   },
   {
     question: "Como devo enviar meus arquivos para impressão?",
