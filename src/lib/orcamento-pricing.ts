@@ -43,6 +43,12 @@ export const FINISHING_TYPES: Record<string, PriceLabel> = {
   corte_dobra: { name: "Corte + Dobra", pricePerM2: 150 },
 };
 
+export const OPTIONAL_FINISHING_TYPES: Record<string, PriceLabel> = {
+  sem_opcional: { name: "Nenhum", pricePerM2: 0 },
+  mascara: { name: "Máscara", pricePerM2: 300 },
+  laminacao_frio: { name: "Laminação a Frio", pricePerM2: 500 },
+};
+
 export const VERSO_TYPES: Record<string, PriceLabel> = {
   sem_verso: { name: "Sem verso", pricePerM2: 0 },
   com_verso: { name: "Com verso", pricePerM2: 60 },

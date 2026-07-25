@@ -6,6 +6,7 @@ import { useMemo, useState } from "react";
 import {
   FINISHING_TYPES,
   MATERIALS,
+  OPTIONAL_FINISHING_TYPES,
   MAX_QUANTITY,
   MINIMUM_PURCHASE,
   MIN_UNIT_PRICE_SMALL_PIECE,
@@ -33,20 +34,7 @@ type BudgetItem = {
   unitPrice: number;
   totalPrice: number;
   finishing: string;
-  verso: string;
-  special: string;
-};
-
-type SpecialService = {
-  name: string;
-  unitPrice: number;
-  height: number;
-  width: number;
-  unit: Unit;
-  material: string;
-  printingType: string;
-  rigidMaterial: string;
-  finishing: string;
+  optionalFinishing: string;
   verso: string;
 };
 
@@ -88,21 +76,6 @@ const FINISHING_ICONS: Record<string, string> = {
   corte_dobra: "📐",
 };
 
-const SPECIAL_SERVICES: Record<string, SpecialService> = {
-  rollup_80x200: {
-    name: "Roll-up 80x200cm",
-    unitPrice: 350,
-    height: 200,
-    width: 80,
-    unit: "cm",
-    material: "banner_fosco",
-    printingType: "eco_solvente",
-    rigidMaterial: "sem_rigido",
-    finishing: "sem_acabamento",
-    verso: "sem_verso",
-  },
-};
-
 function toAreaM2(height: number, width: number, unit: Unit): number {
   if (unit === "m2") return height * width;
   const multiplier = unit === "mm" ? 0.001 : 0.01;
@@ -140,8 +113,8 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
   const [rigidMaterial, setRigidMaterial] = useState("sem_rigido");
   const [quantity, setQuantity] = useState("1");
   const [finishing, setFinishing] = useState("sem_acabamento");
+  const [optionalFinishing, setOptionalFinishing] = useState("sem_opcional");
   const [verso, setVerso] = useState("sem_verso");
-  const [special, setSpecial] = useState("sem_especial");
   const [items, setItems] = useState<BudgetItem[]>([]);
   const [editingItemId, setEditingItemId] = useState<number | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -151,8 +124,8 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
     [items]
   );
 
-  const isSpecialSelected = special !== "sem_especial";
-  const isPrintingSelected = printingType !== "sem_impressao";
+  const canUseOptionalFinishing =
+    material === "vinil_branco_brilho" || material === "vinil_branco_fosco";
 
   const minimumPerServiceHint = useMemo(() => {
     const h = Number.parseFloat(height);
@@ -160,23 +133,6 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
     const qty = Number.parseInt(quantity, 10) || 1;
 
     if (qty <= 0) return null;
-
-    if (isSpecialSelected) {
-      const selectedSpecial = SPECIAL_SERVICES[special];
-      if (!selectedSpecial) return null;
-
-      const currentTotal = selectedSpecial.unitPrice * qty;
-      if (currentTotal >= MINIMUM_PURCHASE) return null;
-
-      const suggestedQty = Math.max(qty, Math.ceil(MINIMUM_PURCHASE / selectedSpecial.unitPrice));
-
-      return {
-        currentTotal,
-        suggestedQty,
-        suggestedTotal: selectedSpecial.unitPrice * suggestedQty,
-        minimumPurchase: MINIMUM_PURCHASE,
-      };
-    }
 
     if (!Number.isFinite(h) || !Number.isFinite(w) || h <= 0 || w <= 0) return null;
     if (material === "sem_material" && rigidMaterial === "sem_rigido") return null;
@@ -188,11 +144,14 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
     const printingPrice = PRINTING_TYPES[printingType]?.pricePerM2 || 0;
     const rigidPrice = RIGID_MATERIALS[rigidMaterial]?.pricePerM2 || 0;
     const finishingPrice = FINISHING_TYPES[finishing]?.pricePerM2 || 0;
+    const optionalFinishingPrice = canUseOptionalFinishing
+      ? OPTIONAL_FINISHING_TYPES[optionalFinishing]?.pricePerM2 || 0
+      : 0;
     const smallPieceMultiplier = areaM2 < 0.0009 ? 1.4 : 1;
     const versoPrice = (VERSO_TYPES[verso]?.pricePerM2 || 0) * areaM2;
 
     const calculatedUnitPrice =
-      areaM2 * (materialPrice + printingPrice + rigidPrice + finishingPrice) * smallPieceMultiplier +
+      areaM2 * (materialPrice + printingPrice + rigidPrice + finishingPrice + optionalFinishingPrice) * smallPieceMultiplier +
       versoPrice;
 
     const isSmallerThanTwoByTwoCm = hCm < 2 && wCm < 2;
@@ -218,7 +177,19 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
       suggestedTotal: unitPrice * suggestedQty,
       minimumPurchase: itemMinimumPurchase,
     };
-  }, [height, width, quantity, material, rigidMaterial, unit, printingType, finishing, verso, special, isSpecialSelected]);
+  }, [
+    height,
+    width,
+    quantity,
+    material,
+    rigidMaterial,
+    unit,
+    printingType,
+    finishing,
+    optionalFinishing,
+    verso,
+    canUseOptionalFinishing,
+  ]);
 
   const minimumWarning = items.length > 0 && totalBudget < MINIMUM_PURCHASE;
 
@@ -231,9 +202,10 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
       .map((item, idx) => {
         const impressao = PRINTING_TYPES[item.printingType]?.name || "-";
         const acabamento = FINISHING_TYPES[item.finishing]?.name || "-";
+        const extra = OPTIONAL_FINISHING_TYPES[item.optionalFinishing || "sem_opcional"]?.name || "-";
         const verso = VERSO_TYPES[item.verso]?.name || "-";
         const dimensoes = `${item.height}x${item.width}${item.unit}`;
-        return `${idx + 1}. ${dimensoes} - ${item.quantity} un. - ${impressao} - ${acabamento} - ${verso} - Total: ${formatCurrency(item.totalPrice)}`;
+        return `${idx + 1}. ${dimensoes} - ${item.quantity} un. - ${impressao} - ${acabamento} - Extra: ${extra} - ${verso} - Total: ${formatCurrency(item.totalPrice)}`;
       })
       .join("\n");
 
@@ -280,11 +252,11 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
     setWidth("");
     setQuantity("1");
     setFinishing("sem_acabamento");
+    setOptionalFinishing("sem_opcional");
     setVerso("sem_verso");
     setRigidMaterial("sem_rigido");
     setPrintingType("sem_impressao");
     setMaterial("sem_material");
-    setSpecial("sem_especial");
     setEditingItemId(null);
   };
 
@@ -299,8 +271,8 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
     setRigidMaterial(item.rigidMaterial);
     setQuantity(String(item.quantity));
     setFinishing(item.finishing);
+    setOptionalFinishing(item.optionalFinishing || "sem_opcional");
     setVerso(item.verso);
-    setSpecial(item.special || "sem_especial");
   };
 
   const removeItem = (id: number) => {
@@ -350,44 +322,6 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
 
     if (qty <= 0 || qty > MAX_QUANTITY) {
       setErrorMessage(`Quantidade deve ser entre 1 e ${MAX_QUANTITY}.`);
-      return;
-    }
-
-    if (isSpecialSelected) {
-      const selectedSpecial = SPECIAL_SERVICES[special];
-      if (!selectedSpecial) {
-        setErrorMessage("Especial selecionado é inválido.");
-        return;
-      }
-
-      const areaM2 = toAreaM2(selectedSpecial.height, selectedSpecial.width, selectedSpecial.unit);
-      const unitPrice = selectedSpecial.unitPrice;
-      const totalPrice = unitPrice * qty;
-
-      const item: BudgetItem = {
-        id: editingItemId ?? Date.now(),
-        height: selectedSpecial.height,
-        width: selectedSpecial.width,
-        unit: selectedSpecial.unit,
-        material: selectedSpecial.material,
-        printingType: selectedSpecial.printingType,
-        rigidMaterial: selectedSpecial.rigidMaterial,
-        quantity: qty,
-        areaM2,
-        unitPrice,
-        totalPrice,
-        finishing: selectedSpecial.finishing,
-        verso: selectedSpecial.verso,
-        special,
-      };
-
-      if (editingItemId !== null) {
-        setItems((prev) => prev.map((current) => (current.id === editingItemId ? item : current)));
-      } else {
-        setItems((prev) => [...prev, item]);
-      }
-
-      resetForm();
       return;
     }
 
@@ -441,11 +375,14 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
     const printingPrice = PRINTING_TYPES[printingType]?.pricePerM2 || 0;
     const rigidPrice = RIGID_MATERIALS[rigidMaterial]?.pricePerM2 || 0;
     const finishingPrice = FINISHING_TYPES[finishing]?.pricePerM2 || 0;
+    const optionalFinishingPrice = canUseOptionalFinishing
+      ? OPTIONAL_FINISHING_TYPES[optionalFinishing]?.pricePerM2 || 0
+      : 0;
     const smallPieceMultiplier = areaM2 < 0.0009 ? 1.4 : 1;
     const versoPrice = (VERSO_TYPES[verso]?.pricePerM2 || 0) * areaM2;
 
     const calculatedUnitPrice =
-      areaM2 * (materialPrice + printingPrice + rigidPrice + finishingPrice) * smallPieceMultiplier +
+      areaM2 * (materialPrice + printingPrice + rigidPrice + finishingPrice + optionalFinishingPrice) * smallPieceMultiplier +
       versoPrice;
     const isSmallerThanTwoByTwoCm = hCm < 2 && wCm < 2;
     let unitPrice = isSmallerThanTwoByTwoCm
@@ -474,8 +411,8 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
       unitPrice: finalUnitPrice,
       totalPrice,
       finishing,
+      optionalFinishing: canUseOptionalFinishing ? optionalFinishing : "sem_opcional",
       verso,
-      special: "sem_especial",
     };
 
     if (editingItemId !== null) {
@@ -526,6 +463,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
       PRINTING_TYPES[item.printingType]?.name || item.printingType,
       RIGID_MATERIALS[item.rigidMaterial]?.name || item.rigidMaterial,
       FINISHING_TYPES[item.finishing]?.name || item.finishing,
+      OPTIONAL_FINISHING_TYPES[item.optionalFinishing || "sem_opcional"]?.name || item.optionalFinishing,
       VERSO_TYPES[item.verso]?.name || item.verso,
       String(item.quantity),
       formatCurrency(item.unitPrice),
@@ -536,7 +474,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
     const tableWidth = pageWidth * 0.95;
     const sideMargin = (pageWidth - tableWidth) / 2;
     // Reduzir a largura da coluna '#' para o mínimo (ex: 7)
-    const baseColumnWidths = [5, 15, 25, 16, 16, 20, 13, 15, 14, 17];
+    const baseColumnWidths = [5, 13, 22, 15, 14, 18, 16, 12, 12, 14, 16];
     const totalBaseWidth = baseColumnWidths.reduce((sum, value) => sum + value, 0);
     const scaledColumnWidths = baseColumnWidths.map((value) => (value * tableWidth) / totalBaseWidth);
 
@@ -550,14 +488,15 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
       6: { cellWidth: scaledColumnWidths[6], halign: "center" as const },
       7: { cellWidth: scaledColumnWidths[7], halign: "center" as const },
       8: { cellWidth: scaledColumnWidths[8], halign: "center" as const },
-      9: { cellWidth: scaledColumnWidths[9], halign: "right" as const },
+      9: { cellWidth: scaledColumnWidths[9], halign: "center" as const },
+      10: { cellWidth: scaledColumnWidths[10], halign: "right" as const },
     };
 
     autoTable(doc, {
       startY: 42,
       margin: { left: sideMargin, right: sideMargin },
       tableWidth,
-      head: [["#", "Tam.", "Adesivo", "Impressao", "Rigido", "Acabamento", "Verso", "Qtd", "Unit.", "Total"]],
+      head: [["#", "Tam.", "Adesivo", "Impressao", "Rigido", "Acabamento", "Extra", "Verso", "Qtd", "Unit.", "Total"]],
       body: tableData,
       theme: "striped",
       headStyles: {
@@ -577,7 +516,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
         const columnIndex = data.column.index;
         if (columnIndex <= 2) {
           data.cell.styles.halign = "left";
-        } else if (columnIndex >= 4 && columnIndex <= 9) {
+        } else if (columnIndex >= 4 && columnIndex <= 10) {
           data.cell.styles.halign = "center";
         }
       },
@@ -681,7 +620,6 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
             step="any"
             className="mt-1.5 h-12 w-full rounded-2xl border border-[#c8d2df] bg-[#f1f4f8] px-4 text-[1.05rem] font-normal text-[#203653] outline-none transition focus:border-[#77a6e7] sm:text-[1.1rem]"
             value={height}
-            disabled={isSpecialSelected}
             onKeyDown={(event) => {
               if (event.key === "-") {
                 event.preventDefault();
@@ -700,7 +638,6 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
             step="any"
             className="mt-1.5 h-12 w-full rounded-2xl border border-[#c8d2df] bg-[#f1f4f8] px-4 text-[1.05rem] font-normal text-[#203653] outline-none transition focus:border-[#77a6e7] sm:text-[1.1rem]"
             value={width}
-            disabled={isSpecialSelected}
             onKeyDown={(event) => {
               if (event.key === "-") {
                 event.preventDefault();
@@ -716,7 +653,6 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
           <select
             className="mt-1.5 h-12 w-full rounded-2xl border border-[#c8d2df] bg-[#f1f4f8] px-4 text-[1.05rem] font-normal text-[#203653] outline-none transition focus:border-[#77a6e7] sm:text-[1.1rem]"
             value={unit}
-            disabled={isSpecialSelected}
             onChange={(event) => setUnit(event.target.value as Unit)}
           >
             <option value="mm">mm</option>
@@ -730,7 +666,6 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
           <select
             className="mt-1.5 h-12 w-full rounded-2xl border border-[#c8d2df] bg-[#f1f4f8] px-4 text-[1.05rem] font-normal text-[#203653] outline-none transition focus:border-[#77a6e7] sm:text-[1.1rem]"
             value={printingType}
-            disabled={isSpecialSelected}
             onChange={(event) => {
               const value = event.target.value;
               setPrintingType(value);
@@ -770,10 +705,13 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
                 setRigidMaterial("sem_rigido");
                 setVerso("sem_verso");
               }
+              if (value !== "vinil_branco_brilho" && value !== "vinil_branco_fosco") {
+                setOptionalFinishing("sem_opcional");
+              }
               // Sempre resetar acabamento para 'sem_acabamento' ao trocar material
               setFinishing("sem_acabamento");
             }}
-            disabled={isSpecialSelected || rigidMaterial !== "sem_rigido" || printingType === "uv"}
+            disabled={rigidMaterial !== "sem_rigido" || printingType === "uv"}
           >
             {Object.entries(MATERIALS).map(([key, value]) => (
               <option key={key} value={key}>
@@ -783,7 +721,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
           </select>
         </label>
 
-        {material === "sem_material" && !isSpecialSelected ? (
+        {material === "sem_material" ? (
           <label className="text-sm font-semibold text-[#102038]">
             Material rígido
             <select
@@ -794,6 +732,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
                 setRigidMaterial(value);
                 if (value !== "sem_rigido") {
                   setMaterial("sem_material");
+                  setOptionalFinishing("sem_opcional");
                   if (printingType === "eco_solvente") {
                     setPrintingType("sem_impressao");
                   }
@@ -818,7 +757,6 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
             value={finishing}
             onChange={(event) => setFinishing(event.target.value)}
             disabled={
-              isSpecialSelected ||
               !(
                 rigidMaterial !== "sem_rigido" ||
                 material === "banner_brilho" ||
@@ -861,40 +799,22 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
         </label>
 
         <label className="text-sm font-semibold text-[#102038]">
-          Especiais
+          Item extra opcional
           <select
             className="mt-1.5 h-12 w-full rounded-2xl border border-[#c8d2df] bg-[#f1f4f8] px-4 text-[1.05rem] font-normal text-[#203653] outline-none transition focus:border-[#77a6e7] sm:text-[1.1rem]"
-            value={special}
-            disabled={!isSpecialSelected && isPrintingSelected}
-            onChange={(event) => {
-              const value = event.target.value;
-              setSpecial(value);
-
-              if (value !== "sem_especial") {
-                const selectedSpecial = SPECIAL_SERVICES[value];
-                if (!selectedSpecial) return;
-
-                setHeight(String(selectedSpecial.height));
-                setWidth(String(selectedSpecial.width));
-                setUnit(selectedSpecial.unit);
-                setMaterial(selectedSpecial.material);
-                setPrintingType(selectedSpecial.printingType);
-                setRigidMaterial(selectedSpecial.rigidMaterial);
-                setFinishing(selectedSpecial.finishing);
-                setVerso(selectedSpecial.verso);
-              }
-            }}
+            value={optionalFinishing}
+            onChange={(event) => setOptionalFinishing(event.target.value)}
+            disabled={!canUseOptionalFinishing}
           >
-            <option value="sem_especial">Nenhum</option>
-            {Object.entries(SPECIAL_SERVICES).map(([key, value]) => (
+            {Object.entries(OPTIONAL_FINISHING_TYPES).map(([key, value]) => (
               <option key={key} value={key}>
-                {value.name} - {formatCurrency(value.unitPrice)}
+                {value.name}
               </option>
             ))}
           </select>
         </label>
 
-        {rigidMaterial !== "sem_rigido" && !isSpecialSelected ? (
+        {rigidMaterial !== "sem_rigido" ? (
           <label className="text-sm font-semibold text-[#102038]">
             Verso
             <select
