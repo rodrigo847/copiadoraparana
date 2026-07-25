@@ -205,7 +205,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
         const extra = OPTIONAL_FINISHING_TYPES[item.optionalFinishing || "sem_opcional"]?.name || "-";
         const verso = VERSO_TYPES[item.verso]?.name || "-";
         const dimensoes = `${item.height}x${item.width}${item.unit}`;
-        return `${idx + 1}. ${dimensoes} - ${item.quantity} un. - ${impressao} - ${acabamento} - Extra: ${extra} - ${verso} - Total: ${formatCurrency(item.totalPrice)}`;
+        return `${idx + 1}. ${dimensoes} - ${item.quantity} un. - ${impressao} - ${acabamento} - Item extra: ${extra} - ${verso} - Total: ${formatCurrency(item.totalPrice)}`;
       })
       .join("\n");
 
@@ -474,7 +474,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
     const tableWidth = pageWidth * 0.95;
     const sideMargin = (pageWidth - tableWidth) / 2;
     // Reduzir a largura da coluna '#' para o mínimo (ex: 7)
-    const baseColumnWidths = [5, 13, 22, 15, 14, 18, 16, 12, 12, 14, 16];
+    const baseColumnWidths = [5, 13, 18, 15, 12, 14, 14, 12, 10, 14, 16];
     const totalBaseWidth = baseColumnWidths.reduce((sum, value) => sum + value, 0);
     const scaledColumnWidths = baseColumnWidths.map((value) => (value * tableWidth) / totalBaseWidth);
 
@@ -590,7 +590,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
   };
 
   return (
-    <section className="mx-auto w-full max-w-none rounded-[1.2rem] border border-[#c7d4e6] bg-[#f7f9fc] px-5 py-7 shadow-[0_12px_28px_rgba(19,38,68,0.08)] sm:px-7 sm:py-8">
+    <section className="mx-auto w-full max-w-none rounded-2xl border border-[#c7d4e6] bg-[#f7f9fc] px-5 py-7 shadow-[0_12px_28px_rgba(19,38,68,0.08)] sm:px-7 sm:py-8">
       <div className="flex items-center gap-3">
         <span className="inline-flex h-6 w-6 items-center justify-center text-[#196feb]">
           <svg viewBox="0 0 24 24" className="h-14 w-14" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
@@ -655,7 +655,6 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
             value={unit}
             onChange={(event) => setUnit(event.target.value as Unit)}
           >
-            <option value="mm">mm</option>
             <option value="cm">cm</option>
             <option value="m2">m2</option>
           </select>
@@ -923,6 +922,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
               <th className="px-3 py-2">Impressão</th>
               <th className="px-3 py-2">Rígido</th>
               <th className="px-3 py-2">Acabamento</th>
+              <th className="px-3 py-2">Extra</th>
               <th className="px-3 py-2">Verso</th>
               <th className="px-3 py-2">Qtd</th>
               <th className="px-3 py-2">Unitário</th>
@@ -933,7 +933,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
           <tbody>
             {items.length === 0 ? (
               <tr>
-                <td className="px-3 py-6 text-center text-[#54779e]" colSpan={11}>
+                <td className="px-3 py-6 text-center text-[#54779e]" colSpan={12}>
                   Nenhum item adicionado.
                 </td>
               </tr>
@@ -946,6 +946,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
                   <td className="px-3 py-2">{PRINTING_TYPES[item.printingType]?.name || item.printingType}</td>
                   <td className="px-3 py-2">{RIGID_MATERIALS[item.rigidMaterial]?.name || item.rigidMaterial}</td>
                   <td className="px-3 py-2">{FINISHING_TYPES[item.finishing]?.name || item.finishing}</td>
+                  <td className="px-3 py-2">{OPTIONAL_FINISHING_TYPES[item.optionalFinishing || "sem_opcional"]?.name || item.optionalFinishing}</td>
                   <td className="px-3 py-2">{VERSO_TYPES[item.verso]?.name || item.verso}</td>
                   <td className="px-3 py-2">{item.quantity}</td>
                   <td className="px-3 py-2">{formatCurrency(item.unitPrice)}</td>

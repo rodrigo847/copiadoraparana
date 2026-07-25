@@ -85,89 +85,89 @@ export type ServiceLandingPage = {
 export const serviceLandingPages: ServiceLandingPage[] = [
   {
     slug: "impressao-digital-curitiba",
-    title: "Impressão Digital em Curitiba",
-    headline: "Impressão digital com agilidade e acabamento profissional",
+    title: "Gráfica Rápida e Impressão Digital em Curitiba",
+    headline: "Gráfica rápida em Curitiba com impressão digital, impressão a laser e impressão colorida",
     metaDescription:
-      "Impressão digital em Curitiba para materiais corporativos, promocionais e institucionais com produção ágil e atendimento especializado.",
+      "Gráfica rápida e impressão digital em Curitiba com impressão a laser, impressão colorida, materiais promocionais e produção ágil para empresas e clientes finais.",
     summary:
-      "Produção de materiais impressos para demandas comerciais e operacionais, com orientação técnica sobre papéis, gramaturas e acabamento.",
-    keywords: ["impressão digital curitiba", "gráfica rápida curitiba", "copiadora curitiba"],
+      "Atendemos demandas de impressão digital, impressão a laser, impressão colorida e materiais comerciais com orientação técnica sobre papéis, gramaturas, acabamento e formatos como impressão A3.",
+    keywords: ["gráfica rápida curitiba", "impressão digital curitiba", "impressão a laser", "impressão colorida", "copiadora curitiba", "impressão a3"],
     highlights: [
       "Materiais em diversas gramaturas",
-      "Atendimento para empresas e profissionais",
-      "Produção com foco em prazo e legibilidade",
+      "Atendimento para empresas, profissionais e demandas urgentes",
+      "Produção com foco em prazo, legibilidade e acabamento",
     ],
   },
   {
     slug: "adesivos-personalizados-curitiba",
-    title: "Adesivos Personalizados em Curitiba",
-    headline: "Adesivos, rótulos e etiquetas para produtos e campanhas",
+    title: "Gráfica para Adesivos em Curitiba",
+    headline: "Gráfica para adesivos com recorte eletrônico, rótulos e etiquetas personalizadas",
     metaDescription:
-      "Adesivos personalizados em Curitiba com recorte eletrônico para rótulos, etiquetas, vitrines e comunicação de ponto de venda.",
+      "Gráfica para adesivos em Curitiba com adesivo recorte, rótulos, etiquetas e materiais para vitrine, embalagem e comunicação visual.",
     summary:
-      "Soluções para marca, embalagem e promoção com formatos variados e aplicações internas ou externas.",
-    keywords: ["adesivos personalizados curitiba", "rótulos curitiba", "etiquetas personalizadas"],
+      "Produzimos adesivos personalizados, adesivo com recorte, rótulos e etiquetas para marca, embalagem, vitrine e ações promocionais com formatos variados.",
+    keywords: ["gráfica para adesivos", "adesivos personalizados curitiba", "adesivo recorte", "rótulos curitiba", "etiquetas personalizadas", "adesivo plotagem"],
     highlights: [
       "Recorte eletrônico para formatos customizados",
       "Aplicação em produtos e pontos de venda",
-      "Materiais para campanhas promocionais",
+      "Materiais para campanhas promocionais e comunicação visual",
     ],
   },
   {
     slug: "banners-rollups-curitiba",
-    title: "Banners e Roll-ups em Curitiba",
-    headline: "Banners, roll-ups e comunicação visual para eventos",
+    title: "Banners e Faixas em Curitiba",
+    headline: "Impressão de banners e faixas para eventos, lojas e campanhas",
     metaDescription:
-      "Banners e roll-ups em Curitiba para eventos, feiras e lojas com acabamento técnico e entrega organizada.",
+      "Banners e faixas em Curitiba com impressão de banners para eventos, feiras, lojas e campanhas promocionais com acabamento técnico.",
     summary:
-      "Produção de materiais para destaque visual com opções de tamanho, estrutura e acabamento conforme o ambiente.",
-    keywords: ["banner curitiba", "rollup curitiba", "comunicação visual curitiba"],
+      "Produção de banners, faixas e peças de comunicação visual com opções de tamanho, estrutura, ilhós, madeira e acabamento conforme o ambiente.",
+    keywords: ["banners e faixas", "impressão de banners", "banner curitiba", "banner", "faixas e banners", "comunicação visual curitiba"],
     highlights: [
       "Opções para uso interno e externo",
       "Acabamentos com ilhós e estrutura",
-      "Ideal para eventos e sinalização",
+      "Ideal para eventos, campanhas e sinalização",
     ],
   },
   {
     slug: "encadernacao-curitiba",
-    title: "Encadernação em Curitiba",
-    headline: "Encadernações para relatórios, materiais técnicos e acadêmicos",
+    title: "Impressão de Apostilas e Encadernação em Curitiba",
+    headline: "Impressão de apostilas, relatórios e encadernações para uso técnico e acadêmico",
     metaDescription:
-      "Encadernação em Curitiba com opções de espiral, capa e formatos para documentos corporativos, técnicos e acadêmicos.",
+      "Impressão de apostilas e encadernação em Curitiba com opções de espiral, capa e formatos para documentos corporativos, técnicos e acadêmicos.",
     summary:
-      "Organização de documentos com apresentação profissional para uso interno, entrega a clientes e materiais didáticos.",
-    keywords: ["encadernação curitiba", "apostilas curitiba", "impressão relatório curitiba"],
+      "Organizamos apostilas, relatórios e materiais didáticos com apresentação profissional para uso interno, entrega a clientes e demandas acadêmicas.",
+    keywords: ["impressão de apostilas", "encadernação curitiba", "apostilas curitiba", "impressão relatório curitiba"],
     highlights: [
-      "Opções de espiral e capas",
+      "Opções de espiral, capas e montagem",
       "Capas Duras para TCC, livros e relatórios",
     ],
   },
   {
     slug: "plotagem-curitiba",
-    title: "Plotagem em Curitiba",
-    headline: "Plotagem de engenharia e arquitetura com leitura precisa",
+    title: "Plotagem e Impressão A3 em Curitiba",
+    headline: "Serviço de plotagem, plotagem gráfica e impressão A3 em Curitiba",
     metaDescription:
-      "Plotagem em Curitiba para plantas, pranchas e projetos de engenharia e arquitetura com contraste e nitidez.",
+      "Serviço de plotagem e impressão A3 em Curitiba para plantas, pranchas e projetos de engenharia e arquitetura com contraste e nitidez.",
     summary:
-      "Impressão de grandes formatos engenharia e arquitetura do tamanho A3 até A0.",
-    keywords: ["plotagem curitiba", "plotagem engenharia curitiba", "plotagem arquitetura curitiba"],
+      "Executamos plotagem gráfica e impressão de grandes formatos para engenharia e arquitetura, do tamanho A3 até A0, com leitura técnica precisa.",
+    keywords: ["plotagem curitiba", "serviço de plotagem", "plotagem grafica", "impressão a3", "plotagem engenharia curitiba", "plotagem arquitetura curitiba"],
     highlights: [
       "Impressão e acabamento para grandes formatos",
       "Escanners e envio de arquivos por email em PDF",
-      "Fotocopias de plantas e projetos técnicos",
+      "Fotocopias de plantas, projetos técnicos e pranchas",
     ],
   },
   {
     slug: "papelaria-corporativa-curitiba",
-    title: "Papelaria Corporativa em Curitiba",
-    headline: "Cartões, timbrados e materiais institucionais para empresas",
+    title: "Panfletos, Flyers e Papelaria Corporativa em Curitiba",
+    headline: "Panfletos, flyers, cartões e papelaria corporativa para empresas",
     metaDescription:
-      "Papelaria corporativa em Curitiba com cartões de visita, papel timbrado e materiais institucionais para fortalecer marca.",
+      "Panfletos, flyers e papelaria corporativa em Curitiba com cartões de visita, papel timbrado e materiais institucionais para fortalecer a marca.",
     summary:
-      "Produção de itens de identidade visual para relacionamento comercial, propostas e comunicação profissional.",
-    keywords: ["papelaria corporativa curitiba", "cartão de visita curitiba", "papel timbrado curitiba"],
+      "Produzimos panfletos, flyers, cartões de visita, papel timbrado e materiais de identidade visual para vendas, divulgação e comunicação profissional.",
+    keywords: ["panfletos", "impressão flyer", "panfletos personalizados", "papelaria corporativa curitiba", "cartão de visita curitiba", "papel timbrado curitiba"],
     highlights: [
-      "Materiais institucionais de alto uso",
+      "Panfletos e flyers para divulgação rápida",
       "Padrão visual alinhado a marca",
       "Apoio para vendas e apresentações",
     ],

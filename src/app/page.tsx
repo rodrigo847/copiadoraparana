@@ -23,12 +23,22 @@ import {
 export const metadata: Metadata = {
   title: "Gráfica Rápida em Curitiba | Paraná Laser Copy",
   description:
-    "Gráfica rápida em Curitiba para impressão digital, adesivos, banners, encadernações e materiais corporativos com produção ágil e atendimento especializado.",
+    "Gráfica rápida em Curitiba para impressão digital, impressão a laser, adesivos com recorte, panfletos, banners, faixas, plotagem e materiais corporativos com produção ágil e atendimento especializado.",
   keywords: [
     "gráfica rápida curitiba",
+    "gráfica para adesivos",
     "impressão digital curitiba",
+    "impressão a laser",
+    "impressão colorida",
     "adesivos personalizados curitiba",
+    "adesivo recorte",
+    "panfletos curitiba",
+    "flyers curitiba",
     "banners curitiba",
+    "faixas curitiba",
+    "plotagem curitiba",
+    "impressão a3",
+    "impressão de apostilas",
     "encadernação curitiba",
     "copiadora paraná laser",
   ],
@@ -36,6 +46,39 @@ export const metadata: Metadata = {
     canonical: "/",
   },
 };
+
+const searchHighlightTopics = [
+  {
+    title: "Gráfica rápida e impressão digital",
+    description:
+      "Atendimento para quem busca gráfica rápida, impressão digital, impressão colorida e impressão a laser em Curitiba.",
+  },
+  {
+    title: "Adesivos com recorte especial",
+    description:
+      "Produção de gráfica para adesivos, adesivo com recorte eletrônico, rótulos e etiquetas para marca, vitrine e embalagem.",
+  },
+  {
+    title: "Panfletos, flyers e apostilas",
+    description:
+      "Impressão de panfletos, flyers, apostilas e materiais promocionais com orientação sobre papel, formato e acabamento.",
+  },
+  {
+    title: "Banners, faixas e comunicação visual",
+    description:
+      "Impressão de banners, faixas e peças de comunicação visual para loja, evento, campanha e ponto de venda.",
+  },
+  {
+    title: "Plotagem e impressão A3",
+    description:
+      "Serviço de plotagem, plotagem gráfica, impressão A3 e grandes formatos para arquitetura, engenharia e apresentação técnica.",
+  },
+  {
+    title: "Gráfica perto de mim em Curitiba",
+    description:
+      "Estrutura no Batel para quem procura gráfica perto de mim, com retirada local, atendimento por WhatsApp e suporte comercial.",
+  },
+];
 
 const productImageMap: Record<string, string> = {
   "Banners e Roll-ups": "/img/banner.jpg",
@@ -73,7 +116,7 @@ export default function HomePage() {
 
       <main className="flex flex-1 flex-col">
         <section id="inicio" className="mx-auto w-full max-w-7xl scroll-mt-28 px-3 pt-5 pb-7 sm:px-6 sm:pt-8 sm:pb-9 lg:px-10 lg:pt-16 lg:pb-16">
-          <div className="hero-panel relative isolate overflow-hidden rounded-3xl px-4 py-6 text-white sm:rounded-[2.1rem] sm:px-8 sm:py-10 lg:px-12 lg:py-14">
+          <div className="hero-panel relative isolate overflow-hidden rounded-3xl px-4 py-6 text-white sm:rounded-4xl sm:px-8 sm:py-10 lg:px-12 lg:py-14">
             <Image
               src="/img/Fundo.png"
               alt=""
@@ -90,11 +133,11 @@ export default function HomePage() {
 
                 <p className="text-2xl mb-3">Bem vindo a <br></br> Copiadora Paraná Laser</p>
                 <h1 className="mb-4 max-w-2xl font-heading text-4xl font-bold tracking-tight text-balance sm:mb-6 sm:text-5xl lg:text-6xl">
-                  Soluções gráficas em tempo recorde
+                  Gráfica rápida em Curitiba para impressão digital, adesivos, banners e plotagem
                 </h1>
 
                 <p className="mt-4 max-w-2xl text-base leading-7 text-[#c5dcfb] sm:mt-6 sm:text-xl sm:leading-8">
-                  Impressões Laser em alta Gramatura, Jato de Tinta e PB, Adesivos com Recorte especial, banners, Digitalizações/Scanner de documentos até A0, Impressões em Acrílico, PS, Vidro e Metal, tudo com a agilidade que sua marca precisa para se destacar.
+                  Impressão a laser, impressão digital, adesivos com recorte especial, panfletos, flyers, banners, faixas, impressão A3 e serviço de plotagem, tudo com a agilidade que sua marca precisa para se destacar.
                 </p>
 
                 <span className="mt-4 inline-flex rounded-full bg-white/5 px-4 py-2 text-[0.72rem] tracking-[0.24em] text-[#a9cbfb]">
@@ -112,6 +155,18 @@ export default function HomePage() {
                     </svg>
                     Orça Fácil
                   </Link>
+                  <a
+                    href={site.whatsappHref}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/12 px-6 py-3 text-center text-sm font-semibold text-white transition hover:bg-white/20 sm:w-auto"
+                  >
+                    <svg className="mr-2 h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                      <path d="M7 4h10a3 3 0 013 3v10a3 3 0 01-3 3H9l-4 3V7a3 3 0 013-3z" />
+                      <path d="M8.5 9.5h7M8.5 12.5h4.5" />
+                    </svg>
+                    Falar no WhatsApp
+                  </a>
                 </div>
               </div>
 
@@ -173,12 +228,69 @@ export default function HomePage() {
 
         <ServicesProductsCarousel items={mostRequested} imageMap={productImageMap} />
 
+        <section className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-10 lg:py-8">
+          <div className="section-card rounded-4xl p-6 sm:p-8 lg:p-10">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+              <div className="max-w-2xl">
+                <span className="eyebrow">Por que escolher a Paraná Laser</span>
+                <h2 className="mt-4 font-heading text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+                  Mais do que impressão: parceria para entregar seu projeto com rapidez e confiança
+                </h2>
+              </div>
+              <p className="max-w-xl text-base leading-7 text-muted">
+                Atuamos com agilidade, orientação técnica e acabamento profissional para empresas, eventos e projetos pessoais.
+              </p>
+            </div>
+
+            <div className="mt-6 grid gap-4 md:grid-cols-3">
+              <div className="rounded-2xl border border-[#dceaff] bg-white/80 p-5">
+                <h3 className="font-heading text-xl font-bold text-[#123159]">Produção ágil</h3>
+                <p className="mt-2 text-sm leading-7 text-[#365a84]">Prazo enxuto para materiais urgentes e entregas com mais previsibilidade.</p>
+              </div>
+              <div className="rounded-2xl border border-[#dceaff] bg-white/80 p-5">
+                <h3 className="font-heading text-xl font-bold text-[#123159]">Atendimento humanizado</h3>
+                <p className="mt-2 text-sm leading-7 text-[#365a84]">Orientação prática para escolher o melhor material, acabamento e formato para cada demanda.</p>
+              </div>
+              <div className="rounded-2xl border border-[#dceaff] bg-white/80 p-5">
+                <h3 className="font-heading text-xl font-bold text-[#123159]">Qualidade técnica</h3>
+                <p className="mt-2 text-sm leading-7 text-[#365a84]">Foco em leitura, acabamento e resultado final para valorizar sua marca.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="mx-auto w-full max-w-7xl px-4 py-4 sm:px-6 lg:px-10 lg:py-6">
+          <div className="section-card rounded-4xl p-6 sm:p-8 lg:p-10">
+            <div className="max-w-3xl">
+              <span className="eyebrow">Serviços mais buscados</span>
+              <h2 className="mt-4 font-heading text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+                Destaques da gráfica para as buscas mais frequentes dos clientes em Curitiba
+              </h2>
+              <p className="mt-3 text-base leading-7 text-muted">
+                Reforçamos abaixo os serviços com maior volume de procura para facilitar a navegação e conectar a home com as demandas reais de pesquisa.
+              </p>
+            </div>
+
+            <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {searchHighlightTopics.map((topic) => (
+                <article
+                  key={topic.title}
+                  className="rounded-2xl border border-[#dceaff] bg-[linear-gradient(180deg,rgba(255,255,255,0.92),rgba(245,249,255,0.88))] p-5 transition hover:border-[#8eb8ee]"
+                >
+                  <h3 className="font-heading text-xl font-bold tracking-tight text-[#123159]">{topic.title}</h3>
+                  <p className="mt-2 text-sm leading-7 text-[#365a84]">{topic.description}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <section id="servicos" className="mx-auto w-full max-w-7xl scroll-mt-28 px-4 py-8 sm:px-6 lg:px-10 lg:py-10">
           <div className="grid gap-6 lg:grid-cols-2">
             {services.map((service) => (
               <article
                 key={service.title}
-                className="section-card relative isolate overflow-hidden rounded-[1.75rem] p-7 transition duration-300 hover:border-[#95c1ff]"
+                className="section-card relative isolate overflow-hidden rounded-3xl p-7 transition duration-300 hover:border-[#95c1ff]"
               >
                 {service.backgroundImage ? (
                   <>
@@ -319,7 +431,7 @@ export default function HomePage() {
                   return (
                     <article
                       key={step.title}
-                      className={`group relative isolate overflow-hidden rounded-[1.9rem] border ${variant.border} bg-[linear-gradient(180deg,rgba(255,255,255,0.94),rgba(247,251,255,0.9))] p-6 transition duration-300 hover:-translate-y-1.5 ${variant.glow}`}
+                      className={`group relative isolate overflow-hidden rounded-4xl border ${variant.border} bg-[linear-gradient(180deg,rgba(255,255,255,0.94),rgba(247,251,255,0.9))] p-6 transition duration-300 hover:-translate-y-1.5 ${variant.glow}`}
                     >
                       <div className="absolute inset-0 bg-[radial-gradient(circle_at_90%_8%,rgba(62,129,225,0.17),transparent_35%)]" />
 
@@ -349,11 +461,56 @@ export default function HomePage() {
 
 
         <section id="quem-somos" className="mx-auto w-full max-w-7xl scroll-mt-28 px-4 py-8 sm:px-6 lg:px-10 lg:py-10">
-          <div className="max-w-6xl border rounded-4xl border-[#cfe0fb]p-8 text-base leading-7 text-foreground p-4">
-            <span className="eyebrow">Quem somos</span>
-            <h2 className="mt-4 font-heading text-2xl tracking-tight text-white sm:text-3xl">
-              Uma empresa do ramo de Gráfica Rápida, Copiadora, Impressão Digital, Comunicação Visual e Papelaria fundada em 1997, com foco em agilidade, qualidade e atendimento personalizado para clientes corporativos e individuais em Curitiba.
-            </h2>
+          <div className="max-w-6xl rounded-4xl border border-[#cfe0fb] bg-[linear-gradient(135deg,rgba(255,255,255,0.96),rgba(242,248,255,0.9))] p-6 text-base leading-7 text-[#234a74] sm:p-8 lg:p-10">
+            <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr] lg:items-start">
+              <div>
+                <span className="eyebrow">Quem somos</span>
+                <h2 className="mt-4 font-heading text-2xl tracking-tight text-[#123159] sm:text-3xl">
+                  Gráfica rápida em Curitiba desde 1997, com atendimento ágil para empresas e clientes finais
+                </h2>
+                <p className="mt-4 max-w-3xl text-base leading-8 text-[#365a84] sm:text-lg">
+                  A Copiadora Paraná Laser atua no Batel, em Curitiba, com soluções em impressão digital, impressão a laser, adesivos, banners, plotagem, comunicação visual, encadernações e papelaria. Nosso foco é unir rapidez, orientação técnica e acabamento profissional para demandas corporativas e pedidos sob medida.
+                </p>
+
+                <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                  <a
+                    href={site.whatsappHref}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center justify-center rounded-full border border-[#7faee2] bg-white px-5 py-3 text-sm font-semibold text-[#0f3864] transition hover:bg-[#eff6ff] sm:w-auto"
+                  >
+                    Solicitar atendimento
+                  </a>
+                  <a
+                    href={site.googleMapsDirections}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center justify-center rounded-full border border-[#c8d9ef] bg-[#f7fbff] px-5 py-3 text-sm font-semibold text-[#335981] transition hover:bg-white sm:w-auto"
+                  >
+                    Ver localização no Batel
+                  </a>
+                </div>
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+                <div className="rounded-3xl border border-[#dceaff] bg-white/80 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#5f7ea5]">Desde 1997</p>
+                  <p className="mt-1 font-heading text-xl font-bold text-[#123159]">Experiência no mercado gráfico local</p>
+                </div>
+                <div className="rounded-3xl border border-[#dceaff] bg-white/80 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#5f7ea5]">Localização</p>
+                  <p className="mt-1 font-heading text-xl font-bold text-[#123159]">Batel, Curitiba, com retirada e atendimento rápido</p>
+                </div>
+                <div className="rounded-3xl border border-[#dceaff] bg-white/80 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#5f7ea5]">Atendimento</p>
+                  <p className="mt-1 font-heading text-xl font-bold text-[#123159]">Empresas, profissionais e clientes finais</p>
+                </div>
+                <div className="rounded-3xl border border-[#dceaff] bg-white/80 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#5f7ea5]">Especialidades</p>
+                  <p className="mt-1 font-heading text-xl font-bold text-[#123159]">Impressão digital, adesivos, banners, plotagem e papelaria</p>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
