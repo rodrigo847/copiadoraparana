@@ -45,14 +45,14 @@ export const FINISHING_TYPES: Record<string, PriceLabel> = {
 
 export const OPTIONAL_FINISHING_TYPES: Record<string, PriceLabel> = {
   sem_opcional: { name: "Nenhum", pricePerM2: 0 },
-  mascara: { name: "Máscara", pricePerM2: 300 },
-  laminacao_frio: { name: "Laminação a Frio", pricePerM2: 500 },
+  mascara: { name: "Máscara", pricePerM2: 90 },
+  laminacao_frio: { name: "Laminação a Frio", pricePerM2: 400 },
 };
 
 export const VERSO_TYPES: Record<string, PriceLabel> = {
   sem_verso: { name: "Sem verso", pricePerM2: 0 },
   com_verso: { name: "Com verso", pricePerM2: 60 },
-};
+}; 
 
 export const MINIMUM_PURCHASE = 60;
 export const UV_MINIMUM_SMALL_PIECE = 60;
