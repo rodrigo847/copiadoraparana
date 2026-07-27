@@ -264,7 +264,7 @@ export default function HomePage() {
             <div className="max-w-3xl">
               <span className="eyebrow">Serviços mais buscados</span>
               <h2 className="mt-4 font-heading text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-                Destaques da gráfica para as buscas mais frequentes dos clientes em Curitiba
+                Destaques da Copiadora para as buscas mais frequentes dos clientes em Curitiba
               </h2>
               <p className="mt-3 text-base leading-7 text-muted">
                 Reforçamos abaixo os serviços com maior volume de procura para facilitar a navegação e conectar a home com as demandas reais de pesquisa.
