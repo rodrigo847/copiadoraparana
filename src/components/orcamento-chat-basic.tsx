@@ -27,7 +27,7 @@ type ParsedRequest = {
   height: number | null;
   width: number | null;
   unit: Unit;
-  productType: "chaveiro" | "placa_pix" | null;
+  productType: "chaveiro" | "placa_pix" | "placa" | null;
   material: string | null;
   printingType: string | null;
   rigidMaterial: string | null;
@@ -274,9 +274,10 @@ function canUseOptionalFinishingForSelection(material: string, rigidMaterial: st
   return isVinylWithOptional || isPsRigid;
 }
 
-function detectProductType(text: string): "chaveiro" | "placa_pix" | null {
+function detectProductType(text: string): "chaveiro" | "placa_pix" | "placa" | null {
   if (/\bchaveiro(?:s)?\b/.test(text)) return "chaveiro";
   if (/\bplaca\s+(?:de\s+)?pix\b/.test(text)) return "placa_pix";
+  if (/\bplaca(?:s)?\b/.test(text)) return "placa";
   return null;
 }
 
@@ -481,6 +482,11 @@ function buildQuote(raw: string): QuoteResult {
     appliedRecommendation = true;
   }
 
+  if (productType === "placa" && rigidMaterial === "sem_rigido" && printingType === "uv") {
+    rigidMaterial = "ps_2mm";
+    appliedRecommendation = true;
+  }
+
   const canUseOptionalFinishing = canUseOptionalFinishingForSelection(material, rigidMaterial);
   if (!canUseOptionalFinishing) {
     optionalFinishing = "sem_opcional";
@@ -524,6 +530,8 @@ function buildQuote(raw: string): QuoteResult {
             ? "Exemplo recomendado: 50 chaveiros 5x7cm em acrilico 2mm com corte laser."
             : productType === "placa_pix"
               ? "Podemos cotar em opcoes como PS 2mm e Acrilico 2mm. O corte laser e indispensavel para montagem; a dobra e aplicada nas plaquinhas desses materiais. Exemplo: 10 placas de pix 20x30cm."
+              : productType === "placa"
+                ? "Para placa UV, informe o tamanho e, se quiser, o material rigido. Exemplo: placa 10x15cm UV em PS 2mm."
             : undefined,
       };
     }
@@ -537,6 +545,8 @@ function buildQuote(raw: string): QuoteResult {
           ? "Exemplo recomendado: 50 chaveiros 5x7cm em acrilico 2mm com corte laser."
           : productType === "placa_pix"
             ? "Podemos cotar em opcoes como PS 2mm e Acrilico 2mm. O corte laser e indispensavel para montagem; a dobra e aplicada nas plaquinhas desses materiais. Exemplo: 10 placas de pix 20x30cm."
+              : productType === "placa"
+                ? "Para placa UV, informe o tamanho e, se quiser, o material rigido. Exemplo: placa 10x15cm UV em PS 2mm."
           : undefined,
     };
   }
@@ -693,6 +703,80 @@ function buildQuote(raw: string): QuoteResult {
     return { ok: true, summary };
   }
 
+  if (productType === "placa" && printingType === "uv") {
+    const areaM2ForOptions = toAreaM2(safeHeight, safeWidth, unit);
+
+    const buildPlacaUvOption = (optionRigid: "ps_2mm" | "acrilico_2mm", title: string): string => {
+      const canUseOptionOptionalFinishing = canUseOptionalFinishingForSelection(material, optionRigid);
+      const materialPrice = MATERIALS[material]?.pricePerM2 ?? 0;
+      const printingPrice = PRINTING_TYPES[printingType]?.pricePerM2 || 0;
+      const rigidPrice = RIGID_MATERIALS[optionRigid]?.pricePerM2 || 0;
+      const finishingPrice = FINISHING_TYPES[finishing]?.pricePerM2 || 0;
+      const optionalFinishingPrice = canUseOptionOptionalFinishing
+        ? OPTIONAL_FINISHING_TYPES[optionalFinishing]?.pricePerM2 || 0
+        : 0;
+      const smallPieceMultiplier = areaM2ForOptions < 0.0009 ? 1.4 : 1;
+      const versoPrice = (VERSO_TYPES[verso]?.pricePerM2 || 0) * areaM2ForOptions;
+
+      const calculatedUnitPrice =
+        areaM2ForOptions * (materialPrice + printingPrice + rigidPrice + finishingPrice + optionalFinishingPrice) * smallPieceMultiplier +
+        versoPrice;
+
+      const isSmallerThanTwoByTwoCm = hCm < 2 && wCm < 2;
+      let optionUnitPrice = isSmallerThanTwoByTwoCm
+        ? Math.max(calculatedUnitPrice, MIN_UNIT_PRICE_SMALL_PIECE)
+        : calculatedUnitPrice;
+
+      if (isUvSmallPiece(printingType, hCm, wCm)) {
+        optionUnitPrice += UV_SMALL_PIECE_LABOR_SURCHARGE;
+      }
+
+      const itemMinimumPurchase = getMinimumPurchaseForItem(printingType, hCm, wCm);
+      const rawTotalPrice = optionUnitPrice * safeQuantity;
+      const totalPrice = Math.max(rawTotalPrice, itemMinimumPurchase);
+      const finalUnitPrice = totalPrice / safeQuantity;
+      const minimumWasApplied = rawTotalPrice < itemMinimumPurchase;
+      const optionalFinishingLabel = OPTIONAL_FINISHING_TYPES[optionalFinishing]?.name || optionalFinishing;
+      const printingLabel = PRINTING_TYPES[printingType]?.name || printingType;
+      const materialLabel = RIGID_MATERIALS[optionRigid]?.name || optionRigid;
+      const sizeLabel = `${safeHeight}x${safeWidth}${unit}`;
+
+      const lines = [
+        `➡️ **${title}**`,
+        `📦 Quantidade: ${safeQuantity} un.`,
+        `📐 Tamanho: ${sizeLabel}`,
+        `🧱 Material: ${materialLabel}`,
+        `🖨️ Impressao: ${printingLabel}`,
+        canUseOptionOptionalFinishing && optionalFinishing !== "sem_opcional"
+          ? `🧩 Item extra: ${optionalFinishingLabel}`
+          : null,
+        minimumWasApplied
+          ? `💵 Unitario real: ${formatCurrency(optionUnitPrice)}`
+          : `💵 Unitario: ${formatCurrency(finalUnitPrice)}`,
+        `💰 Total: ${formatCurrency(totalPrice)}`,
+      ].filter((line): line is string => Boolean(line));
+
+      if (minimumWasApplied) {
+        lines.push(`⚠️ Minimo aplicado: ${formatCurrency(itemMinimumPurchase)}.`);
+        lines.push(`🧾 Unitario neste orcamento (com minimo): ${formatCurrency(finalUnitPrice)}.`);
+      }
+
+      return lines.join("\n");
+    };
+
+    const summary = [
+      "Para placa UV, separamos duas opcoes para facilitar a escolha:",
+      "",
+      buildPlacaUvOption("ps_2mm", "Opcao Economica: PS 2mm"),
+      "",
+      buildPlacaUvOption("acrilico_2mm", "Opcao Premium: Acrilico 2mm"),
+      "",
+      "Se quiser, eu também posso detalhar acabamento, máscara ou laminação para cada opcao.",
+    ].join("\n");
+
+    return { ok: true, summary };
+  }
+
   const areaM2 = bannerMinimumApplied
     ? (pricingHCm * pricingWCm) / 10000
     : toAreaM2(safeHeight, safeWidth, unit);
@@ -774,6 +858,12 @@ function buildQuote(raw: string): QuoteResult {
     );
   }
 
+  if (productType === "placa" && printingType === "uv") {
+    summaryLines.push(
+      "💎 Também posso cotar essa mesma placa em acrílico premium. Se quiser, me peça o valor e eu comparo com o PS.",
+    );
+  }
+
   if (minimumWasApplied) {
     summaryLines.push(
       `⚠️ Aplicado valor mínimo de serviço: ${formatCurrency(itemMinimumPurchase)}.`,
@@ -850,54 +940,49 @@ export function OrcamentoChatBasic() {
 
   return (
     <section className="mx-auto w-full max-w-none rounded-2xl border border-[#c7d4e6] bg-[#f7f9fc] px-5 py-7 shadow-[0_12px_28px_rgba(19,38,68,0.08)] sm:px-7 sm:py-8">
-      <div className="space-y-5">
-        <aside className="rounded-2xl border border-[#d3e1f3] bg-white p-5 sm:p-6">
-          <div className="flex items-start gap-3">
-            <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#d9e9ff] text-[#165bb8]">
-              <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" />
-              </svg>
-            </span>
-            <div>
-              <h2 className="font-heading text-2xl tracking-tight text-[#0f1f39]">Chat de Orçamento!</h2>
-              <p className="mt-1 text-l text-[#4a6486]">Respostas Automáticas! App em desenvolvimento, erros e/ou falhas podem ocorrer!</p>
-              <p className="text-sm text-[#4a6486]">Em primeira fase, apenas para adesivos, banners, acrílico e placas.</p>
-            </div>
+      <div className="rounded-2xl border border-[#d3e1f3] bg-white p-5 sm:p-6">
+        <div className="flex items-start gap-3">
+          <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#d9e9ff] text-[#165bb8]">
+            <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+              <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" />
+            </svg>
+          </span>
+          <div>
+            <h2 className="font-heading text-2xl tracking-tight text-[#0f1f39]">Chat de Orçamento!</h2>
+            <p className="mt-1 text-l text-[#4a6486]">Respostas Automáticas! App em desenvolvimento, erros e/ou falhas podem ocorrer!</p>
+            <p className="text-sm text-[#4a6486]">Em primeira fase, apenas para adesivos, banners, acrílico e placas.</p>
           </div>
-
-          </aside>
-
-        <div className="rounded-2xl border border-[#d3e1f3] bg-white p-4 sm:p-5">
-          <div className="space-y-3">
-            {messages.map((message) => (
-              <div
-                key={message.id}
-                className={`max-w-[92%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
-                  message.role === "assistant"
-                    ? "bg-[#eef5ff] text-[#193a62]"
-                    : "ml-auto bg-[#1b63c4] text-white"
-                }`}
-              >
-                <p className="whitespace-pre-line">{message.text}</p>
-              </div>
-            ))}
-          </div>
-
-          <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-3 sm:flex-row">
-            <input
-              className="h-12 w-full rounded-2xl border border-[#c8d2df] bg-white px-4 text-[1rem] text-[#203653] outline-none transition focus:border-[#77a6e7]"
-              value={prompt}
-              onChange={(event) => setPrompt(event.target.value)}
-              placeholder={placeholder}
-            />
-            <button
-              type="submit"
-              className="inline-flex h-12 items-center justify-center rounded-2xl bg-[#79a2e3] px-6 text-[1rem] font-semibold text-white transition hover:bg-[#668fd3]"
-            >
-              Orçar
-            </button>
-          </form>
         </div>
+
+        <div className="mt-5 space-y-3">
+          {messages.map((message) => (
+            <div
+              key={message.id}
+              className={`max-w-[92%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+                message.role === "assistant"
+                  ? "bg-[#eef5ff] text-[#193a62]"
+                  : "ml-auto bg-[#1b63c4] text-white"
+              }`}
+            >
+              <p className="whitespace-pre-line">{message.text}</p>
+            </div>
+          ))}
+        </div>
+
+        <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-3 sm:flex-row">
+          <input
+            className="h-12 w-full rounded-2xl border border-[#c8d2df] bg-white px-4 text-[1rem] text-[#203653] outline-none transition focus:border-[#77a6e7]"
+            value={prompt}
+            onChange={(event) => setPrompt(event.target.value)}
+            placeholder={placeholder}
+          />
+          <button
+            type="submit"
+            className="inline-flex h-12 items-center justify-center rounded-2xl bg-[#79a2e3] px-6 text-[1rem] font-semibold text-white transition hover:bg-[#668fd3]"
+          >
+            Orçar
+          </button>
+        </form>
       </div>
     </section>
   );
