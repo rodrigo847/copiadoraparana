@@ -10,6 +10,7 @@ import {
   MATERIALS,
   MAX_QUANTITY,
   MIN_UNIT_PRICE_SMALL_PIECE,
+  OPTIONAL_FINISHING_TYPES,
   PRINTING_TYPES,
   RIGID_MATERIALS,
   UV_SMALL_PIECE_LABOR_SURCHARGE,
@@ -31,6 +32,7 @@ type ParsedRequest = {
   printingType: string | null;
   rigidMaterial: string | null;
   finishing: string | null;
+  optionalFinishing: string | null;
   verso: string | null;
 };
 
@@ -78,6 +80,37 @@ function normalizeText(input: string): string {
 
 function parseNumber(value: string): number {
   return Number.parseFloat(value.replace(",", "."));
+}
+
+function detectFromCatalogByName(
+  text: string,
+  catalog: Record<string, { name: string }>,
+  defaultKey: string,
+): string | null {
+  const entries = Object.entries(catalog).filter(([key]) => key !== defaultKey);
+
+  const scoredMatches = entries
+    .map(([key, option]) => {
+      const label = normalizeText(option.name);
+      const keyAsLabel = normalizeText(key.replace(/_/g, " "));
+      const matchesLabel = label.length > 2 && text.includes(label);
+      const matchesKey = keyAsLabel.length > 2 && text.includes(keyAsLabel);
+
+      if (!matchesLabel && !matchesKey) {
+        return null;
+      }
+
+      const score = Math.max(matchesLabel ? label.length : 0, matchesKey ? keyAsLabel.length : 0);
+      return { key, score };
+    })
+    .filter((item): item is { key: string; score: number } => item !== null)
+    .sort((a, b) => b.score - a.score);
+
+  if (scoredMatches.length > 0) {
+    return scoredMatches[0].key;
+  }
+
+  return null;
 }
 
 function formatSizeCm(value: number): string {
@@ -170,8 +203,8 @@ function detectMaterial(text: string): string | null {
   if (/\b(?:couche|offset)\s*150/.test(text)) return "papel_couche_fosco_150g";
   if (/\bcouche\b/.test(text)) return "papel_couche_fosco_150g";
   if (/\bpapel\b/.test(text)) return "papel_couche_fosco_150g";
-  
-  return null;
+
+  return detectFromCatalogByName(text, MATERIALS, "sem_material");
 }
 
 function detectPrintingType(text: string, material: string | null): string | null {
@@ -188,7 +221,7 @@ function detectPrintingType(text: string, material: string | null): string | nul
     return "eco_solvente";
   }
 
-  return null;
+  return detectFromCatalogByName(text, PRINTING_TYPES, "sem_impressao");
 }
 
 function detectRigidMaterial(text: string): string | null {
@@ -205,8 +238,8 @@ function detectRigidMaterial(text: string): string | null {
   // Other rigid materials
   if (/\b(?:c2s\s+)?triplex\b/.test(text)) return "c2s_triplex";
   if (/\bmaterial\s+cliente|cliente\s+fornece\b/.test(text)) return "forn_cliente";
-  
-  return null;
+
+  return detectFromCatalogByName(text, RIGID_MATERIALS, "sem_rigido");
 }
 
 function detectFinishing(text: string): string | null {
@@ -218,14 +251,21 @@ function detectFinishing(text: string): string | null {
   if (/\b(?:com\s+)?ilhos?\b/.test(text) || /\bollhos\b/.test(text)) return "com_ilhos";
   if (/\bmadeira\b/.test(text)) return "com_madeira";
   if (/\bcavalete\b/.test(text)) return "aplicacao_cavalete";
-  
+
+  const dynamicFinishing = detectFromCatalogByName(text, FINISHING_TYPES, "sem_acabamento");
+  if (dynamicFinishing) return dynamicFinishing;
+
   return "sem_acabamento";
+}
+
+function detectOptionalFinishing(text: string): string | null {
+  return detectFromCatalogByName(text, OPTIONAL_FINISHING_TYPES, "sem_opcional") || "sem_opcional";
 }
 
 function detectVerso(text: string): string | null {
   if (/\bcom\s+verso\b/.test(text) || /\bfrente\s+e\s+verso\b/.test(text) || /\bfrente.verso\b/.test(text)) return "com_verso";
   if (/\bfrente\b/.test(text) && /\bverso\b/.test(text)) return "com_verso";
-  return "sem_verso";
+  return detectFromCatalogByName(text, VERSO_TYPES, "sem_verso") || "sem_verso";
 }
 
 function detectProductType(text: string): "chaveiro" | "placa_pix" | null {
@@ -243,8 +283,10 @@ function buildBasePriceSummary(
   rigidMaterial: string,
   printingType: string,
   finishing: string,
+  optionalFinishing: string,
 ): string | null {
   const lines: string[] = [];
+  const canUseOptionalFinishing = material === "vinil_branco_brilho" || material === "vinil_branco_fosco";
 
   if (material !== "sem_material") {
     lines.push(
@@ -270,13 +312,20 @@ function buildBasePriceSummary(
     );
   }
 
+  if (canUseOptionalFinishing && optionalFinishing !== "sem_opcional") {
+    lines.push(
+      `Item extra: ${OPTIONAL_FINISHING_TYPES[optionalFinishing]?.name || optionalFinishing} = ${formatCurrency(OPTIONAL_FINISHING_TYPES[optionalFinishing]?.pricePerM2 || 0)}/m2;`,
+    );
+  }
+
   if (lines.length === 0) return null;
 
   const basePerM2 =
     (MATERIALS[material]?.pricePerM2 || 0) +
     (RIGID_MATERIALS[rigidMaterial]?.pricePerM2 || 0) +
     (PRINTING_TYPES[printingType]?.pricePerM2 || 0) +
-    (FINISHING_TYPES[finishing]?.pricePerM2 || 0);
+    (FINISHING_TYPES[finishing]?.pricePerM2 || 0) +
+    (canUseOptionalFinishing ? OPTIONAL_FINISHING_TYPES[optionalFinishing]?.pricePerM2 || 0 : 0);
 
   lines.push(`Valor base combinado: ${formatCurrency(basePerM2)}/m2;`);
   lines.push("Obs: valor final depende de tamanho, quantidade e regras de minimo.");
@@ -361,6 +410,7 @@ function parseRequest(raw: string): ParsedRequest {
   const rigidMaterial = detectRigidMaterial(text);
   const printingType = detectPrintingType(text, material);
   const finishing = detectFinishing(text);
+  const optionalFinishing = detectOptionalFinishing(text);
   const verso = detectVerso(text);
 
   return {
@@ -373,6 +423,7 @@ function parseRequest(raw: string): ParsedRequest {
     printingType,
     rigidMaterial,
     finishing,
+    optionalFinishing,
     verso,
   };
 }
@@ -394,6 +445,7 @@ function buildQuote(raw: string): QuoteResult {
   let rigidMaterial = parsed.rigidMaterial ?? "sem_rigido";
   const printingType = parsed.printingType ?? "sem_impressao";
   let finishing = parsed.finishing ?? "sem_acabamento";
+  let optionalFinishing = parsed.optionalFinishing ?? "sem_opcional";
   const verso = parsed.verso ?? "sem_verso";
   let appliedRecommendation = false;
   let assumedBannerQuantity = false;
@@ -423,8 +475,19 @@ function buildQuote(raw: string): QuoteResult {
     appliedRecommendation = true;
   }
 
+  const canUseOptionalFinishing = material === "vinil_branco_brilho" || material === "vinil_branco_fosco";
+  if (!canUseOptionalFinishing) {
+    optionalFinishing = "sem_opcional";
+  }
+
   if (isMeterPriceQuestion) {
-    const priceSummary = buildBasePriceSummary(material, rigidMaterial, printingType, finishing);
+    const priceSummary = buildBasePriceSummary(
+      material,
+      rigidMaterial,
+      printingType,
+      finishing,
+      optionalFinishing,
+    );
     if (priceSummary) {
       return { ok: true, summary: priceSummary };
     }
@@ -544,11 +607,14 @@ function buildQuote(raw: string): QuoteResult {
       const printingPrice = PRINTING_TYPES[printingType]?.pricePerM2 || 0;
       const rigidPrice = RIGID_MATERIALS[optionRigid]?.pricePerM2 || 0;
       const finishingPrice = FINISHING_TYPES[optionFinishing]?.pricePerM2 || 0;
+      const optionalFinishingPrice = canUseOptionalFinishing
+        ? OPTIONAL_FINISHING_TYPES[optionalFinishing]?.pricePerM2 || 0
+        : 0;
       const smallPieceMultiplier = areaM2ForOptions < 0.0009 ? 1.4 : 1;
       const versoPrice = (VERSO_TYPES[verso]?.pricePerM2 || 0) * areaM2ForOptions;
 
       const calculatedUnitPrice =
-        areaM2ForOptions * (materialPrice + printingPrice + rigidPrice + finishingPrice) * smallPieceMultiplier +
+        areaM2ForOptions * (materialPrice + printingPrice + rigidPrice + finishingPrice + optionalFinishingPrice) * smallPieceMultiplier +
         versoPrice;
 
       const isSmallerThanTwoByTwoCm = hCm < 2 && wCm < 2;
@@ -570,6 +636,7 @@ function buildQuote(raw: string): QuoteResult {
           ? Math.ceil(itemMinimumPurchase / optionUnitPrice)
           : null;
       const finishingLabel = FINISHING_TYPES[optionFinishing]?.name || optionFinishing;
+      const optionalFinishingLabel = OPTIONAL_FINISHING_TYPES[optionalFinishing]?.name || optionalFinishing;
       const printingLabel = PRINTING_TYPES[printingType]?.name || printingType;
       const materialLabel = RIGID_MATERIALS[optionRigid]?.name || optionRigid;
       const sizeLabel = `${safeHeight}x${safeWidth}${unit}`;
@@ -581,6 +648,9 @@ function buildQuote(raw: string): QuoteResult {
         `🧱 Material: ${materialLabel}`,
         printingLabel !== "Sem impressao" ? `🖨️ Impressao: ${printingLabel}` : null,
         `✂️ Acabamento: ${finishingLabel}`,
+        canUseOptionalFinishing && optionalFinishing !== "sem_opcional"
+          ? `🧩 Item extra: ${optionalFinishingLabel}`
+          : null,
         minimumWasApplied
           ? `💵 Unitario real: ${formatCurrency(optionUnitPrice)}`
           : `💵 Unitario: ${formatCurrency(finalUnitPrice)}`,
@@ -623,11 +693,14 @@ function buildQuote(raw: string): QuoteResult {
   const printingPrice = PRINTING_TYPES[printingType]?.pricePerM2 || 0;
   const rigidPrice = RIGID_MATERIALS[rigidMaterial]?.pricePerM2 || 0;
   const finishingPrice = FINISHING_TYPES[finishing]?.pricePerM2 || 0;
+  const optionalFinishingPrice = canUseOptionalFinishing
+    ? OPTIONAL_FINISHING_TYPES[optionalFinishing]?.pricePerM2 || 0
+    : 0;
   const smallPieceMultiplier = areaM2 < 0.0009 ? 1.4 : 1;
   const versoPrice = (VERSO_TYPES[verso]?.pricePerM2 || 0) * areaM2;
 
   const calculatedUnitPrice =
-    areaM2 * (materialPrice + printingPrice + rigidPrice + finishingPrice) * smallPieceMultiplier +
+    areaM2 * (materialPrice + printingPrice + rigidPrice + finishingPrice + optionalFinishingPrice) * smallPieceMultiplier +
     versoPrice;
 
   const isSmallerThanTwoByTwoCm = hCm < 2 && wCm < 2;
@@ -649,6 +722,7 @@ function buildQuote(raw: string): QuoteResult {
       ? Math.ceil(itemMinimumPurchase / unitPrice)
       : null;
   const finishingLabel = FINISHING_TYPES[finishing]?.name || finishing;
+  const optionalFinishingLabel = OPTIONAL_FINISHING_TYPES[optionalFinishing]?.name || optionalFinishing;
   const printingLabel = PRINTING_TYPES[printingType]?.name || printingType;
   const materialLabel = MATERIALS[material]?.name || material;
   const rigidLabel = RIGID_MATERIALS[rigidMaterial]?.name || rigidMaterial;
@@ -661,17 +735,21 @@ function buildQuote(raw: string): QuoteResult {
     substrateLabel,
     printingLabel !== "Sem impressao" ? printingLabel : null,
     finishing !== "sem_acabamento" ? finishingLabel : null,
+    canUseOptionalFinishing && optionalFinishing !== "sem_opcional" ? optionalFinishingLabel : null,
     verso !== "sem_verso" ? versoLabel : null,
   ].filter(Boolean).join(", ");
 
   const summaryLines = [
     `📋 **Especificação:** ${specs}`,
     `📦 **Quantidade:** ${safeQuantity} un.`,
+    canUseOptionalFinishing && optionalFinishing !== "sem_opcional"
+      ? `🧩 **Item extra aplicado:** ${optionalFinishingLabel}`
+      : null,
     minimumWasApplied
       ? `💵 **Valor Unitário (real):** ${formatCurrency(unitPrice)}`
       : `💵 **Valor Unitário:** ${formatCurrency(finalUnitPrice)}`,
     `💰 **Valor Total:** ${formatCurrency(totalPrice)}`,
-  ];
+  ].filter((line): line is string => Boolean(line));
 
   if (productType === "chaveiro" && appliedRecommendation) {
     summaryLines.push(

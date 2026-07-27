@@ -45,8 +45,9 @@ export const FINISHING_TYPES: Record<string, PriceLabel> = {
 
 export const OPTIONAL_FINISHING_TYPES: Record<string, PriceLabel> = {
   sem_opcional: { name: "Nenhum", pricePerM2: 0 },
-  mascara: { name: "Máscara", pricePerM2: 90 },
-  laminacao_frio: { name: "Laminação a Frio", pricePerM2: 400 },
+  mascara: { name: "Máscara Transparente", pricePerM2: 90 },
+  mascara_papel: { name: "Máscara de papel", pricePerM2: 45 },
+  laminacao_frio: { name: "Laminação a Frio", pricePerM2: 90 },
 };
 
 export const VERSO_TYPES: Record<string, PriceLabel> = {
