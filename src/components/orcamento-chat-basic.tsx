@@ -277,6 +277,7 @@ function canUseOptionalFinishingForSelection(material: string, rigidMaterial: st
 function detectProductType(text: string): "chaveiro" | "placa_pix" | "placa" | null {
   if (/\bchaveiro(?:s)?\b/.test(text)) return "chaveiro";
   if (/\bplaca\s+(?:de\s+)?pix\b/.test(text)) return "placa_pix";
+  if (/\bchapa(?:s)?\b/.test(text)) return "placa";
   if (/\bplaca(?:s)?\b/.test(text)) return "placa";
   return null;
 }
@@ -455,14 +456,18 @@ function buildQuote(raw: string): QuoteResult {
   let optionalFinishing = parsed.optionalFinishing ?? "sem_opcional";
   const verso = parsed.verso ?? "sem_verso";
   let appliedRecommendation = false;
+  let assumedDefaultQuantity = false;
   let assumedBannerQuantity = false;
   let bannerMinimumApplied = false;
   let bannerMinimumRequestedLabel: string | null = null;
   let bannerMinimumChargedLabel: string | null = null;
 
-  if (!quantity && material !== "sem_material" && isBannerMaterial(material)) {
+  if (!quantity) {
     quantity = 1;
-    assumedBannerQuantity = true;
+    assumedDefaultQuantity = true;
+    if (material !== "sem_material" && isBannerMaterial(material)) {
+      assumedBannerQuantity = true;
+    }
   }
 
   if (productType === "chaveiro") {
@@ -849,6 +854,8 @@ function buildQuote(raw: string): QuoteResult {
   }
 
   if (assumedBannerQuantity) {
+    summaryLines.push("ℹ️ Quantidade nao informada: considerei 1 unidade para o calculo.");
+  } else if (assumedDefaultQuantity) {
     summaryLines.push("ℹ️ Quantidade nao informada: considerei 1 unidade para o calculo.");
   }
 
