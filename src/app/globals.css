@@ -179,6 +179,72 @@ a {
   display: none;
 }
 
+.demo-mouse-path {
+  animation: demoMousePath 4.5s ease-in-out infinite;
+}
+
+.demo-mouse-click {
+  animation: demoMouseClick 4.5s ease-in-out infinite;
+}
+
+.demo-typing-text {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 2px solid rgba(25, 58, 98, 0.55);
+  width: 0;
+  animation: demoCaret 0.8s step-end infinite;
+}
+
+.demo-response-reveal {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+.demo-typing-first {
+  animation: demoTypingFirst 30s steps(38, end) infinite, demoCaret 0.8s step-end infinite;
+}
+
+.demo-response-first {
+  animation: demoResponseFirst 30s ease-in-out infinite;
+}
+
+.demo-typing-second {
+  animation: demoTypingSecond 30s steps(36, end) infinite, demoCaret 0.8s step-end infinite;
+}
+
+.demo-response-second {
+  animation: demoResponseSecond 30s ease-in-out infinite;
+}
+
+.demo-sequence-stage {
+  position: relative;
+  min-height: 24rem;
+  overflow: hidden;
+}
+
+.demo-sequence-card {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.demo-sequence-card-first {
+  animation: demoSequenceFirst 30s ease-in-out infinite;
+  z-index: 2;
+}
+
+.demo-sequence-card-second {
+  animation: demoSequenceSecond 30s ease-in-out infinite;
+  z-index: 1;
+}
+
+@media (max-width: 640px) {
+  .demo-sequence-stage {
+    min-height: 28.5rem;
+  }
+}
+
 @keyframes revealUp {
   from {
     opacity: 0;
@@ -188,5 +254,225 @@ a {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes demoMousePath {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.92);
+  }
+
+  12% {
+    opacity: 1;
+  }
+
+  35% {
+    transform: translate(14px, 7px) scale(1);
+  }
+
+  62% {
+    transform: translate(28px, 14px) scale(1);
+  }
+
+  86% {
+    transform: translate(42px, 22px) scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(48px, 26px) scale(0.92);
+  }
+}
+
+@keyframes demoMouseClick {
+  0%,
+  18%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(31, 105, 204, 0.16);
+  }
+
+  24% {
+    transform: scale(0.9);
+    box-shadow: 0 0 0 16px rgba(31, 105, 204, 0.06);
+  }
+
+  30% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(31, 105, 204, 0.16);
+  }
+}
+
+@keyframes demoTyping {
+  0% {
+    width: 0;
+  }
+
+  24% {
+    width: 0;
+  }
+
+  60% {
+    width: 100%;
+  }
+
+  84% {
+    width: 100%;
+  }
+
+  100% {
+    width: 0;
+  }
+}
+
+@keyframes demoCaret {
+  0%,
+  31% {
+    border-right-color: rgba(25, 58, 98, 0.62);
+  }
+
+  32%,
+  100% {
+    border-right-color: transparent;
+  }
+}
+
+@keyframes demoResponseReveal {
+  0%,
+  68% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  78% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  92% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes demoSequenceFirst {
+  0%,
+  4% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  8%,
+  62% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  66%,
+  100% {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes demoSequenceSecond {
+  0%,
+  64% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  68%,
+  99% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes demoTypingFirst {
+  0%,
+  8% {
+    width: 0;
+  }
+
+  24% {
+    width: 100%;
+  }
+
+  30% {
+    width: 100%;
+  }
+
+  100% {
+    width: 0;
+  }
+}
+
+@keyframes demoResponseFirst {
+  0%,
+  30% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  34%,
+  57.5% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@keyframes demoTypingSecond {
+  0%,
+  70% {
+    width: 0;
+  }
+
+  74% {
+    width: 100%;
+  }
+
+  80% {
+    width: 100%;
+  }
+
+  100% {
+    width: 0;
+  }
+}
+
+@keyframes demoResponseSecond {
+  0%,
+  74% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  78%,
+  99.5% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(6px);
   }
 }
