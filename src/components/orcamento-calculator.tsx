@@ -124,8 +124,10 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
     [items]
   );
 
+  const isPsRigidMaterial =
+    rigidMaterial === "ps_1mm" || rigidMaterial === "ps_2mm" || rigidMaterial === "ps_3mm";
   const canUseOptionalFinishing =
-    material === "vinil_branco_brilho" || material === "vinil_branco_fosco";
+    material === "vinil_branco_brilho" || material === "vinil_branco_fosco" || isPsRigidMaterial;
 
   const minimumPerServiceHint = useMemo(() => {
     const h = Number.parseFloat(height);
@@ -731,12 +733,15 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
                 setRigidMaterial(value);
                 if (value !== "sem_rigido") {
                   setMaterial("sem_material");
-                  setOptionalFinishing("sem_opcional");
+                  if (value !== "ps_1mm" && value !== "ps_2mm" && value !== "ps_3mm") {
+                    setOptionalFinishing("sem_opcional");
+                  }
                   if (printingType === "eco_solvente") {
                     setPrintingType("sem_impressao");
                   }
                 } else {
                   setVerso("sem_verso");
+                  setOptionalFinishing("sem_opcional");
                 }
               }}
             >

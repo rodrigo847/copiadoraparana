@@ -268,6 +268,12 @@ function detectVerso(text: string): string | null {
   return detectFromCatalogByName(text, VERSO_TYPES, "sem_verso") || "sem_verso";
 }
 
+function canUseOptionalFinishingForSelection(material: string, rigidMaterial: string): boolean {
+  const isVinylWithOptional = material === "vinil_branco_brilho" || material === "vinil_branco_fosco";
+  const isPsRigid = rigidMaterial === "ps_1mm" || rigidMaterial === "ps_2mm" || rigidMaterial === "ps_3mm";
+  return isVinylWithOptional || isPsRigid;
+}
+
 function detectProductType(text: string): "chaveiro" | "placa_pix" | null {
   if (/\bchaveiro(?:s)?\b/.test(text)) return "chaveiro";
   if (/\bplaca\s+(?:de\s+)?pix\b/.test(text)) return "placa_pix";
@@ -286,7 +292,7 @@ function buildBasePriceSummary(
   optionalFinishing: string,
 ): string | null {
   const lines: string[] = [];
-  const canUseOptionalFinishing = material === "vinil_branco_brilho" || material === "vinil_branco_fosco";
+  const canUseOptionalFinishing = canUseOptionalFinishingForSelection(material, rigidMaterial);
 
   if (material !== "sem_material") {
     lines.push(
@@ -475,7 +481,7 @@ function buildQuote(raw: string): QuoteResult {
     appliedRecommendation = true;
   }
 
-  const canUseOptionalFinishing = material === "vinil_branco_brilho" || material === "vinil_branco_fosco";
+  const canUseOptionalFinishing = canUseOptionalFinishingForSelection(material, rigidMaterial);
   if (!canUseOptionalFinishing) {
     optionalFinishing = "sem_opcional";
   }
@@ -603,11 +609,12 @@ function buildQuote(raw: string): QuoteResult {
     const optionFinishing = finishing === "sem_acabamento" ? "corte_dobra" : finishing;
 
     const buildPlacaPixOption = (optionRigid: "ps_2mm" | "acrilico_2mm", title: string): string => {
+      const canUseOptionOptionalFinishing = canUseOptionalFinishingForSelection(material, optionRigid);
       const materialPrice = MATERIALS[material]?.pricePerM2 ?? 0;
       const printingPrice = PRINTING_TYPES[printingType]?.pricePerM2 || 0;
       const rigidPrice = RIGID_MATERIALS[optionRigid]?.pricePerM2 || 0;
       const finishingPrice = FINISHING_TYPES[optionFinishing]?.pricePerM2 || 0;
-      const optionalFinishingPrice = canUseOptionalFinishing
+      const optionalFinishingPrice = canUseOptionOptionalFinishing
         ? OPTIONAL_FINISHING_TYPES[optionalFinishing]?.pricePerM2 || 0
         : 0;
       const smallPieceMultiplier = areaM2ForOptions < 0.0009 ? 1.4 : 1;
@@ -648,7 +655,7 @@ function buildQuote(raw: string): QuoteResult {
         `🧱 Material: ${materialLabel}`,
         printingLabel !== "Sem impressao" ? `🖨️ Impressao: ${printingLabel}` : null,
         `✂️ Acabamento: ${finishingLabel}`,
-        canUseOptionalFinishing && optionalFinishing !== "sem_opcional"
+        canUseOptionOptionalFinishing && optionalFinishing !== "sem_opcional"
           ? `🧩 Item extra: ${optionalFinishingLabel}`
           : null,
         minimumWasApplied
