@@ -99,6 +99,51 @@ const productImageMap: Record<string, string> = {
   "Wobblers promocionais": "/img/wobler.jpg",
 };
 
+const landingProcessVideos = [
+  {
+    id: "impressao-uv",
+    title: "Impressao UV",
+    description: "Qualidade de impressao em materiais rigidos com acabamento profissional.",
+    videoSrc: "/videos/impressao_uv.mp4",
+    posterSrc: "/img/banner.jpg",
+  },
+  {
+    id: "impressao-ecosolvente",
+    title: "Impressao ecosolvente",
+    description: "Producao em escala para comunicacao visual com consistencia de cor.",
+    videoSrc: "/videos/impressao_ecosolvente.mp4",
+    posterSrc: "/img/material_evento.png",
+  },
+  {
+    id: "meio-corte",
+    title: "Meio corte",
+    description: "Recorte limpo para adesivos, rotulos e pecas personalizadas.",
+    videoSrc: "/videos/meio_corte.mp4",
+    posterSrc: "/img/adesivoredondo.png",
+  },
+  {
+    id: "corte-laser",
+    title: "Corte laser",
+    description: "Detalhamento tecnico para pecas especiais e acabamento premium.",
+    videoSrc: "/videos/corte_laser.mp4",
+    posterSrc: "/img/display.jpg",
+  },
+  {
+    id: "adesivo",
+    title: "Producao de adesivos",
+    description: "Padrao visual uniforme para campanhas, vitrines e rotulagem.",
+    videoSrc: "/videos/Adesivo.mp4",
+    posterSrc: "/img/adesivoredondo.png",
+  },
+  {
+    id: "cracha",
+    title: "Crachas",
+    description: "Identificacao corporativa com agilidade e apresentacao profissional.",
+    videoSrc: "/videos/cracha.mp4",
+    posterSrc: "/img/cracha.jpg",
+  },
+] as const;
+
 export default function HomePage() {
   return (
     <div className="page-shell">
@@ -394,6 +439,36 @@ export default function HomePage() {
                 Você tem a ideia, nós temos a solução gráfica para tornar realidade. <br /><br />Veja como funciona!
               </h2>
             </div>
+
+            <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {landingProcessVideos.map((item) => (
+                <article
+                  key={item.id}
+                  className="overflow-hidden rounded-3xl border border-[#d8e6fb] bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(246,250,255,0.9))] shadow-[0_10px_24px_rgba(19,38,68,0.08)]"
+                >
+                  <div className="aspect-video bg-[#e6efff]">
+                    <video
+                      className="h-full w-full object-cover"
+                      controls
+                      muted
+                      loop
+                      playsInline
+                      preload="metadata"
+                      poster={item.posterSrc}
+                    >
+                      <source src={item.videoSrc} type="video/mp4" />
+                      Seu navegador nao suporta reproducao de video.
+                    </video>
+                  </div>
+                  <div className="space-y-1 px-4 py-3 sm:px-5 sm:py-4">
+                    <p className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[#5f7ea5]">Bastidores em video</p>
+                    <h3 className="font-heading text-xl font-bold text-[#123159]">{item.title}</h3>
+                    <p className="text-sm leading-6 text-[#365a84]">{item.description}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+
             <div className="relative mt-8">
               <div className="pointer-events-none absolute left-[12%] right-[12%] top-10 hidden h-0.5 bg-[linear-gradient(90deg,rgba(22,100,207,0.18),rgba(22,100,207,0.48),rgba(22,100,207,0.18))] lg:block" />
 
