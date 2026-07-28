@@ -4,6 +4,7 @@ import Link from "next/link";
 import Script from "next/script";
 
 import { CopyWhatsappCard } from "@/components/copy-whatsapp-card";
+import { SilentVideo } from "@/components/silent-video";
 import { ServicesProductsCarousel } from "@/components/services-products-carousel";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -447,18 +448,15 @@ export default function HomePage() {
                   className="overflow-hidden rounded-3xl border border-[#d8e6fb] bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(246,250,255,0.9))] shadow-[0_10px_24px_rgba(19,38,68,0.08)]"
                 >
                   <div className="aspect-video bg-[#e6efff]">
-                    <video
+                    <SilentVideo
+                      src={item.videoSrc}
+                      poster={item.posterSrc}
                       className="h-full w-full object-cover"
                       controls
-                      muted
                       loop
                       playsInline
                       preload="metadata"
-                      poster={item.posterSrc}
-                    >
-                      <source src={item.videoSrc} type="video/mp4" />
-                      Seu navegador nao suporta reproducao de video.
-                    </video>
+                    />
                   </div>
                   <div className="space-y-1 px-4 py-3 sm:px-5 sm:py-4">
                     <p className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[#5f7ea5]">Bastidores em video</p>

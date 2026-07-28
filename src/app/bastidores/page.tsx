@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { SilentVideo } from "@/components/silent-video";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { site } from "@/lib/site";
@@ -97,18 +98,15 @@ export default function BastidoresPage() {
                   className="overflow-hidden rounded-3xl border border-[#d0e0f2] bg-white shadow-[0_10px_26px_rgba(19,38,68,0.09)]"
                 >
                   <div className="aspect-video bg-[#ddeaff]">
-                    <video
+                    <SilentVideo
+                      src={step.videoSrc}
+                      poster={step.posterSrc}
                       className="h-full w-full object-cover"
                       controls
-                      muted
                       loop
                       playsInline
                       preload="metadata"
-                      poster={step.posterSrc}
-                    >
-                      <source src={step.videoSrc} type="video/mp4" />
-                      Seu navegador nao suporta reproducao de video.
-                    </video>
+                    />
                   </div>
 
                   <div className="space-y-2 px-4 py-4">
