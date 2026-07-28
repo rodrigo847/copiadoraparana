@@ -49,7 +49,7 @@ export default function OrcaFacilPage() {
                         <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor" aria-hidden="true">
                           <path d="M8 6.4a1 1 0 0 1 1.52-.85l7.5 4.6a1 1 0 0 1 0 1.7l-7.5 4.6A1 1 0 0 1 8 15.6V6.4z" />
                         </svg>
-                        <span>Assistir demonstração</span>
+                        <span>Ver demonstração</span>
                       </span>
                       <span className="hidden items-center gap-2 group-open:inline-flex">
                         <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
