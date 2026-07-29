@@ -6,6 +6,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import { FloatingOrcamentoButton } from "@/components/floating-orcamento-button";
 import { FontSizeToggle } from "@/components/font-size-toggle";
+import { GsapScrollProvider } from "@/components/gsap-scroll-provider";
 
 import "./globals.css";
 
@@ -79,7 +80,7 @@ export default function RootLayout({
   return (
     <html
       lang="pt-BR"
-      className={`${headingFont.variable} ${bodyFont.variable} h-full scroll-smooth antialiased`}
+      className={`${headingFont.variable} ${bodyFont.variable} h-full antialiased`}
     >
       <head>
         <Script
@@ -105,7 +106,12 @@ export default function RootLayout({
             style={{ display: "none", visibility: "hidden" }}
           />
         </noscript>
-        {children}
+        <GsapScrollProvider />
+        <div id="smooth-wrapper" className="min-h-full">
+          <div id="smooth-content" className="min-h-full">
+            {children}
+          </div>
+        </div>
         <FontSizeToggle />
         <FloatingOrcamentoButton />
         <Analytics />
