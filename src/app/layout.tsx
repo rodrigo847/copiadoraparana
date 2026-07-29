@@ -23,11 +23,11 @@ const bodyFont = IBM_Plex_Sans({
 export const metadata: Metadata = {
   metadataBase: new URL("https://copiadoraparana.com.br"),
   title: {
-    default: "Paraná Laser Copy | Copiadora Paraná Laser",
+    default: "Copiadora e Gráfica em Curitiba | Paraná Laser Copy",
     template: "%s | Paraná Laser Copy",
   },
   description:
-    "Gráfica rápida em Curitiba com produção ágil, atendimento consultivo e soluções para impressão gráfica, materiais corporativos e projetos visuais.",
+    "Copiadora e gráfica em Curitiba com impressão digital, impressão a laser, adesivos, banners, panfletos e materiais corporativos com atendimento rápido.",
   applicationName: "Paraná Laser Copy",
   keywords: [
     "copiadora Paraná Laser",

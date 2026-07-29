@@ -3,7 +3,7 @@ export const site = {
   shortName: "Paraná Laser",
   domain: "https://copiadoraparana.com.br",
   description:
-    "Gráfica rápida em Curitiba com soluções gráficas em tempo recorde para materiais corporativos, projetos visuais e produção sob demanda.",
+    "Copiadora e gráfica em Curitiba com soluções gráficas em tempo recorde para materiais corporativos, projetos visuais e produção sob demanda.",
   phoneDisplay: "(41) 3078-2039",
   phoneHref: "tel:+554130782039",
   whatsappDisplay: "(41) 99679-9517",
@@ -100,32 +100,47 @@ export const serviceLandingPages: ServiceLandingPage[] = [
   },
   {
     slug: "adesivos-personalizados-curitiba",
-    title: "Gráfica para Adesivos em Curitiba",
-    headline: "Gráfica para adesivos com recorte eletrônico, rótulos e etiquetas personalizadas",
+    title: "Adesivos Personalizados e Rótulos em Curitiba",
+    headline: "Adesivos personalizados, etiquetas e rótulos para loja, embalagem e comunicação visual",
     metaDescription:
-      "Gráfica para adesivos em Curitiba com adesivo recorte, rótulos, etiquetas e materiais para vitrine, embalagem e comunicação visual.",
+      "Adesivos personalizados em Curitiba com recorte eletrônico, rótulos, etiquetas e soluções para vitrine, embalagem, sinalização e campanhas promocionais.",
     summary:
-      "Produzimos adesivos personalizados, adesivo com recorte, rótulos e etiquetas para marca, embalagem, vitrine e ações promocionais com formatos variados.",
-    keywords: ["gráfica para adesivos", "adesivos personalizados curitiba", "adesivo recorte", "rótulos curitiba", "etiquetas personalizadas", "adesivo plotagem"],
+      "Produzimos adesivos personalizados, adesivo com recorte, rótulos e etiquetas para marca, embalagem, vitrine, ponto de venda e ações promocionais com acabamento profissional.",
+    keywords: ["adesivos personalizados curitiba", "adesivos para loja", "adesivo recorte", "rótulos curitiba", "etiquetas personalizadas", "adesivo plotagem", "adesivos para embalagem"],
     highlights: [
-      "Recorte eletrônico para formatos customizados",
-      "Aplicação em produtos e pontos de venda",
-      "Materiais para campanhas promocionais e comunicação visual",
+      "Recorte eletrônico para formatos e tamanhos sob medida",
+      "Aplicação em produtos, embalagens e ponto de venda",
+      "Ideal para campanhas, vitrine e identificação visual",
     ],
   },
   {
     slug: "banners-rollups-curitiba",
-    title: "Banners e Faixas em Curitiba",
-    headline: "Impressão de banners e faixas para eventos, lojas e campanhas",
+    title: "Banners, Faixas e Roll-up em Curitiba",
+    headline: "Impressão de banners, faixas e roll-up para eventos, lojas e campanhas",
     metaDescription:
-      "Banners e faixas em Curitiba com impressão de banners para eventos, feiras, lojas e campanhas promocionais com acabamento técnico.",
+      "Banners e faixas em Curitiba com impressão para eventos, feiras, lojas e campanhas promocionais, além de roll-up e peças de comunicação visual.",
     summary:
-      "Produção de banners, faixas e peças de comunicação visual com opções de tamanho, estrutura, ilhós, madeira e acabamento conforme o ambiente.",
-    keywords: ["banners e faixas", "impressão de banners", "banner curitiba", "banner", "faixas e banners", "comunicação visual curitiba"],
+      "Produção de banners, faixas, roll-up e peças de comunicação visual com opções de tamanho, estrutura, ilhós, madeira e acabamento conforme o ambiente e a finalidade.",
+    keywords: ["banners curitiba", "faixas curitiba", "roll up curitiba", "impressão de banners", "material para eventos curitiba", "comunicação visual curitiba"],
     highlights: [
-      "Opções para uso interno e externo",
-      "Acabamentos com ilhós e estrutura",
-      "Ideal para eventos, campanhas e sinalização",
+      "Peças para uso interno e externo com boa durabilidade",
+      "Acabamentos com ilhós, estrutura e apoio técnico",
+      "Ideal para eventos, campanhas, feiras e sinalização",
+    ],
+  },
+  {
+    slug: "material-para-eventos-curitiba",
+    title: "Material para Eventos e Produção Gráfica em Curitiba",
+    headline: "Material para eventos com crachás, folders, cartazes e peças promocionais",
+    metaDescription:
+      "Material para eventos em Curitiba com crachás, folders, cartazes, banners e itens promocionais para feiras, congressos, ações e campanhas.",
+    summary:
+      "Montamos material para eventos com foco em identidade visual, organização e entrega rápida para feiras, convenções, treinamentos e ações promocionais.",
+    keywords: ["material para eventos curitiba", "material promocional curitiba", "folders curitiba", "crachás curitiba", "cartazes curitiba", "eventos curitiba"],
+    highlights: [
+      "Peças prontas para credenciamento, exposição e divulgação",
+      "Produção rápida para eventos com prazos apertados",
+      "Combinação de impressão, acabamento e organização visual",
     ],
   },
   {

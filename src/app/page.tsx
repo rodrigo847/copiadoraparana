@@ -22,10 +22,12 @@ import {
 } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Gráfica Rápida em Curitiba | Paraná Laser Copy",
+  title: "Copiadora e Gráfica Rápida em Curitiba | Paraná Laser Copy",
   description:
-    "Gráfica rápida em Curitiba para impressão digital, impressão a laser, adesivos com recorte, panfletos, banners, faixas, plotagem e materiais corporativos com produção ágil e atendimento especializado.",
+    "Copiadora em Curitiba com impressão digital, impressão a laser, adesivos com recorte, panfletos, banners, faixas, plotagem e materiais corporativos com produção ágil.",
   keywords: [
+    "copiadora em curitiba",
+    "copiadora curitiba",
     "gráfica rápida curitiba",
     "gráfica para adesivos",
     "impressão digital curitiba",
@@ -68,6 +70,11 @@ const searchHighlightTopics = [
     title: "Banners, faixas e comunicação visual",
     description:
       "Impressão de banners, faixas e peças de comunicação visual para loja, evento, campanha e ponto de venda.",
+  },
+  {
+    title: "Material para eventos e campanhas",
+    description:
+      "Crachás, folders, cartazes e peças promocionais para feiras, convenções e ações especiais em Curitiba.",
   },
   {
     title: "Plotagem e impressão A3",
@@ -179,11 +186,11 @@ export default function HomePage() {
 
                 <p className="text-2xl mb-3">Bem vindo a <br></br> Copiadora Paraná Laser</p>
                 <h1 className="mb-4 max-w-2xl font-heading text-4xl font-bold tracking-tight text-balance sm:mb-6 sm:text-5xl lg:text-6xl">
-                  Gráfica rápida em Curitiba para impressão digital, adesivos, banners e plotagem
+                  Copiadora e gráfica rápida em Curitiba para impressão digital, adesivos, banners e plotagem
                 </h1>
 
                 <p className="mt-4 max-w-2xl text-base leading-7 text-[#c5dcfb] sm:mt-6 sm:text-xl sm:leading-8">
-                  Impressão a laser, impressão digital, adesivos com recorte especial, panfletos, flyers, banners, faixas, impressão A3 e serviço de plotagem, tudo com a agilidade que sua marca precisa para se destacar.
+                  Se você procura uma copiadora em Curitiba para impressão digital, impressão a laser, adesivos com recorte especial, panfletos, flyers, banners, faixas, impressão A3 e serviço de plotagem, temos atendimento rápido e suporte especializado.
                 </p>
 
                 <span className="mt-4 inline-flex rounded-full bg-white/5 px-4 py-2 text-[0.72rem] tracking-[0.24em] text-[#a9cbfb]">
