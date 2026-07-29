@@ -11,43 +11,43 @@ const productionSteps = [
     id: "impressao-uv",
     title: "Impressao UV",
     description:
-      "Destaque qualidade de impressao em materiais rigidos com acabamento profissional.",
+      "Destaque qualidade de impressão em materiais rígidos com acabamento profissional.",
     videoSrc: "/videos/impressao-uv.mp4",
     posterSrc: "/img/banner.jpg",
-    benefit: "Alta definicao e fidelidade visual",
+    benefit: "Alta definição e fidelidade visual",
   },
   {
     id: "impressao-ecosolvente",
     title: "Impressao Ecosolvente",
     description:
-      "Mostre velocidade de producao para materiais de grande formato e comunicacao visual.",
+      "Mostre velocidade de produção para materiais de grande formato e comunicação visual.",
     videoSrc: "/videos/impressao_ecosolvente.mp4",
     posterSrc: "/img/material_evento.png",
-    benefit: "Escala com consistencia de cor",
+    benefit: "Escala com consistência de cor",
   },
   {
     id: "meio-corte",
     title: "Meio Corte",
     description:
-      "Apresente o recorte preciso para adesivos e rotulos com acabamento limpo.",
+      "Apresente o recorte preciso para adesivos e rótulos com acabamento limpo.",
     videoSrc: "/videos/meio_corte.mp4",
     posterSrc: "/img/adesivoredondo.png",
-    benefit: "Precisao no acabamento final",
+    benefit: "Precisão no acabamento final",
   },
   {
     id: "corte-laser",
     title: "Corte Laser",
     description:
-      "Mostre detalhamento em pecas personalizadas com alto nivel de precisao.",
+      "Mostre detalhamento em peças personalizadas com alto nível de precisão.",
     videoSrc: "/videos/corte_laser.mp4",
     posterSrc: "/img/display.jpg",
-    benefit: "Recorte tecnico e acabamento premium",
+    benefit: "Recorte técnico e acabamento premium",
   },
   {
     id: "adesivo",
-    title: "Producao de Adesivos",
+    title: "Produção de Adesivos",
     description:
-      "Evidencie padrao visual uniforme para campanhas, vitrines e rotulagem.",
+      "Evidencie padrão visual uniforme para campanhas, vitrines e rotulagem.",
     videoSrc: "/videos/Adesivo.mp4",
     posterSrc: "/img/adesivoredondo.png",
     benefit: "Repetibilidade e alta nitidez",
@@ -56,17 +56,17 @@ const productionSteps = [
     id: "cracha",
     title: "Crachas",
     description:
-      "Mostre o fluxo de producao para identificacao corporativa e eventos.",
+      "Mostre o fluxo de produção para identificação corporativa e eventos.",
     videoSrc: "/videos/cracha.mp4",
     posterSrc: "/img/cracha.jpg",
-    benefit: "Agilidade com padrao profissional",
+    benefit: "Agilidade com padrão profissional",
   },
 ] as const;
 
 export const metadata: Metadata = {
-  title: "Bastidores de Producao | Copiadora Parana Laser",
+  title: "Bastidores de Produção | Copiadora Parana Laser",
   description:
-    "Pagina para apresentar videos curtos dos equipamentos e etapas de producao da Copiadora Parana Laser.",
+    "Página para apresentar vídeos curtos dos equipamentos e etapas de produção da Copiadora Parana Laser.",
   alternates: {
     canonical: "/bastidores",
   },
@@ -84,11 +84,11 @@ export default function BastidoresPage() {
               Bastidores
             </span>
             <h1 className="mt-3 font-heading text-2xl font-bold tracking-tight text-[#0f1f39] sm:text-4xl">
-              Conheca nossos equipamentos em acao
+              Conheça nossos equipamentos em ação
             </h1>
             <p className="mt-2 max-w-4xl text-sm leading-7 text-[#58708f] sm:text-base">
-              Esta pagina foi pensada para videos curtos que mostram processo real, qualidade de acabamento e
-              agilidade na producao. O objetivo e reforcar confianca dentro da landing de forma limpa.
+              Esta página foi pensada para vídeos curtos que mostram processo real, qualidade de acabamento e
+              agilidade na produção. O objetivo é reforçar confiança dentro da landing de forma limpa.
             </p>
 
             <div className="mt-6 grid gap-4 sm:mt-8 sm:gap-5 lg:grid-cols-3">
