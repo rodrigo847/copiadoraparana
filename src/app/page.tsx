@@ -466,7 +466,6 @@ export default function HomePage() {
                     />
                   </div>
                   <div className="space-y-1 px-4 py-3 sm:px-5 sm:py-4">
-                    <p className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[#5f7ea5]">Bastidores em video</p>
                     <h3 className="font-heading text-xl font-bold text-[#123159]">{item.title}</h3>
                     <p className="text-sm leading-6 text-[#365a84]">{item.description}</p>
                   </div>
