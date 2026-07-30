@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { OrcamentoChatBasic } from "@/components/orcamento-chat-basic";
 import { OrcamentoCalculator } from "@/components/orcamento-calculator";
+import { OrcamentoMateriaisLaser } from "@/components/orcamento-materiais-laser";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { site } from "@/lib/site";
@@ -175,6 +176,10 @@ export default function OrcaFacilPage() {
 
               <div className="w-full min-[900px]:w-[85%]">
                 <OrcamentoCalculator whatsappHref={site.whatsappHref} />
+              </div>
+
+              <div className="w-full min-[900px]:w-[85%]">
+                <OrcamentoMateriaisLaser whatsappHref={site.whatsappHref} />
               </div>
             </div>
           </div>
