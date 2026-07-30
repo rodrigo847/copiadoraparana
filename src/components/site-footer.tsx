@@ -12,6 +12,7 @@ export function SiteFooter() {
             A melhor em impressão gráfica de Curitiba, agora com uma estrutura digital pensada para desempenho,
             clareza comercial e visibilidade orgânica.
           </p>
+          <p className="text-[0.95rem] text-[#a9c7ea] sm:text-sm">Razão Social: Onograf Cópias Ltda <br /> CNPJ: 01.906.658/0001-20</p>
         </div>
 
         <div className="space-y-3 text-[0.97rem] text-[#a9c7ea] sm:text-sm">
