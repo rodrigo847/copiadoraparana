@@ -11,6 +11,7 @@ type LaserQuoteItem = {
   size: string;
   finishing: string;
   estimatedDeadline: string;
+  paymentCondition: string;
   unitPrice: number;
   note: string;
 };
@@ -48,11 +49,13 @@ export function OrcamentoMateriaisLaser({ }: OrcamentoMateriaisLaserProps) {
   const [size, setSize] = useState("");
   const [finishing, setFinishing] = useState("");
   const [estimatedDeadline, setEstimatedDeadline] = useState("");
+  const [paymentCondition, setPaymentCondition] = useState("");
   const [unitPrice, setUnitPrice] = useState("");
   const [note, setNote] = useState("");
   const [items, setItems] = useState<LaserQuoteItem[]>([]);
   const [editingItemId, setEditingItemId] = useState<number | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [copiedItemId, setCopiedItemId] = useState<number | null>(null);
 
   const resetForm = () => {
     setQuantity("1");
@@ -61,6 +64,7 @@ export function OrcamentoMateriaisLaser({ }: OrcamentoMateriaisLaserProps) {
     setSize("");
     setFinishing("");
     setEstimatedDeadline("");
+    setPaymentCondition("");
     setUnitPrice("");
     setNote("");
     setEditingItemId(null);
@@ -116,6 +120,11 @@ export function OrcamentoMateriaisLaser({ }: OrcamentoMateriaisLaserProps) {
       return;
     }
 
+    if (!paymentCondition.trim()) {
+      setErrorMessage("Informe a condição de pagamento.");
+      return;
+    }
+
     if (!Number.isFinite(parsedPrice) || parsedPrice < 0) {
       setErrorMessage("Informe um valor unitário válido.");
       return;
@@ -130,6 +139,7 @@ export function OrcamentoMateriaisLaser({ }: OrcamentoMateriaisLaserProps) {
       size: size.trim(),
       finishing: finishing.trim(),
       estimatedDeadline: estimatedDeadline.trim(),
+      paymentCondition: paymentCondition.trim(),
       unitPrice: parsedPrice,
       note: note.trim(),
     };
@@ -152,6 +162,7 @@ export function OrcamentoMateriaisLaser({ }: OrcamentoMateriaisLaserProps) {
     setSize(item.size);
     setFinishing(item.finishing);
     setEstimatedDeadline(item.estimatedDeadline);
+    setPaymentCondition(item.paymentCondition);
     setUnitPrice(item.unitPrice.toFixed(2).replace(".", ","));
     setNote(item.note);
     setErrorMessage(null);
@@ -161,6 +172,48 @@ export function OrcamentoMateriaisLaser({ }: OrcamentoMateriaisLaserProps) {
     setItems((prev) => prev.filter((item) => item.id !== id));
     if (editingItemId === id) {
       resetForm();
+    }
+  };
+
+  const buildItemPlainTextMessage = (item: LaserQuoteItem): string => {
+    const date = new Intl.DateTimeFormat("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(new Date());
+
+    const itemTotal = item.quantity * item.unitPrice;
+    const lines: string[] = [
+      "Orçamento",
+      `Data: ${date}`,
+      `Material: ${item.material}`,
+      `Quantidade: ${item.quantity}`,
+      `Tipo de Mídia: ${item.mediaType}`,
+      `Tipo Impressão: ${item.printingType}`,
+      `Tamanho: ${item.size}`,
+      `Acabamento: ${item.finishing}`,
+      `Prazo estimado: ${item.estimatedDeadline}`,
+      `Valor unitário: ${formatCurrency(item.unitPrice)}`,
+      `Condição de pagamento: ${item.paymentCondition}`,
+      `Valor total: ${formatCurrency(itemTotal)}`,
+    ];
+
+    if (item.note) {
+      lines.push(`* ${item.note}`);
+    }
+
+    return lines.join("\n");
+  };
+
+  const handleCopyItemPlainText = async (item: LaserQuoteItem) => {
+    try {
+      await navigator.clipboard.writeText(buildItemPlainTextMessage(item));
+      setCopiedItemId(item.id);
+      window.setTimeout(() => setCopiedItemId(null), 1800);
+    } catch {
+      setCopiedItemId(null);
     }
   };
 
@@ -286,6 +339,16 @@ export function OrcamentoMateriaisLaser({ }: OrcamentoMateriaisLaserProps) {
           </div>
 
           <label className="block text-sm font-medium text-[#26415f]">
+            <span className="mb-2 block">Condição de pagamento</span>
+            <input
+              value={paymentCondition}
+              onChange={(event) => setPaymentCondition(event.target.value)}
+              className="w-full rounded-2xl border border-[#cfdcf0] bg-[#f9fbff] px-3 py-2.5 text-sm text-[#193a62] outline-none ring-0 focus:border-[#6b8fd3]"
+              placeholder="Ex: 50% entrada e 50% na retirada"
+            />
+          </label>
+
+          <label className="block text-sm font-medium text-[#26415f]">
             <span className="mb-2 block">Observação do item</span>
             <textarea
               value={note}
@@ -332,6 +395,7 @@ export function OrcamentoMateriaisLaser({ }: OrcamentoMateriaisLaserProps) {
                         <p className="text-sm text-[#5f7390]">Acabamento: {item.finishing}</p>
                         <p className="text-sm text-[#5f7390]">Prazo estimado: {item.estimatedDeadline}</p>
                         <p className="text-sm text-[#5f7390]">Valor unitário: {formatCurrency(item.unitPrice)}</p>
+                        <p className="text-sm text-[#5f7390]">Condição de pagamento: {item.paymentCondition}</p>
                         <p className="text-sm font-semibold text-[#173354]">Valor total: {formatCurrency(item.quantity * item.unitPrice)}</p>
                         {item.note ? <p className="text-xs text-[#6b86a6]">* {item.note}</p> : null}
                       </div>
@@ -343,6 +407,13 @@ export function OrcamentoMateriaisLaser({ }: OrcamentoMateriaisLaserProps) {
                         className="inline-flex items-center rounded-full border border-[#cfe0f3] bg-white px-4 py-2 text-sm font-semibold text-[#2d63a8] shadow-[0_6px_14px_rgba(19,38,68,0.05)] transition hover:border-[#b8d0ec] hover:bg-[#f5f9ff]"
                       >
                         Editar
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleCopyItemPlainText(item)}
+                        className="inline-flex items-center rounded-full border border-[#c9d8ea] bg-white px-4 py-2 text-sm font-semibold text-[#2d63a8] shadow-[0_6px_14px_rgba(19,38,68,0.05)] transition hover:border-[#b8d0ec] hover:bg-[#f5f9ff]"
+                      >
+                        {copiedItemId === item.id ? "Copiado" : "Copiar texto"}
                       </button>
                       <button
                         type="button"
