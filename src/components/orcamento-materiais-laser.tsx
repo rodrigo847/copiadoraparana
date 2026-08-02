@@ -41,13 +41,91 @@ function normalizeQuantity(value: string): string {
   return String(Math.max(1, Math.min(9999, parsed)));
 }
 
+const sizeOptions = [
+  "A0 - 84,1 x 118,9 cm",
+  "A1 - 59,4 x 84,1 cm",
+  "A2 - 42,0 x 59,4 cm",
+  "A3 - 29,7 x 42,0 cm",
+  "A4 - 21,0 x 29,7 cm",
+  "A5 - 14,8 x 21,0 cm",
+  "A6 - 10,5 x 14,8 cm",
+];
+const finishingOptions = ["Sem acabamento", "Laminação fosca", "Laminação brilho", "Plastificação 07", "Dobra", "Grampo", "Encadernação", "Meio corte", "Corte Total"];
+const printingTypeOptions = ["Laser Colorida", "Laser PB", "Jato de Tinta", "Offset", "Ecosolvente", "UV", "Plotagem"];
+const mediaTypeOptionsByPrintingType: Record<string, string[]> = {
+  Plotagem: ["Offset"],
+  "Laser Colorida": ["Offset", "Couche", "Colacril", "Aspen"],
+  "Laser PB": ["Offset"],
+  "Jato de Tinta": ["Offset"],
+  Offset: ["Offset", "Couche"],
+  Ecosolvente: ["Banner", "Vinil Fosco", "Vinil Brilho", "Vinil Transparente", "Couche", "Offset"],
+  UV: ["Rígido", "Material Cliente"],
+};
+
+const gramaturaOptionsByPrintingType: Record<string, string[]> = {
+  Plotagem: ["75g", "150g"],
+  "Laser Colorida": ["75g", "90g", "150g", "170g", "250g", "C2s 300g"],
+  "Laser PB": ["75g", "90g"],
+  "Jato de Tinta": ["75g", "90g", "120g", "Envelope XXX"],
+  Offset: ["90g", "150g", "250g", "300g"],
+  Ecosolvente: [],
+  UV: [],
+};
+
+function getMediaTypeOptionsForPrintingType(value: string): string[] {
+  return mediaTypeOptionsByPrintingType[value] ?? [];
+}
+
+function getGramaturaOptionsForPrintingType(value: string): string[] {
+  return gramaturaOptionsByPrintingType[value] ?? [];
+}
+
+function getGramaturaOptions(printingTypeValue: string, mediaTypeValue: string): string[] {
+  const baseOptions = getGramaturaOptionsForPrintingType(printingTypeValue);
+
+  if (["Vinil Fosco", "Vinil Brilho", "Vinil Transparente"].includes(mediaTypeValue)) {
+    return baseOptions.includes("0.10") ? baseOptions : [...baseOptions, "0.10"];
+  }
+
+  return baseOptions;
+}
+
+function resolveLegacySizeToPreset(value: string): string | null {
+  const normalized = value.trim().toUpperCase();
+  const matched = sizeOptions.find((option) => option.startsWith(`${normalized} - `));
+  return matched ?? null;
+}
+
+function parseMediaSelection(value: string) {
+  const separatorIndex = value.lastIndexOf(" - ");
+  if (separatorIndex === -1) {
+    return { mediaType: value, gramatura: "" };
+  }
+
+  return {
+    mediaType: value.slice(0, separatorIndex),
+    gramatura: value.slice(separatorIndex + 3),
+  };
+}
+
 export function OrcamentoMateriaisLaser({ }: OrcamentoMateriaisLaserProps) {
   const [customerName, setCustomerName] = useState("");
   const [quantity, setQuantity] = useState("1");
   const [mediaType, setMediaType] = useState("");
+  const [customMediaType, setCustomMediaType] = useState("");
+  const [mediaTypeMode, setMediaTypeMode] = useState<"preset" | "custom">("preset");
+  const [gramatura, setGramatura] = useState("");
+  const [customGramatura, setCustomGramatura] = useState("");
+  const [gramaturaMode, setGramaturaMode] = useState<"preset" | "custom">("preset");
   const [printingType, setPrintingType] = useState("");
+  const [customPrintingType, setCustomPrintingType] = useState("");
+  const [printingTypeMode, setPrintingTypeMode] = useState<"preset" | "custom">("preset");
   const [size, setSize] = useState("");
+  const [customSize, setCustomSize] = useState("");
+  const [sizeMode, setSizeMode] = useState<"preset" | "custom">("preset");
   const [finishing, setFinishing] = useState("");
+  const [customFinishing, setCustomFinishing] = useState("");
+  const [finishingMode, setFinishingMode] = useState<"preset" | "custom">("preset");
   const [estimatedDeadline, setEstimatedDeadline] = useState("");
   const [paymentCondition, setPaymentCondition] = useState("");
   const [unitPrice, setUnitPrice] = useState("");
@@ -58,11 +136,23 @@ export function OrcamentoMateriaisLaser({ }: OrcamentoMateriaisLaserProps) {
   const [copiedItemId, setCopiedItemId] = useState<number | null>(null);
 
   const resetForm = () => {
+    setCustomerName("");
     setQuantity("1");
     setMediaType("");
+    setCustomMediaType("");
+    setMediaTypeMode("preset");
+    setGramatura("");
+    setCustomGramatura("");
+    setGramaturaMode("preset");
     setPrintingType("");
+    setCustomPrintingType("");
+    setPrintingTypeMode("preset");
     setSize("");
+    setCustomSize("");
+    setSizeMode("preset");
     setFinishing("");
+    setCustomFinishing("");
+    setFinishingMode("preset");
     setEstimatedDeadline("");
     setPaymentCondition("");
     setUnitPrice("");
@@ -95,22 +185,34 @@ export function OrcamentoMateriaisLaser({ }: OrcamentoMateriaisLaserProps) {
       return;
     }
 
-    if (!mediaType.trim()) {
+    const finalPrintingType = printingTypeMode === "custom" ? customPrintingType.trim() : printingType.trim();
+    const finalMediaType = mediaTypeMode === "custom" ? customMediaType.trim() : mediaType.trim();
+    const finalGramatura = gramaturaMode === "custom" ? customGramatura.trim() : gramatura.trim();
+
+    if (!finalMediaType) {
       setErrorMessage("Informe o tipo de mídia.");
       return;
     }
 
-    if (!printingType.trim()) {
+    if (!finalGramatura) {
+      setErrorMessage("Informe a gramatura.");
+      return;
+    }
+
+    if (!finalPrintingType) {
       setErrorMessage("Informe o tipo de impressão.");
       return;
     }
 
-    if (!size.trim()) {
+    const finalSize = sizeMode === "custom" ? customSize.trim() : size.trim();
+    const finalFinishing = finishingMode === "custom" ? customFinishing.trim() : finishing.trim();
+
+    if (!finalSize) {
       setErrorMessage("Informe o tamanho.");
       return;
     }
 
-    if (!finishing.trim()) {
+    if (!finalFinishing) {
       setErrorMessage("Informe o acabamento.");
       return;
     }
@@ -134,10 +236,10 @@ export function OrcamentoMateriaisLaser({ }: OrcamentoMateriaisLaserProps) {
       id: editingItemId ?? Date.now(),
       material: customerName.trim(),
       quantity: parsedQuantity,
-      mediaType: mediaType.trim(),
-      printingType: printingType.trim(),
-      size: size.trim(),
-      finishing: finishing.trim(),
+      mediaType: `${finalMediaType} - ${finalGramatura}`,
+      printingType: finalPrintingType,
+      size: finalSize,
+      finishing: finalFinishing,
       estimatedDeadline: estimatedDeadline.trim(),
       paymentCondition: paymentCondition.trim(),
       unitPrice: parsedPrice,
@@ -157,10 +259,61 @@ export function OrcamentoMateriaisLaser({ }: OrcamentoMateriaisLaserProps) {
     setEditingItemId(item.id);
     setCustomerName(item.material);
     setQuantity(String(item.quantity));
-    setMediaType(item.mediaType);
-    setPrintingType(item.printingType);
-    setSize(item.size);
-    setFinishing(item.finishing);
+    const parsedMedia = parseMediaSelection(item.mediaType);
+    const resolvedPrintingType = printingTypeOptions.includes(item.printingType) ? item.printingType : null;
+    const availableMediaForPrintingType = resolvedPrintingType ? getMediaTypeOptionsForPrintingType(resolvedPrintingType) : [];
+    const availableGramaturaForPrintingType = resolvedPrintingType ? getGramaturaOptions(resolvedPrintingType, parsedMedia.mediaType) : [];
+
+    if (resolvedPrintingType) {
+      setPrintingType(resolvedPrintingType);
+      setCustomPrintingType("");
+      setPrintingTypeMode("preset");
+    } else {
+      setPrintingType("");
+      setCustomPrintingType(item.printingType);
+      setPrintingTypeMode("custom");
+    }
+
+    const knownMedia = availableMediaForPrintingType.includes(parsedMedia.mediaType);
+    if (knownMedia) {
+      setMediaType(parsedMedia.mediaType);
+      setCustomMediaType("");
+      setMediaTypeMode("preset");
+    } else {
+      setMediaType("");
+      setCustomMediaType(parsedMedia.mediaType);
+      setMediaTypeMode("custom");
+    }
+
+    if (availableGramaturaForPrintingType.includes(parsedMedia.gramatura)) {
+      setGramatura(parsedMedia.gramatura);
+      setCustomGramatura("");
+      setGramaturaMode("preset");
+    } else {
+      setGramatura("");
+      setCustomGramatura(parsedMedia.gramatura);
+      setGramaturaMode(parsedMedia.gramatura ? "custom" : "preset");
+    }
+
+    const resolvedSize = sizeOptions.includes(item.size) ? item.size : resolveLegacySizeToPreset(item.size);
+    if (resolvedSize) {
+      setSize(resolvedSize);
+      setCustomSize("");
+      setSizeMode("preset");
+    } else {
+      setSize("");
+      setCustomSize(item.size);
+      setSizeMode("custom");
+    }
+    if (finishingOptions.includes(item.finishing)) {
+      setFinishing(item.finishing);
+      setCustomFinishing("");
+      setFinishingMode("preset");
+    } else {
+      setFinishing("");
+      setCustomFinishing(item.finishing);
+      setFinishingMode("custom");
+    }
     setEstimatedDeadline(item.estimatedDeadline);
     setPaymentCondition(item.paymentCondition);
     setUnitPrice(item.unitPrice.toFixed(2).replace(".", ","));
@@ -217,6 +370,11 @@ export function OrcamentoMateriaisLaser({ }: OrcamentoMateriaisLaserProps) {
     }
   };
 
+  const selectedPrintingValue = printingTypeMode === "custom" ? customPrintingType.trim() : printingType.trim();
+  const selectedMediaValue = mediaTypeMode === "custom" ? customMediaType.trim() : mediaType.trim();
+  const availableMediaTypeOptions = getMediaTypeOptionsForPrintingType(selectedPrintingValue);
+  const availableGramaturaOptions = getGramaturaOptions(selectedPrintingValue, selectedMediaValue);
+
   return (
     <section className="rounded-4xl border border-[#c9d8ea] bg-[linear-gradient(180deg,#ffffff_0%,#f6f9fd_100%)] p-5 shadow-[0_14px_35px_rgba(19,38,68,0.08)] sm:p-8">
       <div>
@@ -227,7 +385,7 @@ export function OrcamentoMateriaisLaser({ }: OrcamentoMateriaisLaserProps) {
 
       <div className="mt-6">
         <div className="space-y-4 rounded-3xl border border-[#e2ebf5] bg-white/80 p-4 shadow-[0_10px_24px_rgba(19,38,68,0.04)] sm:p-5">
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-4 md:grid-cols-3">
             <label className="text-sm font-medium text-[#26415f]">
               <span className="mb-2 block">Material</span>
               <input
@@ -237,6 +395,259 @@ export function OrcamentoMateriaisLaser({ }: OrcamentoMateriaisLaserProps) {
                 placeholder="Ex: Folder"
               />
             </label>
+            <label className="text-sm font-medium text-[#26415f]">
+              <span className="mb-2 block">Tamanho</span>
+              <div className="space-y-3 rounded-2xl border border-[#cfdcf0] bg-[#f9fbff] p-3">
+                <select
+                  value={sizeMode === "custom" ? "custom" : size}
+                  onChange={(event) => {
+                    const nextValue = event.target.value;
+                    if (nextValue === "custom") {
+                      setSize("");
+                      setCustomSize("");
+                      setSizeMode("custom");
+                      return;
+                    }
+
+                    setSize(nextValue);
+                    setCustomSize("");
+                    setSizeMode("preset");
+                  }}
+                  className="w-full rounded-2xl border border-[#cfdcf0] bg-white px-3 py-2.5 text-sm text-[#193a62] outline-none ring-0 focus:border-[#6b8fd3]"
+                >
+                  <option value="">Selecione um tamanho</option>
+                  {sizeOptions.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                  <option value="custom">Outros</option>
+                </select>
+
+                {sizeMode === "custom" ? (
+                  <div className="rounded-2xl border border-dashed border-[#cfdcf0] bg-white/70 p-3">
+                    <label className="text-xs font-semibold uppercase tracking-[0.24em] text-[#5d7695]">Outros</label>
+                    <input
+                      value={customSize}
+                      onChange={(event) => {
+                        const nextValue = event.target.value;
+                        setCustomSize(nextValue);
+                        setSize(nextValue);
+                      }}
+                      className="mt-2 w-full rounded-2xl border border-[#cfdcf0] bg-[#f9fbff] px-3 py-2.5 text-sm text-[#193a62] outline-none ring-0 focus:border-[#6b8fd3]"
+                      placeholder="Ex: 10x15cm"
+                    />
+                  </div>
+                ) : null}
+              </div>
+            </label>
+            <label className="text-sm font-medium text-[#26415f]">
+              <span className="mb-2 block">Tipo Impressão</span>
+              <div className="space-y-3 rounded-2xl border border-[#cfdcf0] bg-[#f9fbff] p-3">
+                <select
+                  value={printingTypeMode === "custom" ? "custom" : printingType}
+                  onChange={(event) => {
+                    const nextValue = event.target.value;
+                    if (nextValue === "custom") {
+                      setPrintingType("");
+                      setCustomPrintingType("");
+                      setPrintingTypeMode("custom");
+                      setMediaType("");
+                      setCustomMediaType("");
+                      setMediaTypeMode("preset");
+                      return;
+                    }
+
+                    setPrintingType(nextValue);
+                    setCustomPrintingType("");
+                    setPrintingTypeMode("preset");
+                    setMediaType("");
+                    setCustomMediaType("");
+                    setMediaTypeMode("preset");
+                  }}
+                  className="w-full rounded-2xl border border-[#cfdcf0] bg-white px-3 py-2.5 text-sm text-[#193a62] outline-none ring-0 focus:border-[#6b8fd3]"
+                >
+                  <option value="">Selecione uma impressão</option>
+                  {printingTypeOptions.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                  <option value="custom">Outros</option>
+                </select>
+
+                {printingTypeMode === "custom" ? (
+                  <div className="rounded-2xl border border-dashed border-[#cfdcf0] bg-white/70 p-3">
+                    <label className="text-xs font-semibold uppercase tracking-[0.24em] text-[#5d7695]">Outros</label>
+                    <input
+                      value={customPrintingType}
+                      onChange={(event) => {
+                        const nextValue = event.target.value;
+                        setCustomPrintingType(nextValue);
+                        setPrintingType(nextValue);
+                      }}
+                      className="mt-2 w-full rounded-2xl border border-[#cfdcf0] bg-[#f9fbff] px-3 py-2.5 text-sm text-[#193a62] outline-none ring-0 focus:border-[#6b8fd3]"
+                      placeholder="Ex: Impressão especial"
+                    />
+                  </div>
+                ) : null}
+              </div>
+            </label>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-3">
+            <label className="text-sm font-medium text-[#26415f]">
+              <span className="mb-2 block">Tipo de Mídia</span>
+              <div className="space-y-3 rounded-2xl border border-[#cfdcf0] bg-[#f9fbff] p-3">
+                <select
+                  value={mediaTypeMode === "custom" ? "custom" : mediaType}
+                  onChange={(event) => {
+                    const nextValue = event.target.value;
+                    if (nextValue === "custom") {
+                      setMediaType("");
+                      setCustomMediaType("");
+                      setMediaTypeMode("custom");
+                      setGramatura("");
+                      setCustomGramatura("");
+                      setGramaturaMode("preset");
+                      return;
+                    }
+
+                    setMediaType(nextValue);
+                    setCustomMediaType("");
+                    setMediaTypeMode("preset");
+                    setGramatura("");
+                    setCustomGramatura("");
+                    setGramaturaMode("preset");
+                  }}
+                  className="w-full rounded-2xl border border-[#cfdcf0] bg-white px-3 py-2.5 text-sm text-[#193a62] outline-none ring-0 focus:border-[#6b8fd3]"
+                  disabled={!selectedPrintingValue}
+                >
+                  <option value="">{selectedPrintingValue ? "Selecione uma mídia" : "Selecione a impressão primeiro"}</option>
+                  {availableMediaTypeOptions.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                  <option value="custom">Outros</option>
+                </select>
+
+                {mediaTypeMode === "custom" ? (
+                  <div className="rounded-2xl border border-dashed border-[#cfdcf0] bg-white/70 p-3">
+                    <label className="text-xs font-semibold uppercase tracking-[0.24em] text-[#5d7695]">Outros</label>
+                    <input
+                      value={customMediaType}
+                      onChange={(event) => {
+                        const nextValue = event.target.value;
+                        setCustomMediaType(nextValue);
+                        setMediaType(nextValue);
+                        setGramatura("");
+                        setCustomGramatura("");
+                        setGramaturaMode("preset");
+                      }}
+                      className="mt-2 w-full rounded-2xl border border-[#cfdcf0] bg-[#f9fbff] px-3 py-2.5 text-sm text-[#193a62] outline-none ring-0 focus:border-[#6b8fd3]"
+                      placeholder="Ex: Papel especial"
+                    />
+                  </div>
+                ) : null}
+              </div>
+            </label>
+            <label className="text-sm font-medium text-[#26415f]">
+              <span className="mb-2 block">Gramatura</span>
+              <div className="space-y-3 rounded-2xl border border-[#cfdcf0] bg-[#f9fbff] p-3">
+                <select
+                  value={gramaturaMode === "custom" ? "custom" : gramatura}
+                  onChange={(event) => {
+                    const nextValue = event.target.value;
+                    if (nextValue === "custom") {
+                      setGramatura("");
+                      setCustomGramatura("");
+                      setGramaturaMode("custom");
+                      return;
+                    }
+
+                    setGramatura(nextValue);
+                    setCustomGramatura("");
+                    setGramaturaMode("preset");
+                  }}
+                  className="w-full rounded-2xl border border-[#cfdcf0] bg-white px-3 py-2.5 text-sm text-[#193a62] outline-none ring-0 focus:border-[#6b8fd3]"
+                  disabled={!selectedPrintingValue}
+                >
+                  <option value="">{selectedPrintingValue ? "Selecione uma gramatura" : "Selecione a impressão primeiro"}</option>
+                  {availableGramaturaOptions.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                  <option value="custom">Outros</option>
+                </select>
+
+                {gramaturaMode === "custom" ? (
+                  <div className="rounded-2xl border border-dashed border-[#cfdcf0] bg-white/70 p-3">
+                    <label className="text-xs font-semibold uppercase tracking-[0.24em] text-[#5d7695]">Outros</label>
+                    <input
+                      value={customGramatura}
+                      onChange={(event) => {
+                        const nextValue = event.target.value;
+                        setCustomGramatura(nextValue);
+                        setGramatura(nextValue);
+                      }}
+                      className="mt-2 w-full rounded-2xl border border-[#cfdcf0] bg-[#f9fbff] px-3 py-2.5 text-sm text-[#193a62] outline-none ring-0 focus:border-[#6b8fd3]"
+                      placeholder="Ex: 300g"
+                    />
+                  </div>
+                ) : null}
+              </div>
+            </label>
+            <label className="text-sm font-medium text-[#26415f]">
+              <span className="mb-2 block">Acabamento</span>
+              <div className="space-y-3 rounded-2xl border border-[#cfdcf0] bg-[#f9fbff] p-3">
+                <select
+                  value={finishingMode === "custom" ? "custom" : finishing}
+                  onChange={(event) => {
+                    const nextValue = event.target.value;
+                    if (nextValue === "custom") {
+                      setFinishing("");
+                      setCustomFinishing("");
+                      setFinishingMode("custom");
+                      return;
+                    }
+
+                    setFinishing(nextValue);
+                    setCustomFinishing("");
+                    setFinishingMode("preset");
+                  }}
+                  className="w-full rounded-2xl border border-[#cfdcf0] bg-white px-3 py-2.5 text-sm text-[#193a62] outline-none ring-0 focus:border-[#6b8fd3]"
+                >
+                  <option value="">Selecione um acabamento</option>
+                  {finishingOptions.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                  <option value="custom">Outros</option>
+                </select>
+
+                {finishingMode === "custom" ? (
+                  <div className="rounded-2xl border border-dashed border-[#cfdcf0] bg-white/70 p-3">
+                    <label className="text-xs font-semibold uppercase tracking-[0.24em] text-[#5d7695]">Outros</label>
+                    <input
+                      value={customFinishing}
+                      onChange={(event) => {
+                        const nextValue = event.target.value;
+                        setCustomFinishing(nextValue);
+                        setFinishing(nextValue);
+                      }}
+                      className="mt-2 w-full rounded-2xl border border-[#cfdcf0] bg-[#f9fbff] px-3 py-2.5 text-sm text-[#193a62] outline-none ring-0 focus:border-[#6b8fd3]"
+                      placeholder="Ex: Encadernação especial"
+                    />
+                  </div>
+                ) : null}
+              </div>
+            </label>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-3">
             <label className="text-sm font-medium text-[#26415f]">
               <span className="mb-2 block">Quantidade</span>
               <div className="mt-1.5 flex h-12 w-full items-center rounded-2xl border border-[#c8d2df] bg-[#f1f4f8] shadow-[inset_0_1px_2px_rgba(18,42,72,0.05)]">
@@ -271,51 +682,6 @@ export function OrcamentoMateriaisLaser({ }: OrcamentoMateriaisLaserProps) {
                 </button>
               </div>
             </label>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            <label className="text-sm font-medium text-[#26415f]">
-              <span className="mb-2 block">Tipo de Mídia</span>
-              <input
-                value={mediaType}
-                onChange={(event) => setMediaType(event.target.value)}
-                className="w-full rounded-2xl border border-[#cfdcf0] bg-[#f9fbff] px-3 py-2.5 text-sm text-[#193a62] outline-none ring-0 focus:border-[#6b8fd3]"
-                placeholder="Ex.: Couchê 170g"
-              />
-            </label>
-            <label className="text-sm font-medium text-[#26415f]">
-              <span className="mb-2 block">Tipo Impressão</span>
-              <input
-                value={printingType}
-                onChange={(event) => setPrintingType(event.target.value)}
-                className="w-full rounded-2xl border border-[#cfdcf0] bg-[#f9fbff] px-3 py-2.5 text-sm text-[#193a62] outline-none ring-0 focus:border-[#6b8fd3]"
-                placeholder="Ex: Laser"
-              />
-            </label>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            <label className="text-sm font-medium text-[#26415f]">
-              <span className="mb-2 block">Tamanho</span>
-              <input
-                value={size}
-                onChange={(event) => setSize(event.target.value)}
-                className="w-full rounded-2xl border border-[#cfdcf0] bg-[#f9fbff] px-3 py-2.5 text-sm text-[#193a62] outline-none ring-0 focus:border-[#6b8fd3]"
-                placeholder="Ex: 10x15cm"
-              />
-            </label>
-            <label className="text-sm font-medium text-[#26415f]">
-              <span className="mb-2 block">Acabamento</span>
-              <input
-                value={finishing}
-                onChange={(event) => setFinishing(event.target.value)}
-                className="w-full rounded-2xl border border-[#cfdcf0] bg-[#f9fbff] px-3 py-2.5 text-sm text-[#193a62] outline-none ring-0 focus:border-[#6b8fd3]"
-                placeholder="Ex: Laminação Fosca"
-              />
-            </label>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
             <label className="text-sm font-medium text-[#26415f]">
               <span className="mb-2 block">Prazo estimado</span>
               <input
@@ -338,15 +704,17 @@ export function OrcamentoMateriaisLaser({ }: OrcamentoMateriaisLaserProps) {
             </label>
           </div>
 
-          <label className="block text-sm font-medium text-[#26415f]">
-            <span className="mb-2 block">Condição de pagamento</span>
-            <input
-              value={paymentCondition}
-              onChange={(event) => setPaymentCondition(event.target.value)}
-              className="w-full rounded-2xl border border-[#cfdcf0] bg-[#f9fbff] px-3 py-2.5 text-sm text-[#193a62] outline-none ring-0 focus:border-[#6b8fd3]"
-              placeholder="Ex: 50% entrada e 50% na retirada"
-            />
-          </label>
+          <div className="grid gap-4">
+            <label className="block text-sm font-medium text-[#26415f]">
+              <span className="mb-2 block">Condição de pagamento</span>
+              <input
+                value={paymentCondition}
+                onChange={(event) => setPaymentCondition(event.target.value)}
+                className="w-full rounded-2xl border border-[#cfdcf0] bg-[#f9fbff] px-3 py-2.5 text-sm text-[#193a62] outline-none ring-0 focus:border-[#6b8fd3]"
+                placeholder="Ex: 50% entrada e 50% na retirada"
+              />
+            </label>
+          </div>
 
           <label className="block text-sm font-medium text-[#26415f]">
             <span className="mb-2 block">Observação do item</span>
