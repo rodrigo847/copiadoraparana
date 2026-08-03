@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 type LaserQuoteItem = {
   id: number;
@@ -81,7 +81,23 @@ function getGramaturaOptionsForPrintingType(value: string): string[] {
 }
 
 function getGramaturaOptions(printingTypeValue: string, mediaTypeValue: string): string[] {
+  if (printingTypeValue.startsWith("Laser") && mediaTypeValue === "Colacril") {
+    return ["170g Fosco", "170g Brilho"];
+  }
+
+  if (mediaTypeValue === "Aspen") {
+    return ["240g Aspen Perolado", "240g Aspen Majorca"];
+  }
+
+  if (mediaTypeValue === "Offset") {
+    return ["75g", "90g", "120g", "180g", "240g"];
+  }
+
   const baseOptions = getGramaturaOptionsForPrintingType(printingTypeValue);
+
+  if (mediaTypeValue === "Couche") {
+    return baseOptions.filter((option) => option !== "75g");
+  }
 
   if (["Vinil Fosco", "Vinil Brilho", "Vinil Transparente"].includes(mediaTypeValue)) {
     return baseOptions.includes("0.10") ? baseOptions : [...baseOptions, "0.10"];
@@ -374,20 +390,55 @@ export function OrcamentoMateriaisLaser({ }: OrcamentoMateriaisLaserProps) {
   const selectedMediaValue = mediaTypeMode === "custom" ? customMediaType.trim() : mediaType.trim();
   const availableMediaTypeOptions = getMediaTypeOptionsForPrintingType(selectedPrintingValue);
   const availableGramaturaOptions = getGramaturaOptions(selectedPrintingValue, selectedMediaValue);
+  const parsedQuantityPreview = Number.parseInt(quantity, 10);
+  const parsedUnitPricePreview = parseCurrencyInput(unitPrice);
+  const itemPreviewTotal =
+    Number.isFinite(parsedQuantityPreview) && Number.isFinite(parsedUnitPricePreview)
+      ? parsedQuantityPreview * parsedUnitPricePreview
+      : 0;
+  const itemsTotal = useMemo(
+    () => items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0),
+    [items],
+  );
 
   return (
     <section className="rounded-4xl border border-[#c9d8ea] bg-[linear-gradient(180deg,#ffffff_0%,#f6f9fd_100%)] p-5 shadow-[0_14px_35px_rgba(19,38,68,0.08)] sm:p-8">
-      <div>
-        <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#2d63a8]">Orçamento Laser e Offset</p>
+      <div className="space-y-3">
+        <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#2d63a8]">Orçamento Laser e Offset</p>
+        <h2 className="font-heading text-2xl font-bold text-[#123355] sm:text-3xl">Monte o orçamento item por item</h2>
+        <p className="max-w-3xl text-sm leading-6 text-[#4f6988] sm:text-base">
+          Preencha os dados do material, ajuste quantidade e valor unitário, e adicione quantos itens precisar.
+          O total da proposta é atualizado automaticamente.
+        </p>
+      </div>
+
+      <div className="mt-5 grid gap-3 sm:grid-cols-3">
+        <div className="rounded-2xl border border-[#dbe7f4] bg-white p-4">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#6380a3]">Prévia do item</p>
+          <p className="mt-2 text-2xl font-bold text-[#15375d]">{formatCurrency(itemPreviewTotal)}</p>
+          <p className="mt-1 text-xs text-[#6883a2]">Baseado na quantidade e valor unitário preenchidos</p>
+        </div>
+        <div className="rounded-2xl border border-[#dbe7f4] bg-white p-4">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#6380a3]">Itens adicionados</p>
+          <p className="mt-2 text-2xl font-bold text-[#15375d]">{items.length}</p>
+          <p className="mt-1 text-xs text-[#6883a2]">Quantidade de linhas no orçamento atual</p>
+        </div>
+        <div className="rounded-2xl border border-[#dbe7f4] bg-white p-4">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#6380a3]">Total acumulado</p>
+          <p className="mt-2 text-2xl font-bold text-[#15375d]">{formatCurrency(itemsTotal)}</p>
+          <p className="mt-1 text-xs text-[#6883a2]">Soma de todos os itens adicionados</p>
         </div>
       </div>
 
       <div className="mt-6">
         <div className="space-y-4 rounded-3xl border border-[#e2ebf5] bg-white/80 p-4 shadow-[0_10px_24px_rgba(19,38,68,0.04)] sm:p-5">
+          <p className="rounded-2xl border border-[#dbe7f4] bg-[#f5f9ff] px-3 py-2 text-xs font-medium text-[#365a81]">
+            Dica: primeiro selecione o tipo de impressão para liberar automaticamente as opções de mídia e gramatura.
+          </p>
+
           <div className="grid gap-4 md:grid-cols-3">
             <label className="text-sm font-medium text-[#26415f]">
-              <span className="mb-2 block">Material</span>
+              <span className="mb-2 block">Material / Serviço</span>
               <input
                 value={customerName}
                 onChange={(event) => setCustomerName(event.target.value)}
@@ -726,7 +777,11 @@ export function OrcamentoMateriaisLaser({ }: OrcamentoMateriaisLaserProps) {
             />
           </label>
 
-          {errorMessage ? <p className="text-sm font-medium text-[#b54708]">{errorMessage}</p> : null}
+          {errorMessage ? (
+            <p className="rounded-2xl border border-[#f4d8c5] bg-[#fff7f2] px-3 py-2 text-sm font-medium text-[#b54708]">
+              {errorMessage}
+            </p>
+          ) : null}
 
           <div className="flex flex-wrap gap-3">
             <button
@@ -745,16 +800,27 @@ export function OrcamentoMateriaisLaser({ }: OrcamentoMateriaisLaserProps) {
             </button>
           </div>
 
-          <div className="rounded-2xl border border-[#dbe7f4] bg-white p-3 text-sm text-[#385979]">
-            <p className="font-semibold text-[#193a62]">Itens adicionados</p>
+          <div className="rounded-2xl border border-[#dbe7f4] bg-white p-3 text-sm text-[#385979] sm:p-4">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <p className="font-semibold text-[#193a62]">Itens adicionados</p>
+              <p className="rounded-full bg-[#f3f8ff] px-3 py-1 text-xs font-semibold text-[#2d63a8]">
+                Total: {formatCurrency(itemsTotal)}
+              </p>
+            </div>
             {items.length === 0 ? (
-              <p className="mt-2">Ainda não há itens para orçamento.</p>
+              <p className="mt-3 rounded-xl border border-dashed border-[#d5e3f2] bg-[#fafcff] px-3 py-4 text-sm text-[#5f7390]">
+                Ainda não há itens para orçamento. Preencha os campos acima e clique em adicionar item.
+              </p>
             ) : (
-              <ul className="mt-3 space-y-2">
+              <ul className="mt-3 space-y-3">
                 {items.map((item) => (
                   <li key={item.id} className="space-y-2">
-                    <div className="rounded-2xl border border-[#ebf2fa] bg-[#f9fbff] p-3">
-                      <div className="space-y-1">
+                    <div className="rounded-2xl border border-[#ebf2fa] bg-[#f9fbff] p-3 sm:p-4">
+                      <div className="mb-2 flex items-center justify-between gap-2">
+                        <p className="text-sm font-semibold text-[#193a62]">{item.material || "Item sem nome"}</p>
+                        <p className="text-sm font-bold text-[#173354]">{formatCurrency(item.quantity * item.unitPrice)}</p>
+                      </div>
+                      <div className="grid gap-1 sm:grid-cols-2">
                         <p className="text-sm text-[#5f7390]">Material: {item.material}</p>
                         <p className="text-sm text-[#5f7390]">Quantidade: {item.quantity}</p>
                         <p className="text-sm text-[#5f7390]">Tipo de Mídia: {item.mediaType}</p>
