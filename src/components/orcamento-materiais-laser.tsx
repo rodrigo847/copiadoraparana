@@ -741,7 +741,7 @@ export function OrcamentoMateriaisLaser({ }: OrcamentoMateriaisLaserProps) {
             </label>
           </div>
 
-          <div className="grid gap-4">
+          <div className="grid gap-4 sm:grid-cols-2 sm:items-start">
             <label className="block text-sm font-medium text-[#26415f]">
               <span className="mb-2 block">Condição de pagamento</span>
               <input
@@ -751,17 +751,17 @@ export function OrcamentoMateriaisLaser({ }: OrcamentoMateriaisLaserProps) {
                 placeholder="Ex: 50% entrada e 50% na retirada"
               />
             </label>
-          </div>
 
-          <label className="block text-sm font-medium text-[#26415f]">
-            <span className="mb-2 block">Observação do item</span>
-            <textarea
-              value={note}
-              onChange={(event) => setNote(event.target.value)}
-              className="min-h-24 w-full rounded-2xl border border-[#cfdcf0] bg-[#f9fbff] px-3 py-2.5 text-sm text-[#193a62] outline-none ring-0 focus:border-[#6b8fd3]"
-              placeholder="Detalhes extras para o cliente"
-            />
-          </label>
+            <label className="block text-sm font-medium text-[#26415f]">
+              <span className="mb-2 block">Observação do item</span>
+              <textarea
+                value={note}
+                onChange={(event) => setNote(event.target.value)}
+                className="min-h-24 w-full rounded-2xl border border-[#cfdcf0] bg-[#f9fbff] px-3 py-2.5 text-sm text-[#193a62] outline-none ring-0 focus:border-[#6b8fd3]"
+                placeholder="Detalhes extras para o cliente"
+              />
+            </label>
+          </div>
 
           {errorMessage ? (
             <p className="rounded-2xl border border-[#f4d8c5] bg-[#fff7f2] px-3 py-2 text-sm font-medium text-[#b54708]">
