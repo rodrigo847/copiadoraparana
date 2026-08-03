@@ -81,6 +81,10 @@ function getGramaturaOptionsForPrintingType(value: string): string[] {
 }
 
 function getGramaturaOptions(printingTypeValue: string, mediaTypeValue: string): string[] {
+  if (printingTypeValue === "Plotagem") {
+    return ["75g", "150g"];
+  }
+
   if (printingTypeValue.startsWith("Laser") && mediaTypeValue === "Colacril") {
     return ["170g Fosco", "170g Brilho"];
   }
@@ -410,24 +414,6 @@ export function OrcamentoMateriaisLaser({ }: OrcamentoMateriaisLaserProps) {
           Preencha os dados do material, ajuste quantidade e valor unitário, e adicione quantos itens precisar.
           O total da proposta é atualizado automaticamente.
         </p>
-      </div>
-
-      <div className="mt-5 grid gap-3 sm:grid-cols-3">
-        <div className="rounded-2xl border border-[#dbe7f4] bg-white p-4">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#6380a3]">Prévia do item</p>
-          <p className="mt-2 text-2xl font-bold text-[#15375d]">{formatCurrency(itemPreviewTotal)}</p>
-          <p className="mt-1 text-xs text-[#6883a2]">Baseado na quantidade e valor unitário preenchidos</p>
-        </div>
-        <div className="rounded-2xl border border-[#dbe7f4] bg-white p-4">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#6380a3]">Itens adicionados</p>
-          <p className="mt-2 text-2xl font-bold text-[#15375d]">{items.length}</p>
-          <p className="mt-1 text-xs text-[#6883a2]">Quantidade de linhas no orçamento atual</p>
-        </div>
-        <div className="rounded-2xl border border-[#dbe7f4] bg-white p-4">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#6380a3]">Total acumulado</p>
-          <p className="mt-2 text-2xl font-bold text-[#15375d]">{formatCurrency(itemsTotal)}</p>
-          <p className="mt-1 text-xs text-[#6883a2]">Soma de todos os itens adicionados</p>
-        </div>
       </div>
 
       <div className="mt-6">
@@ -798,6 +784,24 @@ export function OrcamentoMateriaisLaser({ }: OrcamentoMateriaisLaserProps) {
             >
               Limpar
             </button>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div className="rounded-2xl border border-[#cfe0f5] bg-[linear-gradient(135deg,#eef5ff_0%,#f8fbff_100%)] p-4 shadow-[0_8px_18px_rgba(19,38,68,0.06)]">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#6380a3]">Prévia do item</p>
+              <p className="mt-2 text-2xl font-bold text-[#15375d]">{formatCurrency(itemPreviewTotal)}</p>
+              <p className="mt-1 text-xs text-[#6883a2]">Baseado na quantidade e valor unitário preenchidos</p>
+            </div>
+            <div className="rounded-2xl border border-[#cde8dd] bg-[linear-gradient(135deg,#eefaf3_0%,#f8fdf9_100%)] p-4 shadow-[0_8px_18px_rgba(19,38,68,0.06)]">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#6380a3]">Itens adicionados</p>
+              <p className="mt-2 text-2xl font-bold text-[#15375d]">{items.length}</p>
+              <p className="mt-1 text-xs text-[#6883a2]">Quantidade de linhas no orçamento atual</p>
+            </div>
+            <div className="rounded-2xl border border-[#f0debf] bg-[linear-gradient(135deg,#fff6e9_0%,#fffdfa_100%)] p-4 shadow-[0_8px_18px_rgba(19,38,68,0.06)]">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#6380a3]">Total acumulado</p>
+              <p className="mt-2 text-2xl font-bold text-[#15375d]">{formatCurrency(itemsTotal)}</p>
+              <p className="mt-1 text-xs text-[#6883a2]">Soma de todos os itens adicionados</p>
+            </div>
           </div>
 
           <div className="rounded-2xl border border-[#dbe7f4] bg-white p-3 text-sm text-[#385979] sm:p-4">
