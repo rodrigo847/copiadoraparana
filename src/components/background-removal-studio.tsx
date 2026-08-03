@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
+import { ChangeEvent, MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 import jsPDF from "jspdf";
 
 type VectorCell = {
@@ -18,6 +18,12 @@ type ProcessResult = {
   height: number;
   cells: VectorCell[];
   svgMarkup: string;
+};
+
+type SampledColor = {
+  r: number;
+  g: number;
+  b: number;
 };
 
 const MAX_IMAGE_SIDE = 1600;
@@ -98,21 +104,43 @@ function buildSvgMarkup(width: number, height: number, cells: VectorCell[]): str
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><rect width="100%" height="100%" fill="transparent"/>${rects}</svg>`;
 }
 
+function getColorDistance(first: SampledColor, second: SampledColor): number {
+  return Math.sqrt(
+    (first.r - second.r) ** 2 +
+    (first.g - second.g) ** 2 +
+    (first.b - second.b) ** 2,
+  );
+}
+
+function formatRgbColor(color: SampledColor): string {
+  return `rgb(${color.r}, ${color.g}, ${color.b})`;
+}
+
 export function BackgroundRemovalStudio() {
   const [sourcePreviewUrl, setSourcePreviewUrl] = useState<string | null>(null);
   const [result, setResult] = useState<ProcessResult | null>(null);
   const [threshold, setThreshold] = useState(235);
+  const [tolerance, setTolerance] = useState(42);
   const [feather, setFeather] = useState(25);
   const [vectorCellSize, setVectorCellSize] = useState(8);
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [pdfMode, setPdfMode] = useState<"raster" | "vector">("vector");
+  const [downloadSource, setDownloadSource] = useState<"image" | "vector">("image");
+  const [sampledColor, setSampledColor] = useState<SampledColor | null>(null);
+  const [sourceImageSize, setSourceImageSize] = useState<{ width: number; height: number } | null>(null);
 
   const svgPreviewUrlRef = useRef<string | null>(null);
+  const sourcePreviewUrlRef = useRef<string | null>(null);
+  const sourceSampleCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const originalImageRef = useRef<HTMLImageElement | null>(null);
   const [svgPreviewUrl, setSvgPreviewUrl] = useState<string | null>(null);
 
   useEffect(() => {
     return () => {
+      if (sourcePreviewUrlRef.current) {
+        URL.revokeObjectURL(sourcePreviewUrlRef.current);
+      }
+
       if (svgPreviewUrlRef.current) {
         URL.revokeObjectURL(svgPreviewUrlRef.current);
       }
@@ -130,9 +158,76 @@ export function BackgroundRemovalStudio() {
     const file = event.target.files?.[0];
     if (!file) return;
 
+    if (sourcePreviewUrlRef.current) {
+      URL.revokeObjectURL(sourcePreviewUrlRef.current);
+    }
+
     const objectUrl = URL.createObjectURL(file);
+    sourcePreviewUrlRef.current = objectUrl;
+
+    const image = await loadImage(objectUrl);
+    const sampleCanvas = document.createElement("canvas");
+    sampleCanvas.width = image.naturalWidth;
+    sampleCanvas.height = image.naturalHeight;
+    const sampleContext = sampleCanvas.getContext("2d", { willReadFrequently: true });
+
+    if (sampleContext) {
+      sampleContext.clearRect(0, 0, sampleCanvas.width, sampleCanvas.height);
+      sampleContext.drawImage(image, 0, 0);
+      sourceSampleCanvasRef.current = sampleCanvas;
+    }
+
     setSourcePreviewUrl(objectUrl);
+    setSourceImageSize({ width: image.naturalWidth, height: image.naturalHeight });
+    setSampledColor(null);
     setResult(null);
+    setErrorMessage(null);
+  };
+
+  const handleOriginalImageClick = (event: MouseEvent<HTMLImageElement>) => {
+    if (!originalImageRef.current || !sourceImageSize || !sourceSampleCanvasRef.current) {
+      return;
+    }
+
+    const rect = originalImageRef.current.getBoundingClientRect();
+    const imageRatio = sourceImageSize.width / sourceImageSize.height;
+    const boxRatio = rect.width / rect.height;
+
+    let renderedWidth = rect.width;
+    let renderedHeight = rect.height;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    if (imageRatio > boxRatio) {
+      renderedHeight = rect.width / imageRatio;
+      offsetY = (rect.height - renderedHeight) / 2;
+    } else {
+      renderedWidth = rect.height * imageRatio;
+      offsetX = (rect.width - renderedWidth) / 2;
+    }
+
+    const localX = event.clientX - rect.left - offsetX;
+    const localY = event.clientY - rect.top - offsetY;
+
+    if (localX < 0 || localY < 0 || localX > renderedWidth || localY > renderedHeight) {
+      setErrorMessage("Clique dentro da área útil da imagem para escolher o branco de referência.");
+      return;
+    }
+
+    const pixelX = clamp(Math.round((localX / renderedWidth) * (sourceImageSize.width - 1)), 0, sourceImageSize.width - 1);
+    const pixelY = clamp(Math.round((localY / renderedHeight) * (sourceImageSize.height - 1)), 0, sourceImageSize.height - 1);
+    const sampleContext = sourceSampleCanvasRef.current.getContext("2d", { willReadFrequently: true });
+    if (!sampleContext) {
+      setErrorMessage("Não foi possível capturar a cor da imagem.");
+      return;
+    }
+
+    const pixelData = sampleContext.getImageData(pixelX, pixelY, 1, 1).data;
+    setSampledColor({
+      r: pixelData[0],
+      g: pixelData[1],
+      b: pixelData[2],
+    });
     setErrorMessage(null);
   };
 
@@ -167,6 +262,7 @@ export function BackgroundRemovalStudio() {
       const imageData = ctx.getImageData(0, 0, width, height);
       const data = imageData.data;
       const edge = clamp(threshold, 150, 255);
+      const sampledTolerance = clamp(tolerance, 0, 180);
       const smooth = clamp(feather, 0, 120);
       const startFade = edge - smooth;
 
@@ -174,6 +270,22 @@ export function BackgroundRemovalStudio() {
         const r = data[i];
         const g = data[i + 1];
         const b = data[i + 2];
+        if (sampledColor) {
+          const distance = getColorDistance(sampledColor, { r, g, b });
+
+          if (distance <= sampledTolerance) {
+            data[i + 3] = 0;
+            continue;
+          }
+
+          if (smooth > 0 && distance <= sampledTolerance + smooth) {
+            const opacity = Math.round(((distance - sampledTolerance) / smooth) * 255);
+            data[i + 3] = clamp(opacity, 0, 255);
+          }
+
+          continue;
+        }
+
         const minRgb = Math.min(r, g, b);
 
         if (minRgb >= edge) {
@@ -217,8 +329,42 @@ export function BackgroundRemovalStudio() {
     }
   };
 
-  const downloadPng = () => {
+  const renderVectorToCanvas = async (): Promise<HTMLCanvasElement | null> => {
+    if (!result) return null;
+
+    const svgBlob = new Blob([result.svgMarkup], { type: "image/svg+xml;charset=utf-8" });
+    const svgUrl = URL.createObjectURL(svgBlob);
+
+    try {
+      const img = await loadImage(svgUrl);
+      const canvas = document.createElement("canvas");
+      canvas.width = result.width;
+      canvas.height = result.height;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return null;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0);
+      return canvas;
+    } finally {
+      URL.revokeObjectURL(svgUrl);
+    }
+  };
+
+  const downloadPng = async () => {
     if (!result) return;
+
+    if (downloadSource === "vector") {
+      const vectorCanvas = await renderVectorToCanvas();
+      if (!vectorCanvas) return;
+
+      const a = document.createElement("a");
+      a.href = vectorCanvas.toDataURL("image/png");
+      a.download = "vetor-simplificado.png";
+      a.click();
+      return;
+    }
+
     const a = document.createElement("a");
     a.href = result.dataUrlPng;
     a.download = "imagem-sem-fundo.png";
@@ -227,7 +373,17 @@ export function BackgroundRemovalStudio() {
 
   const downloadJpg = async () => {
     if (!result) return;
-    const img = await loadImage(result.dataUrlPng);
+
+    const img =
+      downloadSource === "vector"
+        ? await (async () => {
+            const vectorCanvas = await renderVectorToCanvas();
+            if (!vectorCanvas) return null;
+            return loadImage(vectorCanvas.toDataURL("image/png"));
+          })()
+        : await loadImage(result.dataUrlPng);
+
+    if (!img) return;
 
     const canvas = document.createElement("canvas");
     canvas.width = result.width;
@@ -241,7 +397,7 @@ export function BackgroundRemovalStudio() {
 
     const a = document.createElement("a");
     a.href = canvas.toDataURL("image/jpeg", 0.95);
-    a.download = "imagem-sem-fundo.jpg";
+    a.download = downloadSource === "vector" ? "vetor-simplificado.jpg" : "imagem-sem-fundo.jpg";
     a.click();
   };
 
@@ -263,7 +419,7 @@ export function BackgroundRemovalStudio() {
     const x = (pageWidth - targetWidth) / 2;
     const y = (pageHeight - targetHeight) / 2;
 
-    if (pdfMode === "raster") {
+    if (downloadSource === "image") {
       const img = await loadImage(result.dataUrlPng);
       const canvas = document.createElement("canvas");
       canvas.width = result.width;
@@ -285,7 +441,7 @@ export function BackgroundRemovalStudio() {
       });
     }
 
-    pdf.save("imagem-processada.pdf");
+    pdf.save(downloadSource === "vector" ? "vetor-simplificado.pdf" : "imagem-sem-fundo.pdf");
   };
 
   return (
@@ -312,7 +468,19 @@ export function BackgroundRemovalStudio() {
 
           <div className="grid gap-3 sm:grid-cols-2">
             <label className="text-sm font-medium text-[#26415f]">
-              Limiar do branco: <strong>{threshold}</strong>
+              Tolerância da amostra: <strong>{tolerance}</strong>
+              <input
+                type="range"
+                min={0}
+                max={180}
+                value={tolerance}
+                onChange={(event) => setTolerance(Number(event.target.value))}
+                className="mt-2 w-full"
+              />
+            </label>
+
+            <label className="text-sm font-medium text-[#26415f]">
+              Branco automático: <strong>{threshold}</strong>
               <input
                 type="range"
                 min={180}
@@ -348,20 +516,97 @@ export function BackgroundRemovalStudio() {
             </label>
 
             <label className="text-sm font-medium text-[#26415f]">
-              Modo PDF
+              Fonte para download
               <select
-                value={pdfMode}
-                onChange={(event) => setPdfMode(event.target.value as "raster" | "vector")}
+                value={downloadSource}
+                onChange={(event) => setDownloadSource(event.target.value as "image" | "vector")}
                 className="mt-2 w-full rounded-xl border border-[#cfdcf0] bg-[#f9fbff] px-3 py-2.5 text-sm text-[#193a62]"
               >
-                <option value="vector">Vetorial simplificado</option>
-                <option value="raster">Raster (fiel à imagem)</option>
+                <option value="image">Imagem sem fundo</option>
+                <option value="vector">Vetor simplificado</option>
               </select>
             </label>
           </div>
         </div>
 
-        <div className="mt-4 flex flex-wrap gap-3">
+        <div className="mt-4 flex flex-wrap items-center gap-3 rounded-2xl border border-[#d8e4f2] bg-[#f7faff] px-4 py-3 text-sm text-[#355476]">
+          <p>
+            Clique na prévia <strong>Original</strong> para escolher qual branco deve ser removido.
+          </p>
+          {sampledColor ? (
+            <>
+              <span
+                className="inline-flex h-7 w-7 rounded-full border border-white shadow-[0_0_0_1px_rgba(19,38,68,0.12)]"
+                style={{ backgroundColor: formatRgbColor(sampledColor) }}
+                aria-hidden="true"
+              />
+              <span className="rounded-full bg-white px-3 py-1 font-medium text-[#21466e]">
+                Amostra ativa: {formatRgbColor(sampledColor)}
+              </span>
+              <button
+                type="button"
+                onClick={() => setSampledColor(null)}
+                className="rounded-full border border-[#c9d8ea] bg-white px-3 py-1.5 text-xs font-semibold text-[#2d63a8] transition hover:bg-[#eef5ff]"
+              >
+                Limpar amostra
+              </button>
+            </>
+          ) : (
+            <span className="rounded-full bg-white px-3 py-1 font-medium text-[#21466e]">
+              Sem amostra: usando branco automático
+            </span>
+          )}
+        </div>
+
+        {errorMessage ? (
+          <p className="mt-4 rounded-2xl border border-[#f4d8c5] bg-[#fff7f2] px-3 py-2 text-sm font-medium text-[#b54708]">{errorMessage}</p>
+        ) : null}
+
+        <div className="mt-6 grid gap-4 lg:grid-cols-3">
+          <div className="rounded-2xl border border-[#d8e4f2] bg-white p-3">
+            <div className="mb-2 flex items-center justify-between gap-2">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#6380a3]">Original</p>
+              <span className="rounded-full bg-[#edf4ff] px-2.5 py-1 text-[11px] font-semibold text-[#2d63a8]">
+                Clique para amostrar
+              </span>
+            </div>
+            {sourcePreviewUrl ? (
+              <img
+                ref={originalImageRef}
+                src={sourcePreviewUrl}
+                alt="Original"
+                onClick={handleOriginalImageClick}
+                className="max-h-[360px] w-full cursor-crosshair rounded-xl bg-[rgba(107,114,128,0.6)] object-contain"
+              />
+            ) : (
+              <div className="flex h-[260px] items-center justify-center rounded-xl bg-[rgba(107,114,128,0.6)] text-sm text-white/90">Aguardando imagem</div>
+            )}
+          </div>
+
+          <div className="rounded-2xl border border-[#d8e4f2] bg-white p-3">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#6380a3]">Sem fundo (PNG)</p>
+            {result ? (
+              <img src={result.dataUrlPng} alt="Sem fundo" className="max-h-[360px] w-full rounded-xl bg-[rgba(107,114,128,0.6)] object-contain" />
+            ) : (
+              <div className="flex h-[260px] items-center justify-center rounded-xl bg-[rgba(107,114,128,0.6)] text-sm text-white/90">Processamento pendente</div>
+            )}
+          </div>
+
+          <div className="rounded-2xl border border-[#d8e4f2] bg-white p-3">
+            <div className="mb-2 flex items-center justify-between gap-2">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#6380a3]">Vetor simplificado</p>
+              <span className="rounded-full bg-[#edf4ff] px-2.5 py-1 text-[11px] font-semibold text-[#2d63a8]">{itemCountLabel}</span>
+            </div>
+
+            {svgPreviewUrl ? (
+              <img src={svgPreviewUrl} alt="Vetor simplificado" className="max-h-[360px] w-full rounded-xl bg-[rgba(107,114,128,0.6)] object-contain" />
+            ) : (
+              <div className="flex h-[260px] items-center justify-center rounded-xl bg-[rgba(107,114,128,0.6)] text-sm text-white/90">Sem vetor gerado</div>
+            )}
+          </div>
+        </div>
+
+        <div className="mt-6 flex flex-wrap gap-3">
           <button
             type="button"
             onClick={processImage}
@@ -399,42 +644,9 @@ export function BackgroundRemovalStudio() {
           </button>
         </div>
 
-        {errorMessage ? (
-          <p className="mt-4 rounded-2xl border border-[#f4d8c5] bg-[#fff7f2] px-3 py-2 text-sm font-medium text-[#b54708]">{errorMessage}</p>
-        ) : null}
-
-        <div className="mt-6 grid gap-4 lg:grid-cols-3">
-          <div className="rounded-2xl border border-[#d8e4f2] bg-white p-3">
-            <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#6380a3]">Original</p>
-            {sourcePreviewUrl ? (
-              <img src={sourcePreviewUrl} alt="Original" className="max-h-[360px] w-full rounded-xl bg-[rgba(107,114,128,0.6)] object-contain" />
-            ) : (
-              <div className="flex h-[260px] items-center justify-center rounded-xl bg-[rgba(107,114,128,0.6)] text-sm text-white/90">Aguardando imagem</div>
-            )}
-          </div>
-
-          <div className="rounded-2xl border border-[#d8e4f2] bg-white p-3">
-            <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#6380a3]">Sem fundo (PNG)</p>
-            {result ? (
-              <img src={result.dataUrlPng} alt="Sem fundo" className="max-h-[360px] w-full rounded-xl bg-[rgba(107,114,128,0.6)] object-contain" />
-            ) : (
-              <div className="flex h-[260px] items-center justify-center rounded-xl bg-[rgba(107,114,128,0.6)] text-sm text-white/90">Processamento pendente</div>
-            )}
-          </div>
-
-          <div className="rounded-2xl border border-[#d8e4f2] bg-white p-3">
-            <div className="mb-2 flex items-center justify-between gap-2">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#6380a3]">Vetor simplificado</p>
-              <span className="rounded-full bg-[#edf4ff] px-2.5 py-1 text-[11px] font-semibold text-[#2d63a8]">{itemCountLabel}</span>
-            </div>
-
-            {svgPreviewUrl ? (
-              <img src={svgPreviewUrl} alt="Vetor simplificado" className="max-h-[360px] w-full rounded-xl bg-[rgba(107,114,128,0.6)] object-contain" />
-            ) : (
-              <div className="flex h-[260px] items-center justify-center rounded-xl bg-[rgba(107,114,128,0.6)] text-sm text-white/90">Sem vetor gerado</div>
-            )}
-          </div>
-        </div>
+        <p className="mt-2 text-xs text-[#5f7390]">
+          Os botões de download seguem a fonte selecionada em <strong>Fonte para download</strong>.
+        </p>
       </section>
     </main>
   );
