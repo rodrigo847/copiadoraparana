@@ -173,8 +173,8 @@ export default function HomePage() {
       <SiteHeader />
 
       <main className="flex flex-1 flex-col">
-        <section id="inicio" className="mx-auto w-full max-w-7xl scroll-mt-28 px-3 pt-5 pb-7 sm:px-6 sm:pt-8 sm:pb-9 lg:px-10 lg:pt-16 lg:pb-16">
-          <div className="hero-panel relative isolate overflow-hidden rounded-3xl px-4 py-6 text-white sm:rounded-4xl sm:px-8 sm:py-10 lg:px-12 lg:py-14">
+        <section id="inicio" className="mx-auto w-full max-w-7xl scroll-mt-28 px-3 pt-2 pb-7 sm:px-6 sm:pt-4 sm:pb-9 lg:px-10 lg:pt-6 lg:pb-16">
+          <div className="hero-panel relative isolate overflow-hidden rounded-3xl px-4 py-4 text-white sm:rounded-4xl sm:px-8 sm:py-8 lg:min-h-160 lg:px-12 lg:py-10">
             <Image
               src="/img/Fundo.png"
               alt=""
@@ -186,11 +186,11 @@ export default function HomePage() {
             />
             <div className="absolute inset-0 bg-[linear-gradient(105deg,rgba(10,28,49,0.72)_10%,rgba(12,37,62,0.64)_55%,rgba(14,48,78,0.56)_100%)]" />
 
-            <div className="relative z-10 grid gap-6 sm:gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
+            <div className="relative z-10 grid gap-6 sm:gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-stretch">
               <div>
 
                 <p className="text-2xl mb-3">Bem vindo a <br></br> Copiadora Paraná Laser</p>
-                <h1 className="mb-4 max-w-2xl font-heading text-4xl font-bold tracking-tight text-balance sm:mb-6 sm:text-5xl lg:text-6xl">
+                <h1 className="mb-4 max-w-3xl font-heading text-3xl font-bold leading-[1.06] tracking-[-0.01em] text-balance sm:mb-5 sm:text-4xl lg:text-5xl">
                   Copiadora e gráfica rápida em Curitiba para impressão digital, adesivos, banners e plotagem
                 </h1>
 
@@ -228,9 +228,9 @@ export default function HomePage() {
                 </div>
               </div>
 
-              <div className="relative overflow-hidden rounded-3xl border border-white/12 bg-white/5 p-5 sm:rounded-4xl sm:p-9 lg:p-10 backdrop-blur-2xl shadow-[0_20px_60px_rgba(2,10,22,0.25)]">
+              <div className="relative h-full self-stretch overflow-hidden rounded-3xl border border-white/12 bg-white/5 p-5 sm:rounded-4xl sm:p-9 lg:p-10 backdrop-blur-2xl shadow-[0_20px_60px_rgba(2,10,22,0.25)]">
                 <div className="absolute inset-0 rounded-4xl bg-[linear-gradient(145deg,rgba(255,255,255,0.08),rgba(255,255,255,0.01))]" />
-                <div className="relative z-10">
+                <div className="relative z-10 flex h-full flex-col justify-center">
                   <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#d8e8ff]">Fale Conosco</p>
                   <h2 className="mt-3 font-heading text-xl font-bold tracking-tight text-white sm:text-2xl">Atendimento rápido e direto</h2>
 
@@ -278,6 +278,7 @@ export default function HomePage() {
                       </a>
                     </div>
                   </div>
+
                 </div>
               </div>
             </div>
