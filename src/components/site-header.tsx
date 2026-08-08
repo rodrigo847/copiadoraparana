@@ -105,17 +105,18 @@ export function SiteHeader() {
   const isExternalLink = (href: string) => /^https?:\/\//.test(href);
 
   return (
-    <header className="sticky top-0 z-30 border-b border-white/10 bg-[#071f3c]/92 text-white backdrop-blur-xl">
+    <header className="sticky top-0 z-30 border-b border-white/10 bg-[#071f3c] text-white">
       <div className="mx-auto w-full max-w-7xl px-4 py-3 sm:px-6 lg:px-10">
         <div className="flex items-center justify-between gap-3 lg:gap-6">
           <Link href="/" className="flex items-center" onClick={(event) => handleSectionNavigation("inicio", event)}>
             {!logoError ? (
               <Image
-                src="/img/logo.png"
+                src="/img/logo-animada.gif"
                 alt="Paraná Laser Copy"
-                width={260}
-                height={56}
-                className="h-10 w-auto object-contain sm:h-12"
+                width={711}
+                height={98}
+                unoptimized
+                className="h-10 w-auto object-contain sm:h-11"
                 onError={() => setLogoError(true)}
               />
             ) : (
