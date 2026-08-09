@@ -395,15 +395,43 @@ export default function HomePage() {
               Veja detalhes de atendimento para cada tipo de demanda de impressão e material gráfico.
             </p>
 
-            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+            <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {serviceLandingPages.map((servicePage) => (
-                <Link
+                <article
                   key={servicePage.slug}
-                  href={`/servicos/${servicePage.slug}`}
-                  className="rounded-2xl border border-[#cfe0fb] bg-white/78 px-4 py-3 text-sm font-semibold text-[#0f3864] transition hover:border-[#7aa9e3] hover:bg-white"
+                  className="rounded-3xl border border-[#d8e6fb] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(244,249,255,0.92))] p-5 shadow-[0_10px_24px_rgba(19,38,68,0.08)] transition hover:-translate-y-0.5 hover:border-[#90b9ee]"
                 >
-                  {servicePage.title}
-                </Link>
+                  <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[#5f7ea5]">Especialidade</p>
+                  <h3 className="mt-2 font-heading text-xl font-bold tracking-tight text-[#123159]">{servicePage.title}</h3>
+                  <p className="mt-2 text-sm leading-7 text-[#365a84]">{servicePage.summary}</p>
+
+                  <div className="mt-4 space-y-1.5">
+                    {servicePage.highlights.slice(0, 2).map((highlight) => (
+                      <p key={highlight} className="flex items-start gap-2 text-sm leading-6 text-[#2f547c]">
+                        <span className="mt-2 inline-block h-1.5 w-1.5 rounded-full bg-[#5d92d7]" aria-hidden="true" />
+                        <span>{highlight}</span>
+                      </p>
+                    ))}
+                  </div>
+
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {servicePage.keywords.slice(0, 2).map((keyword) => (
+                      <span
+                        key={keyword}
+                        className="rounded-full border border-[#d3e2f6] bg-white/92 px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.08em] text-[#4b6f98]"
+                      >
+                        {keyword}
+                      </span>
+                    ))}
+                  </div>
+
+                  <Link
+                    href={`/servicos/${servicePage.slug}`}
+                    className="mt-5 inline-flex items-center justify-center rounded-full border border-[#7ea9df] bg-white px-4 py-2 text-sm font-semibold text-[#0f3864] transition hover:border-[#5f92d7] hover:bg-[#f2f7ff]"
+                  >
+                    Ver detalhes do serviço
+                  </Link>
+                </article>
               ))}
             </div>
           </div>
