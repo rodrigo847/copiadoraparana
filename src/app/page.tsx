@@ -349,24 +349,37 @@ export default function HomePage() {
             {services.map((service) => (
               <article
                 key={service.title}
-                className="section-card relative isolate overflow-hidden rounded-3xl p-7 transition duration-300 hover:border-[#95c1ff]"
+                className="section-card relative isolate overflow-hidden rounded-3xl transition duration-300 hover:border-[#95c1ff]"
               >
                 {service.backgroundImage ? (
                   <>
+                    <div className="relative h-52 sm:hidden">
+                      <Image
+                        src={service.backgroundImage}
+                        alt={service.title}
+                        fill
+                        sizes="100vw"
+                        className="object-cover"
+                      />
+                    </div>
+
                     <Image
                       src={service.backgroundImage}
                       alt=""
                       aria-hidden="true"
                       fill
                       sizes="(min-width: 1024px) 50vw, 100vw"
+                      className="hidden sm:block"
                       style={{ objectFit: "cover", objectPosition: "center", opacity: 0.6, borderRadius: "1.75rem" }}
                     />
-                    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.82),rgba(242,248,255,0.74))]" />
+                    <div className="absolute inset-0 hidden bg-[linear-gradient(180deg,rgba(255,255,255,0.82),rgba(242,248,255,0.74))] sm:block" />
                   </>
                 ) : null}
 
-                <h2 className="relative z-10 mt-4 font-heading text-2xl font-bold tracking-tight text-[#08284c]">{service.title}</h2>
-                <p className="relative z-10 mt-3 text-base leading-7 text-[#234a74]">{service.description}</p>
+                <div className="relative z-10 px-5 py-5 sm:p-7">
+                  <h2 className="font-heading text-2xl font-bold tracking-tight text-[#08284c]">{service.title}</h2>
+                  <p className="mt-3 text-base leading-7 text-[#234a74]">{service.description}</p>
+                </div>
               </article>
             ))}
           </div>
