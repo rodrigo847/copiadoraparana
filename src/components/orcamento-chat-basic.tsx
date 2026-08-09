@@ -985,7 +985,6 @@ export function OrcamentoChatBasic() {
           </span>
           <div>
             <h2 className="font-heading text-2xl tracking-tight text-[#0f1f39]">Chat de Orçamento!</h2>
-            <p className="text-sm text-[#4a6486]">Em primeira fase, apenas para adesivos, banners, acrílico e placas.</p>
           </div>
         </div>
 
