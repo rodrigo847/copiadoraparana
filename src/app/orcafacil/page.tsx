@@ -31,6 +31,7 @@ export default function OrcaFacilPage() {
           </p>
         </section>
 
+        {/*
         <section className="mt-2">
           <div className="mx-auto w-full max-w-screen-2xl px-4 sm:px-6 min-[900px]:max-w-[94vw]">
             <div className="mx-auto w-full min-[900px]:w-[85%]">
@@ -166,6 +167,7 @@ export default function OrcaFacilPage() {
             </div>
           </div>
         </section>
+        */}
 
         <section className="mt-2">
           <div className="mx-auto w-full max-w-screen-2xl px-4 sm:px-6 min-[900px]:max-w-[94vw]">

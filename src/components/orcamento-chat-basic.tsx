@@ -78,6 +78,25 @@ function normalizeText(input: string): string {
     .trim();
 }
 
+function extractRequestBody(raw: string): { text: string; intent: "quote" | "price" | "availability" } {
+  const normalized = normalizeText(raw);
+  const hasPriceIntent = /\b(quanto|valor|preco|custa|sai|fica|estimar|orcar|cotar)\b/.test(normalized);
+  const hasAvailabilityIntent = /\b(fazem|faz|conseguem|trabalham|tem opcao|voces fazem|possuem|dispõem)\b/.test(normalized);
+
+  let text = normalized;
+  text = text.replace(/^(?:preciso de|preciso|quero saber quanto(?: custa| sai| fica| e| é)?|quero saber|gostaria de saber|gostaria de|me diga uma coisa|me diga|qual o valor de|qual valor de|quanto custa|quanto sai|quero|por favor)\s+/i, "");
+  text = text.replace(/^(?:,|:|;|\.)\s*/, "").replace(/\s+/g, " ").trim();
+
+  if (!text) {
+    return { text: normalized, intent: hasPriceIntent ? "price" : hasAvailabilityIntent ? "availability" : "quote" };
+  }
+
+  return {
+    text,
+    intent: hasPriceIntent ? "price" : hasAvailabilityIntent ? "availability" : "quote",
+  };
+}
+
 function parseNumber(value: string): number {
   return Number.parseFloat(value.replace(",", "."));
 }
@@ -437,12 +456,13 @@ function parseRequest(raw: string): ParsedRequest {
 }
 
 function buildQuote(raw: string): QuoteResult {
-  const normalizedRaw = normalizeText(raw);
+  const { text: requestText, intent } = extractRequestBody(raw);
+  const normalizedRaw = normalizeText(requestText);
   const isMeterPriceQuestion = isPriceInquiry(normalizedRaw);
   const isAvailabilityQuestion = /(fazem|faz|conseguem|trabalham com|tem opcao|voces fazem)/.test(
     normalizedRaw,
   );
-  const parsed = parseRequest(raw);
+  const parsed = parseRequest(requestText);
 
   let quantity = parsed.quantity;
   const height = parsed.height;
@@ -525,6 +545,10 @@ function buildQuote(raw: string): QuoteResult {
           : RIGID_MATERIALS[rigidMaterial]?.name;
 
       const missingHint = missing.join(", ");
+      const exampleHint =
+        intent === "price"
+          ? "Exemplo: quero saber quanto custa 100 adesivos 3x3cm em vinil fosco com meio corte."
+          : "Exemplo: preciso de 100 adesivos 3x3cm em vinil fosco com meio corte.";
 
       return {
         ok: false,
@@ -532,14 +556,19 @@ function buildQuote(raw: string): QuoteResult {
         error: `Sim, fazemos ${serviceLabel?.toLowerCase() || "esse material"}! Para calcular certinho, preciso de: ${missingHint}.`,
         hint:
           productType === "chaveiro"
-            ? "Exemplo recomendado: 50 chaveiros 5x7cm em acrilico 2mm com corte laser."
+            ? `${exampleHint}\nExemplo recomendado: 50 chaveiros 5x7cm em acrilico 2mm com corte laser.`
             : productType === "placa_pix"
-              ? "Podemos cotar em opcoes como PS 2mm e Acrilico 2mm. O corte laser e indispensavel para montagem; a dobra e aplicada nas plaquinhas desses materiais. Exemplo: 10 placas de pix 20x30cm."
+              ? `${exampleHint}\nPodemos cotar em opcoes como PS 2mm e Acrilico 2mm. O corte laser e indispensavel para montagem; a dobra e aplicada nas plaquinhas desses materiais. Exemplo: 10 placas de pix 20x30cm.`
               : productType === "placa"
-                ? "Para placa UV, informe o tamanho e, se quiser, o material rigido. Exemplo: placa 10x15cm UV em PS 2mm."
-            : undefined,
+                ? `${exampleHint}\nPara placa UV, informe o tamanho e, se quiser, o material rigido. Exemplo: placa 10x15cm UV em PS 2mm.`
+                : exampleHint,
       };
     }
+
+    const exampleHint =
+      intent === "price"
+        ? "Exemplo: quero saber quanto custa 100 adesivos 3x3cm em vinil fosco com meio corte."
+        : "Exemplo: preciso de 100 adesivos 3x3cm em vinil fosco com meio corte.";
 
     return {
       ok: false,
@@ -547,12 +576,12 @@ function buildQuote(raw: string): QuoteResult {
       error: `Preciso de mais dados para calcular: ${missing.join(", ")}.`,
       hint:
         productType === "chaveiro"
-          ? "Exemplo recomendado: 50 chaveiros 5x7cm em acrilico 2mm com corte laser."
+          ? `${exampleHint}\nExemplo recomendado: 50 chaveiros 5x7cm em acrilico 2mm com corte laser.`
           : productType === "placa_pix"
-            ? "Podemos cotar em opcoes como PS 2mm e Acrilico 2mm. O corte laser e indispensavel para montagem; a dobra e aplicada nas plaquinhas desses materiais. Exemplo: 10 placas de pix 20x30cm."
-              : productType === "placa"
-                ? "Para placa UV, informe o tamanho e, se quiser, o material rigido. Exemplo: placa 10x15cm UV em PS 2mm."
-          : undefined,
+            ? `${exampleHint}\nPodemos cotar em opcoes como PS 2mm e Acrilico 2mm. O corte laser e indispensavel para montagem; a dobra e aplicada nas plaquinhas desses materiais. Exemplo: 10 placas de pix 20x30cm.`
+            : productType === "placa"
+              ? `${exampleHint}\nPara placa UV, informe o tamanho e, se quiser, o material rigido. Exemplo: placa 10x15cm UV em PS 2mm.`
+              : exampleHint,
     };
   }
 
@@ -903,7 +932,7 @@ export function OrcamentoChatBasic() {
   ]);
 
   const placeholder = useMemo(
-    () => "Ex: 100 adesivos 3x3cm em vinil...",
+    () => "Ex: preciso de 100 adesivos 3x3cm em vinil fosco com meio corte",
     []
   );
 
