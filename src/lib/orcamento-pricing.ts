@@ -10,6 +10,7 @@ export const MATERIALS: Record<string, PriceLabel> = {
   vinil_branco_fosco: { name: "Adesivo Vinil Fosco", pricePerM2: 35 },
   vinil_branco_brilho: { name: "Adesivo Vinil Brilho", pricePerM2: 35 },
   vinil_transparente_brilho: { name: "Adesivo Vinil Transparente", pricePerM2: 75 },
+  adesivo_perfurado: { name: "Adesivo Perfurado", pricePerM2: 35 },
   papel_couche_fosco_150g: { name: "Couche/Offset 150g", pricePerM2: 1 },
   banner_brilho: { name: "Banner Brilho", pricePerM2: 35 },
   banner_fosco: { name: "Banner Fosco", pricePerM2: 35 },

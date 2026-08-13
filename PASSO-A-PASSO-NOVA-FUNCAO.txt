@@ -55,11 +55,11 @@ git checkout -b feat/nome-da-funcao
 npm run dev
 
 ----------------------------------------
-EXECUÇÃO PADRÃO 
+EXECUTAR APÓS ALTERAÇÕES NO PROJETO
 npm run build
 git add .
-git commit -m "feat: nome da funcao"
-git push origin feat/nome-da-funcao
+git commit -m "detalhar o que foi feito"
+git push origin main
 
 --------------------------------------------
 QUANDO FOR AJUSTE PEQUENO DIRETO NA MAIN

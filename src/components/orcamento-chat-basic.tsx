@@ -204,6 +204,11 @@ function detectMaterial(text: string): string | null {
   if (/\bban+n?er(?:es|s)?\s+fosco\b/.test(text)) return "banner_fosco";
   if (/\bban+n?er(?:es|s)?\s+brilho\b/.test(text)) return "banner_brilho";
   if (/\bban+n?er(?:es|s)?\b/.test(text)) return "banner_brilho"; // default to shiny if not specified
+
+  // Perforated sticker - explicit detection before generic adhesive detection
+  if (/\badesivo(?:s)?\s+perfurado(?:s)?\b/.test(text) || (/\badesivo(?:s)?\b/.test(text) && /\bperfurado\b/.test(text))) {
+    return "adesivo_perfurado";
+  }
   
   // Vinyl materials - order matters for specificity
   if (/\badesivo(?:s)?\b/.test(text) && /\btransparente\b/.test(text)) return "vinil_transparente_brilho";

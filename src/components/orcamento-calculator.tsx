@@ -43,6 +43,7 @@ const MATERIAL_ICONS: Record<string, string> = {
   vinil_branco_fosco: "⚪",
   vinil_branco_brilho: "⚪",
   vinil_transparente_brilho: "⚪",
+  adesivo_perfurado: "🧩",
   papel_couche_fosco_150g: "📄",
   banner_brilho: "🪧",
   banner_fosco: "🪧",
@@ -705,6 +706,9 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
               if (value !== "sem_material") {
                 setRigidMaterial("sem_rigido");
                 setVerso("sem_verso");
+              }
+              if (value === "adesivo_perfurado") {
+                setPrintingType("eco_solvente");
               }
               if (value !== "vinil_branco_brilho" && value !== "vinil_branco_fosco") {
                 setOptionalFinishing("sem_opcional");
