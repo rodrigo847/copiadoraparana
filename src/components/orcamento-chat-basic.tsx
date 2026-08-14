@@ -286,6 +286,14 @@ function detectOptionalFinishing(text: string): string | null {
   return detectFromCatalogByName(text, OPTIONAL_FINISHING_TYPES, "sem_opcional") || "sem_opcional";
 }
 
+function hasExplicitFinishKeyword(text: string): boolean {
+  return /\b(?:corte\s+)?laser\b|\b(?:corte\s+)?dobra\b|\b(?:meio\s+corte|corte\s+total|ilh(?:os|o)|madeira|cavalete)\b/i.test(text);
+}
+
+function hasExplicitMaterialKeyword(text: string): boolean {
+  return /\b(?:adesivo|banner|vinil|ps\s*\d|acrilico|triplex|c2s|material\s+cliente|papel|couche|offset)\b/i.test(text);
+}
+
 function detectVerso(text: string): string | null {
   if (/\bcom\s+verso\b/.test(text) || /\bfrente\s+e\s+verso\b/.test(text) || /\bfrente.verso\b/.test(text)) return "com_verso";
   if (/\bfrente\b/.test(text) && /\bverso\b/.test(text)) return "com_verso";
@@ -495,7 +503,11 @@ function buildQuote(raw: string): QuoteResult {
     }
   }
 
-  if (productType === "chaveiro") {
+  const hasExplicitLaserRequest = /\b(?:corte\s+)?laser\b/.test(requestText);
+  const hasExplicitFinishRequest = hasExplicitFinishKeyword(requestText);
+  const hasExplicitMaterialRequest = hasExplicitMaterialKeyword(requestText);
+
+  if (productType === "chaveiro" && hasExplicitLaserRequest) {
     if (rigidMaterial === "sem_rigido") {
       rigidMaterial = "acrilico_2mm";
       appliedRecommendation = true;
@@ -507,15 +519,9 @@ function buildQuote(raw: string): QuoteResult {
     }
   }
 
-  if (productType === "placa_pix" && finishing === "sem_acabamento") {
-    finishing = "corte_dobra";
-    appliedRecommendation = true;
-  }
-
-  if (productType === "placa" && rigidMaterial === "sem_rigido" && printingType === "uv") {
-    rigidMaterial = "ps_2mm";
-    appliedRecommendation = true;
-  }
+  // Mantém o orçamento fiel ao que foi pedido; não aplica acabamento ou material
+  // automaticamente quando o cliente não explicitou essas opções.
+  // Regras de recomendação ficam restritas apenas à solicitação explícita do usuário.
 
   const canUseOptionalFinishing = canUseOptionalFinishingForSelection(material, rigidMaterial);
   if (!canUseOptionalFinishing) {
@@ -540,6 +546,19 @@ function buildQuote(raw: string): QuoteResult {
   if (!height || !width) missing.push("tamanho (ex: 3x3cm)");
   if (material === "sem_material" && rigidMaterial === "sem_rigido" && productType !== "placa_pix") {
     missing.push("material");
+  }
+
+  if (!hasExplicitMaterialRequest && (material === "sem_material" && rigidMaterial === "sem_rigido")) {
+    return {
+      ok: false,
+      missing: ["material"],
+      error: "Nao consegui identificar o material do pedido. Informe o tipo de material (adesivo, banner, PS, acrilico, etc.) antes de calcular o preco.",
+      hint: "Exemplo: 20 adesivos 5x5cm em vinil fosco sem acabamento.",
+    };
+  }
+
+  if (!hasExplicitFinishRequest && finishing !== "sem_acabamento") {
+    finishing = "sem_acabamento";
   }
 
   if (missing.length > 0) {
@@ -736,7 +755,7 @@ function buildQuote(raw: string): QuoteResult {
       "",
       buildPlacaPixOption("acrilico_2mm", "Opcao Premium: Acrilico 2mm"),
       "",
-      "Obs: o corte laser e indispensavel para montagem; a dobra e aplicada nas plaquinhas de PS e Acrilico.",
+      "Obs: confirme o acabamento desejado; corte laser e dobra dependem do tipo de peça e da montagem final.",
     ].join("\n");
 
     return { ok: true, summary };
@@ -881,7 +900,7 @@ function buildQuote(raw: string): QuoteResult {
     `💰 **Valor Total:** ${formatCurrency(totalPrice)}`,
   ].filter((line): line is string => Boolean(line));
 
-  if (productType === "chaveiro" && appliedRecommendation) {
+  if (productType === "chaveiro" && appliedRecommendation && hasExplicitLaserRequest) {
     summaryLines.push(
       "💡 Recomendacao aplicada para chaveiro: Acrilico 2mm + Corte Laser.",
     );
