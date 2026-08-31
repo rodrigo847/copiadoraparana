@@ -15,7 +15,7 @@ export const site = {
     "mailto:financeiro@copiadoraparanalaser.com.br?subject=Solicitacao%20de%20cadastro%20comercial&body=Ola%2C%20gostaria%20de%20solicitar%20cadastro%20comercial.%0A%0AEmpresa%3A%0ACNPJ%3A%0AResponsavel%3A%0ATelefone%3A%0AEmail%3A%0A",
   instagram: "https://www.instagram.com/copiadoraparanalaser/",
   googleMapsDirections:
-    "https://www.google.com/maps/dir/?api=1&destination=Rua+Teixeira+Coelho,+61,+Batel,+Curitiba+-+PR,+80420-030",
+    "https://www.google.com/maps/dir/?api=1&destination=Rua+Teixeira+Coelho,+61,+Batel,+Curitiba+-+PR,+80420-150",
   wazeDirections:
     "https://www.waze.com/ul?q=Rua%20Teixeira%20Coelho%2061%20Batel%20Curitiba&navigate=yes",
   address: {
@@ -23,7 +23,7 @@ export const site = {
     district: "Batel",
     city: "Curitiba",
     region: "PR",
-    postalCode: "80420-030",
+    postalCode: "80420-150",
     country: "BR",
   },
   openingHours: ["Mo-Fr 09:00-18:00", "Sa 09:00-12:00"],
