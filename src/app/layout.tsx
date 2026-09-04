@@ -6,6 +6,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import { FloatingOrcamentoButton } from "@/components/floating-orcamento-button";
 import { FontSizeToggle } from "@/components/font-size-toggle";
+import { HolidayNoticeModal } from "@/components/holiday-notice-modal";
 
 import "./globals.css";
 
@@ -108,6 +109,7 @@ export default function RootLayout({
         {children}
         <FontSizeToggle />
         <FloatingOrcamentoButton />
+        <HolidayNoticeModal />
         <Analytics />
         <SpeedInsights />
       </body>
