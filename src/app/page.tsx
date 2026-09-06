@@ -6,6 +6,7 @@ import Script from "next/script";
 import { CopyWhatsappCard } from "@/components/copy-whatsapp-card";
 import { SilentVideo } from "@/components/silent-video";
 import { ServicesProductsCarousel } from "@/components/services-products-carousel";
+import { ServiceCube } from "@/components/service-cube";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import {
@@ -188,8 +189,7 @@ export default function HomePage() {
 
             <div className="relative z-10 grid gap-6 sm:gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-stretch">
               <div>
-
-                <p className="mb-3 text-xl">Bem-vindo à Copiadora Paraná Laser</p>
+                <ServiceCube />
                 <h1 className="my-10 max-w-xl font-heading text-xl font-bold leading-[1.06] tracking-[-0.01em] text-balance sm:mb-5 sm:text-4xl lg:text-5xl">
                   Copiadora, Comunicação Visual e <span className="inline whitespace-nowrap text-blue-300 italic">gráfica rápida</span> em Curitiba
                 </h1>
