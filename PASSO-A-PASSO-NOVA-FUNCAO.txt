@@ -72,6 +72,3 @@ git add .
 git commit -m "fix: descricao do ajuste"
 git push origin main
 
-Observacao:
-- npm run build local NAO publica na Vercel.
-- Publica quando fizer push (ou merge) na branch monitorada pela Vercel.

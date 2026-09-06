@@ -195,7 +195,7 @@ export default function HomePage() {
                 </h1>
 
                 <p className="my-6 max-w-xl text-base leading-7 text-[#c5dcfb] sm:mt-6 sm:text-xl sm:leading-8">
-                  Impressão digital, adesivos, banners, encadernações: Espiral, Wire-o e Capa Dura, kit eventos, impressão UV em materiais rígidos e plotagens até A0 com agilidade e qualidade.
+                  Impressão digital, adesivos, banners, encadernações, plastificações, kit eventos, impressão UV em materiais rígidos como PVC, PS e Acrílico e plotagens até A0 com agilidade e qualidade.
                 </p>
                 <p className="my-6 max-w-l text-base leading-7 text-[#c5dcfb] sm:mt-6 sm:text-l sm:leading-8">
                   Contamos também com DTF para Brindes e Personalização de Produtos.
