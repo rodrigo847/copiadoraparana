@@ -319,9 +319,15 @@ export default function HomePage() {
         </section>
 
         <section className="mx-auto w-full max-w-7xl px-4 py-4 sm:px-6 lg:px-10 lg:py-6">
-          <div className="section-card rounded-4xl p-6 sm:p-8 lg:p-10">
-            <div className="max-w-3xl">
+          <details className="group section-card rounded-4xl p-6 sm:p-8 lg:p-10">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-5 [&::-webkit-details-marker]:hidden">
               <span className="eyebrow">Serviços mais buscados</span>
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#c9ddf8] bg-white/70 text-[#35669e] transition duration-300 group-open:rotate-180" aria-hidden="true">
+                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m6 9 6 6 6-6" /></svg>
+              </span>
+            </summary>
+
+            <div className="mt-6">
               <h2 className="mt-4 font-heading text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
                 Destaques da Copiadora para as buscas mais frequentes dos clientes em Curitiba
               </h2>
@@ -341,7 +347,7 @@ export default function HomePage() {
                 </article>
               ))}
             </div>
-          </div>
+          </details>
         </section>
 
         <section id="servicos" className="mx-auto w-full max-w-7xl scroll-mt-28 px-4 py-8 sm:px-6 lg:px-10 lg:py-10">
@@ -386,16 +392,23 @@ export default function HomePage() {
         </section>
 
         <section className="mx-auto w-full max-w-7xl scroll-mt-28 px-4 py-8 sm:px-6 lg:px-10 lg:py-10">
-          <div className="section-card rounded-4xl p-6 sm:p-8">
-            <span className="eyebrow">Serviços por especialidade</span>
-            <h2 className="mt-4 font-heading text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-              Páginas dedicadas para os principais serviços em Curitiba
-            </h2>
-            <p className="mt-3 max-w-3xl text-base leading-7 text-muted">
-              Veja detalhes de atendimento para cada tipo de demanda de impressão e material gráfico.
-            </p>
+          <details className="group section-card rounded-4xl p-6 sm:p-8">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-5 [&::-webkit-details-marker]:hidden">
+              <span className="eyebrow">Serviços por especialidade</span>
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#c9ddf8] bg-white/70 text-[#35669e] transition duration-300 group-open:rotate-180" aria-hidden="true">
+                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m6 9 6 6 6-6" /></svg>
+              </span>
+            </summary>
 
-            <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            <div className="mt-6">
+              <h2 className="font-heading text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+                Páginas dedicadas para os principais serviços em Curitiba
+              </h2>
+              <p className="mt-3 max-w-3xl text-base leading-7 text-muted">
+                Veja detalhes de atendimento para cada tipo de demanda de impressão e material gráfico.
+              </p>
+
+              <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {serviceLandingPages.map((servicePage) => (
                 <article
                   key={servicePage.slug}
@@ -433,8 +446,9 @@ export default function HomePage() {
                   </Link>
                 </article>
               ))}
+              </div>
             </div>
-          </div>
+          </details>
         </section>
 
         <section className="mx-auto w-full max-w-7xl scroll-mt-28 px-4 py-8 sm:px-6 lg:px-10 lg:py-10">
