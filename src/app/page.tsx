@@ -176,7 +176,7 @@ export default function HomePage() {
         <section id="inicio" className="mx-auto w-full max-w-7xl scroll-mt-28 px-3 pt-2 pb-7 sm:px-6 sm:pt-4 sm:pb-9 lg:px-10 lg:pt-6 lg:pb-16">
           <div className="hero-panel relative isolate overflow-hidden rounded-3xl px-4 py-4 text-white sm:rounded-4xl sm:px-8 sm:py-8 lg:min-h-160 lg:px-12 lg:py-10">
             <Image
-              src="/img/Fundo.png"
+              src="/img/banner1.jpg"
               alt=""
               aria-hidden="true"
               fill
@@ -189,18 +189,18 @@ export default function HomePage() {
             <div className="relative z-10 grid gap-6 sm:gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-stretch">
               <div>
 
-                <p className="text-2xl mb-3">Bem vindo a <br></br> Copiadora Paraná Laser</p>
-                <h1 className="mb-4 max-w-3xl font-heading text-3xl font-bold leading-[1.06] tracking-[-0.01em] text-balance sm:mb-5 sm:text-4xl lg:text-5xl">
-                  Copiadora e gráfica rápida em Curitiba para impressão digital, adesivos, banners e plotagem
+                <p className="mb-3 text-xl">Bem-vindo à Copiadora Paraná Laser</p>
+                <h1 className="my-10 max-w-xl font-heading text-xl font-bold leading-[1.06] tracking-[-0.01em] text-balance sm:mb-5 sm:text-4xl lg:text-5xl">
+                  Copiadora, Comunicação Visual e <span className="inline whitespace-nowrap text-blue-300 italic">gráfica rápida</span> em Curitiba
                 </h1>
 
-                <p className="mt-4 max-w-2xl text-base leading-7 text-[#c5dcfb] sm:mt-6 sm:text-xl sm:leading-8">
-                  Se você procura uma copiadora em Curitiba para impressão digital, impressão a laser, adesivos com recorte especial, panfletos, flyers, banners, faixas, impressão A3 e serviço de plotagem, temos atendimento rápido e suporte especializado.
+                <p className="my-6 max-w-xl text-base leading-7 text-[#c5dcfb] sm:mt-6 sm:text-xl sm:leading-8">
+                  Impressão digital, adesivos, banners, encadernações: Espiral, Wire-o e Capa Dura, kit eventos, impressão UV em materiais rígidos e plotagens até A0 com agilidade e qualidade.
+                </p>
+                <p className="my-6 max-w-l text-base leading-7 text-[#c5dcfb] sm:mt-6 sm:text-l sm:leading-8">
+                  Contamos também com DTF para Brindes e Personalização de Produtos.
                 </p>
 
-                <span className="mt-4 inline-flex rounded-full bg-white/5 px-4 py-2 text-[0.72rem] tracking-[0.24em] text-[#a9cbfb]">
-                  Impressões Rápidas e com Qualidade
-                </span>
 
                 <div className="mt-7 sm:mt-8 flex flex-col gap-3 sm:flex-row sm:gap-5">
                   <Link
@@ -223,13 +223,13 @@ export default function HomePage() {
                       <path d="M7 4h10a3 3 0 013 3v10a3 3 0 01-3 3H9l-4 3V7a3 3 0 013-3z" />
                       <path d="M8.5 9.5h7M8.5 12.5h4.5" />
                     </svg>
-                    Falar no WhatsApp
+                    Atendimento WhatsApp
                   </a>
                 </div>
               </div>
 
-              <div className="relative h-full self-stretch overflow-hidden rounded-3xl border border-white/12 bg-white/5 p-5 sm:rounded-4xl sm:p-9 lg:p-10 backdrop-blur-2xl shadow-[0_20px_60px_rgba(2,10,22,0.25)]">
-                <div className="absolute inset-0 rounded-4xl bg-[linear-gradient(145deg,rgba(255,255,255,0.08),rgba(255,255,255,0.01))]" />
+              <div className="relative h-full self-stretch overflow-hidden rounded-3xl border border-white/12 bg-white/3 p-5 sm:rounded-4xl sm:p-9 lg:p-10 backdrop-blur-2xl shadow-[0_20px_60px_rgba(2,10,22,0.25)]">
+                <div className="absolute inset-0 rounded-4xl bg-[linear-gradient(145deg,rgba(255,255,255,0.04),rgba(255,255,255,0.005))]" />
                 <div className="relative z-10 flex h-full flex-col justify-center">
                   <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#d8e8ff]">Fale Conosco</p>
                   <h2 className="mt-3 font-heading text-xl font-bold tracking-tight text-white sm:text-2xl">Atendimento rápido e direto</h2>
