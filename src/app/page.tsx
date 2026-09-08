@@ -606,7 +606,7 @@ export default function HomePage() {
               <div>
                 <span className="eyebrow">Quem somos</span>
                 <h2 className="mt-4 font-heading text-2xl tracking-tight text-[#123159] sm:text-3xl">
-                  Gráfica rápida em Curitiba desde 1997, com atendimento ágil para empresas e clientes finais
+                  Copiadora e gráfica rápida em Curitiba desde 1997, com atendimento ágil para empresas e clientes finais
                 </h2>
                 <p className="mt-4 max-w-3xl text-base leading-8 text-[#365a84] sm:text-lg">
                   A Copiadora Paraná Laser atua no Batel, em Curitiba, com soluções em impressão digital, impressão a laser, adesivos, banners, plotagem, comunicação visual, encadernações e papelaria. Nosso foco é unir rapidez, orientação técnica e acabamento profissional para demandas corporativas e pedidos sob medida.
