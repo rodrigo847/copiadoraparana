@@ -3,10 +3,14 @@
 import Image from "next/image";
 import { useState } from "react";
 
-export function HolidayNoticeModal() {
-  const [isOpen, setIsOpen] = useState(true);
+type HolidayNoticeModalProps = {
+  enabled?: boolean;
+};
 
-  if (!isOpen) {
+export function HolidayNoticeModal({ enabled = false }: HolidayNoticeModalProps) {
+  const [isOpen, setIsOpen] = useState(enabled);
+
+  if (!enabled || !isOpen) {
     return null;
   }
 

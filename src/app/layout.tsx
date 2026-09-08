@@ -77,6 +77,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const siteNoticeEnabled = false;
+
   return (
     <html
       lang="pt-BR"
@@ -109,7 +111,7 @@ export default function RootLayout({
         {children}
         <FontSizeToggle />
         <FloatingOrcamentoButton />
-        <HolidayNoticeModal />
+        <HolidayNoticeModal enabled={siteNoticeEnabled} />
         <Analytics />
         <SpeedInsights />
       </body>
