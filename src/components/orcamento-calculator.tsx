@@ -725,7 +725,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
               if (event.key === "-") event.preventDefault();
             }}
             onChange={(event) => setWidth(sanitizeNonNegativeInput(event.target.value))}
-            placeholder="Ex: 15"
+            placeholder="Max: 180cm (largura)"
           />
         </label>
 
@@ -742,7 +742,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
               if (event.key === "-") event.preventDefault();
             }}
             onChange={(event) => setHeight(sanitizeNonNegativeInput(event.target.value))}
-            placeholder="Ex: 10"
+            placeholder="Altura: 50m"
           />
         </label>
 
