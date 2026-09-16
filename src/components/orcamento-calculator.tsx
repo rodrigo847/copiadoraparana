@@ -421,18 +421,13 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
       }
     }
 
-    if (isBannerMaterial(material) && wCm > 180) {
-      setErrorMessage("Para banner, a largura maxima e 180cm.");
+    if (isBannerMaterial(material) && (wCm > 180 || hCm > 5000)) {
+      setErrorMessage("Para banner, a largura maxima e 180cm e a altura maxima e 50m.");
       return;
     }
 
     if (printingType === "uv" && (hCm > 60 || wCm > 90)) {
       setErrorMessage("Impressao UV: maximo 60cm x 90cm.");
-      return;
-    }
-
-    if (printingType === "eco_solvente" && (hCm > 180 || wCm > 5000)) {
-      setErrorMessage("Eco-solvente: largura maxima de 50m e altura maxima de 1,80m.");
       return;
     }
 

@@ -627,8 +627,11 @@ function buildQuote(raw: string): QuoteResult {
     return { ok: false, error: "Impressao UV permite no maximo 60cm x 90cm." };
   }
 
-  if (printingType === "eco_solvente" && (hCm > 180 || wCm > 5000)) {
-    return { ok: false, error: "Eco-solvente permite no maximo 1,80m x 50m." };
+  if (isBannerMaterial(material) && (wCm > 180 || hCm > 5000)) {
+    return {
+      ok: false,
+      error: "Para banner, a largura maxima e 180cm e a altura maxima e 50m.",
+    };
   }
 
   if (printingType === "eco_solvente" && rigidMaterial !== "sem_rigido") {
