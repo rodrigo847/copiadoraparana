@@ -136,7 +136,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
   const isPsRigidMaterial =
     rigidMaterial === "ps_1mm" || rigidMaterial === "ps_2mm" || rigidMaterial === "ps_3mm";
   const canUseOptionalFinishing =
-    material === "vinil_branco_brilho" || material === "vinil_branco_fosco" || isPsRigidMaterial;
+    material === "vinil_branco_brilho" || material === "vinil_branco_fosco" || isPsRigidMaterial || printingType === "uv";
   const hasSpecialProduct = specialProduct !== "";
   const hasStandardData =
     height !== "" ||
@@ -774,6 +774,9 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
               if (value === "uv") {
                 setMaterial("sem_material");
               }
+              if (value !== "uv" && optionalFinishing === "fita_dupla_face") {
+                setOptionalFinishing("sem_opcional");
+              }
             }}
           >
             {Object.entries(PRINTING_TYPES)
@@ -911,11 +914,19 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
             onChange={(event) => setOptionalFinishing(event.target.value)}
             disabled={hasSpecialProduct || !canUseOptionalFinishing}
           >
-            {Object.entries(OPTIONAL_FINISHING_TYPES).map(([key, value]) => (
+            {Object.entries(OPTIONAL_FINISHING_TYPES)
+              .filter(([key]) => {
+                if (printingType === "uv") {
+                  return key === "sem_opcional" || key === "laminacao_frio" || key === "fita_dupla_face";
+                }
+
+                return key !== "fita_dupla_face";
+              })
+              .map(([key, value]) => (
               <option key={key} value={key}>
                 {value.name}
               </option>
-            ))}
+              ))}
           </select>
         </label>
 
