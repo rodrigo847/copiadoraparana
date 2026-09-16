@@ -432,7 +432,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
     }
 
     if (printingType === "eco_solvente" && (hCm > 180 || wCm > 5000)) {
-      setErrorMessage("Eco-solvente: maximo 1,80m x 50m.");
+      setErrorMessage("Eco-solvente: largura maxima de 50m e altura maxima de 1,80m.");
       return;
     }
 
@@ -708,7 +708,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
             className="mt-1.5 h-12 w-full rounded-2xl border border-[#c8d2df] bg-[#f1f4f8] px-4 text-[1.05rem] font-normal text-[#203653] outline-none transition placeholder:text-xs focus:border-[#77a6e7] sm:text-[1.1rem]"
             value={customerName}
             onChange={(event) => setCustomerName(event.target.value)}
-            placeholder="Ex: João Silva"
+            placeholder="Ex: Copiadora"
           />
         </label>
 
@@ -725,7 +725,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
               if (event.key === "-") event.preventDefault();
             }}
             onChange={(event) => setWidth(sanitizeNonNegativeInput(event.target.value))}
-            placeholder="Max: 180cm"
+            placeholder=""
           />
         </label>
 
@@ -742,7 +742,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
               if (event.key === "-") event.preventDefault();
             }}
             onChange={(event) => setHeight(sanitizeNonNegativeInput(event.target.value))}
-            placeholder="Max 500cm"
+            placeholder=""
           />
         </label>
 
