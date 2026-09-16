@@ -45,6 +45,12 @@ const SPECIAL_PRODUCTS: Record<string, { name: string; unitPrice: number }> = {
   roll_up_80x200: { name: "Roll-up 80x200cm", unitPrice: 350 },
 };
 
+const SPECIAL_PRODUCT_PDF_DESCRIPTIONS: Record<string, string> = {
+  dtf_a4: "DTF A4\nImpressão UV (com branco, verniz, CMYK e transfer)",
+  dtf_a3: "DTF A3\nImpressão UV (com branco, verniz, CMYK e transfer)",
+  roll_up_80x200: "Roll-up 80x200cm\nCom banner",
+};
+
 const MATERIAL_ICONS: Record<string, string> = {
   sem_material: "🚫",
   vinil_branco_fosco: "⚪",
@@ -526,7 +532,9 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
     const tableData = items.map((item, idx) => [
       String(idx + 1),
       item.specialProduct ? "-" : `${item.height} x ${item.width} ${item.unit}`,
-      item.specialProduct ? SPECIAL_PRODUCTS[item.specialProduct]?.name || item.specialProduct : MATERIALS[item.material]?.name || item.material,
+      item.specialProduct
+        ? SPECIAL_PRODUCT_PDF_DESCRIPTIONS[item.specialProduct] || SPECIAL_PRODUCTS[item.specialProduct]?.name || item.specialProduct
+        : MATERIALS[item.material]?.name || item.material,
       PRINTING_TYPES[item.printingType]?.name || item.printingType,
       RIGID_MATERIALS[item.rigidMaterial]?.name || item.rigidMaterial,
       FINISHING_TYPES[item.finishing]?.name || item.finishing,
