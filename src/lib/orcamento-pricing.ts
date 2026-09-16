@@ -49,7 +49,7 @@ export const OPTIONAL_FINISHING_TYPES: Record<string, PriceLabel> = {
   mascara: { name: "Máscara Transparente + R$80,00m²", pricePerM2: 80 },
   mascara_papel: { name: "Máscara de papel + R$45,00m²", pricePerM2: 45 },
   laminacao_frio: { name: "Laminação a Frio + R$95,00m²", pricePerM2: 95 },
-  fita_dupla_face: { name: "Fita dupla face + R$10,00m²", pricePerM2: 10 },
+  fita_dupla_face: { name: "Fita dupla face + R$10,00/m linear", pricePerM2: 10 },
 };
 
 export const VERSO_TYPES: Record<string, PriceLabel> = {

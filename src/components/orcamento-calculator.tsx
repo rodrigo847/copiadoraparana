@@ -171,14 +171,18 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
     const printingPrice = PRINTING_TYPES[printingType]?.pricePerM2 || 0;
     const rigidPrice = RIGID_MATERIALS[rigidMaterial]?.pricePerM2 || 0;
     const finishingPrice = FINISHING_TYPES[finishing]?.pricePerM2 || 0;
-    const optionalFinishingPrice = canUseOptionalFinishing
+    const optionalFinishingPrice = canUseOptionalFinishing && optionalFinishing !== "fita_dupla_face"
       ? OPTIONAL_FINISHING_TYPES[optionalFinishing]?.pricePerM2 || 0
+      : 0;
+    const doubleSidedTapePrice = optionalFinishing === "fita_dupla_face"
+      ? (hCm / 100) * 2 * OPTIONAL_FINISHING_TYPES.fita_dupla_face.pricePerM2
       : 0;
     const smallPieceMultiplier = areaM2 < 0.0009 ? 1.4 : 1;
     const versoPrice = (VERSO_TYPES[verso]?.pricePerM2 || 0) * areaM2;
 
     const calculatedUnitPrice =
       areaM2 * (materialPrice + printingPrice + rigidPrice + finishingPrice + optionalFinishingPrice) * smallPieceMultiplier +
+      doubleSidedTapePrice +
       versoPrice;
 
     const isSmallerThanTwoByTwoCm = hCm < 2 && wCm < 2;
@@ -447,14 +451,18 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
     const printingPrice = PRINTING_TYPES[printingType]?.pricePerM2 || 0;
     const rigidPrice = RIGID_MATERIALS[rigidMaterial]?.pricePerM2 || 0;
     const finishingPrice = FINISHING_TYPES[finishing]?.pricePerM2 || 0;
-    const optionalFinishingPrice = canUseOptionalFinishing
+    const optionalFinishingPrice = canUseOptionalFinishing && optionalFinishing !== "fita_dupla_face"
       ? OPTIONAL_FINISHING_TYPES[optionalFinishing]?.pricePerM2 || 0
+      : 0;
+    const doubleSidedTapePrice = optionalFinishing === "fita_dupla_face"
+      ? (hCm / 100) * 2 * OPTIONAL_FINISHING_TYPES.fita_dupla_face.pricePerM2
       : 0;
     const smallPieceMultiplier = areaM2 < 0.0009 ? 1.4 : 1;
     const versoPrice = (VERSO_TYPES[verso]?.pricePerM2 || 0) * areaM2;
 
     const calculatedUnitPrice =
       areaM2 * (materialPrice + printingPrice + rigidPrice + finishingPrice + optionalFinishingPrice) * smallPieceMultiplier +
+      doubleSidedTapePrice +
       versoPrice;
     const isSmallerThanTwoByTwoCm = hCm < 2 && wCm < 2;
     let unitPrice = isSmallerThanTwoByTwoCm
