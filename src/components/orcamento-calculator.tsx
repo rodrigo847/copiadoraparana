@@ -705,7 +705,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
         <label className="text-sm font-semibold text-[#102038] sm:col-span-2 lg:col-span-3">
           Nome do cliente
           <input
-            className="mt-1.5 h-12 w-full rounded-2xl border border-[#c8d2df] bg-[#f1f4f8] px-4 text-[1.05rem] font-normal text-[#203653] outline-none transition focus:border-[#77a6e7] sm:text-[1.1rem]"
+            className="mt-1.5 h-12 w-full rounded-2xl border border-[#c8d2df] bg-[#f1f4f8] px-4 text-[1.05rem] font-normal text-[#203653] outline-none transition placeholder:text-xs focus:border-[#77a6e7] sm:text-[1.1rem]"
             value={customerName}
             onChange={(event) => setCustomerName(event.target.value)}
             placeholder="Ex: João Silva"
@@ -718,14 +718,14 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
             type="number"
             min={0}
             step="any"
-            className="mt-1.5 h-12 w-full rounded-2xl border border-[#c8d2df] bg-[#f1f4f8] px-4 text-[1.05rem] font-normal text-[#203653] outline-none transition focus:border-[#77a6e7] sm:text-[1.1rem]"
+            className="mt-1.5 h-12 w-full rounded-2xl border border-[#c8d2df] bg-[#f1f4f8] px-4 text-[1.05rem] font-normal text-[#203653] outline-none transition placeholder:text-xs focus:border-[#77a6e7] sm:text-[1.1rem]"
             value={width}
             disabled={hasSpecialProduct}
             onKeyDown={(event) => {
               if (event.key === "-") event.preventDefault();
             }}
             onChange={(event) => setWidth(sanitizeNonNegativeInput(event.target.value))}
-            placeholder="Max: 180cm (largura)"
+            placeholder="Max: 180cm"
           />
         </label>
 
@@ -742,7 +742,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
               if (event.key === "-") event.preventDefault();
             }}
             onChange={(event) => setHeight(sanitizeNonNegativeInput(event.target.value))}
-            placeholder="Altura: 50m"
+            placeholder="Max 500cm"
           />
         </label>
 
