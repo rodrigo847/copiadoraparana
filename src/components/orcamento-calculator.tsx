@@ -409,6 +409,23 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
     const hCm = toCm(h, unit);
     const wCm = toCm(w, unit);
 
+    if (material.startsWith("vinil_") || material === "adesivo_perfurado") {
+      if (wCm > 100) {
+        setErrorMessage("Para adesivo, a largura maxima e 100cm.");
+        return;
+      }
+
+      if (hCm > 5000) {
+        setErrorMessage("Para adesivo, a altura maxima e 50m.");
+        return;
+      }
+    }
+
+    if (isBannerMaterial(material) && wCm > 180) {
+      setErrorMessage("Para banner, a largura maxima e 180cm.");
+      return;
+    }
+
     if (printingType === "uv" && (hCm > 60 || wCm > 90)) {
       setErrorMessage("Impressao UV: maximo 60cm x 90cm.");
       return;
@@ -429,13 +446,13 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
       return;
     }
 
-    if (printingType === "uv" && material !== "sem_material") {
-      setErrorMessage("Impressao UV permite apenas material rigido (sem adesivo/banner).");
+    if (material !== "sem_material" && printingType === "uv") {
+      setErrorMessage("Adesivo/Banner permite apenas Eco-solvente.");
       return;
     }
 
-    if (rigidMaterial !== "sem_rigido" && printingType !== "uv" && printingType !== "sem_impressao") {
-      setErrorMessage("Para material rigido, selecione impressao UV ou sem impressao.");
+    if (rigidMaterial !== "sem_rigido" && printingType !== "uv") {
+      setErrorMessage("Para material rigido, selecione impressao UV.");
       return;
     }
 
@@ -685,60 +702,13 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
       </div>
 
       <div className="mt-7 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <label className="text-sm font-semibold text-[#102038] sm:col-span-1 lg:col-span-2">
+        <label className="text-sm font-semibold text-[#102038] sm:col-span-2 lg:col-span-3">
           Nome do cliente
           <input
             className="mt-1.5 h-12 w-full rounded-2xl border border-[#c8d2df] bg-[#f1f4f8] px-4 text-[1.05rem] font-normal text-[#203653] outline-none transition focus:border-[#77a6e7] sm:text-[1.1rem]"
             value={customerName}
             onChange={(event) => setCustomerName(event.target.value)}
             placeholder="Ex: João Silva"
-          />
-        </label>
-
-        <label className="text-sm font-semibold text-[#102038]">
-          Especiais
-          <select
-            className="mt-1.5 h-12 w-full rounded-2xl border border-[#c8d2df] bg-[#f1f4f8] px-4 text-[1.05rem] font-normal text-[#203653] outline-none transition focus:border-[#77a6e7] disabled:cursor-not-allowed disabled:opacity-55 sm:text-[1.1rem]"
-            value={specialProduct}
-            disabled={hasStandardData && !hasSpecialProduct}
-            onChange={(event) => {
-              const value = event.target.value;
-              setSpecialProduct(value);
-              if (value) {
-                setHeight("");
-                setWidth("");
-                setMaterial("sem_material");
-                setPrintingType("sem_impressao");
-                setRigidMaterial("sem_rigido");
-                setFinishing("sem_acabamento");
-                setOptionalFinishing("sem_opcional");
-                setVerso("sem_verso");
-              }
-            }}
-          >
-            <option value="">Selecione um produto</option>
-            {Object.entries(SPECIAL_PRODUCTS).map(([key, product]) => (
-              <option key={key} value={key}>{`${product.name} - ${formatCurrency(product.unitPrice)}`}</option>
-            ))}
-          </select>
-        </label>
-
-        <label className="text-sm font-semibold text-[#102038]">
-          Altura
-          <input
-            type="number"
-            min={0}
-            step="any"
-            className="mt-1.5 h-12 w-full rounded-2xl border border-[#c8d2df] bg-[#f1f4f8] px-4 text-[1.05rem] font-normal text-[#203653] outline-none transition focus:border-[#77a6e7] sm:text-[1.1rem]"
-            value={height}
-            disabled={hasSpecialProduct}
-            onKeyDown={(event) => {
-              if (event.key === "-") {
-                event.preventDefault();
-              }
-            }}
-            onChange={(event) => setHeight(sanitizeNonNegativeInput(event.target.value))}
-            placeholder="Ex: 10"
           />
         </label>
 
@@ -752,12 +722,27 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
             value={width}
             disabled={hasSpecialProduct}
             onKeyDown={(event) => {
-              if (event.key === "-") {
-                event.preventDefault();
-              }
+              if (event.key === "-") event.preventDefault();
             }}
             onChange={(event) => setWidth(sanitizeNonNegativeInput(event.target.value))}
             placeholder="Ex: 15"
+          />
+        </label>
+
+        <label className="text-sm font-semibold text-[#102038]">
+          Altura
+          <input
+            type="number"
+            min={0}
+            step="any"
+            className="mt-1.5 h-12 w-full rounded-2xl border border-[#c8d2df] bg-[#f1f4f8] px-4 text-[1.05rem] font-normal text-[#203653] outline-none transition focus:border-[#77a6e7] sm:text-[1.1rem]"
+            value={height}
+            disabled={hasSpecialProduct}
+            onKeyDown={(event) => {
+              if (event.key === "-") event.preventDefault();
+            }}
+            onChange={(event) => setHeight(sanitizeNonNegativeInput(event.target.value))}
+            placeholder="Ex: 10"
           />
         </label>
 
@@ -775,42 +760,6 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
         </label>
 
         <label className="text-sm font-semibold text-[#102038]">
-          Impressao
-          <select
-            className="mt-1.5 h-12 w-full rounded-2xl border border-[#c8d2df] bg-[#f1f4f8] px-4 text-[1.05rem] font-normal text-[#203653] outline-none transition focus:border-[#77a6e7] sm:text-[1.1rem]"
-            value={printingType}
-            disabled={hasSpecialProduct}
-            onChange={(event) => {
-              const value = event.target.value;
-              setPrintingType(value);
-              if (value === "eco_solvente") {
-                setRigidMaterial("sem_rigido");
-                setVerso("sem_verso");
-              }
-              if (value === "uv") {
-                setMaterial("sem_material");
-              }
-              if (value !== "uv" && optionalFinishing === "fita_dupla_face") {
-                setOptionalFinishing("sem_opcional");
-              }
-            }}
-          >
-            {Object.entries(PRINTING_TYPES)
-              .filter(([key]) => {
-                if (rigidMaterial !== "sem_rigido") {
-                  return key === "uv" || key === "sem_impressao";
-                }
-                return true;
-              })
-              .map(([key, value]) => (
-                <option key={key} value={key}>
-                  {PRINTING_ICONS[key] ? `${PRINTING_ICONS[key]} ${value.name}` : value.name}
-                </option>
-              ))}
-          </select>
-        </label>
-
-        <label className="text-sm font-semibold text-[#102038]">
           Adesivo/Banner
           <select
             className="mt-1.5 h-12 w-full rounded-2xl border border-[#c8d2df] bg-[#f1f4f8] px-4 text-[1.05rem] font-normal text-[#203653] outline-none transition focus:border-[#77a6e7] sm:text-[1.1rem]"
@@ -821,6 +770,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
               if (value !== "sem_material") {
                 setRigidMaterial("sem_rigido");
                 setVerso("sem_verso");
+                setPrintingType("eco_solvente");
               }
               if (value === "adesivo_perfurado") {
                 setPrintingType("eco_solvente");
@@ -853,11 +803,9 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
                 setRigidMaterial(value);
                 if (value !== "sem_rigido") {
                   setMaterial("sem_material");
+                  setPrintingType("uv");
                   if (value !== "ps_1mm" && value !== "ps_2mm" && value !== "ps_3mm") {
                     setOptionalFinishing("sem_opcional");
-                  }
-                  if (printingType === "eco_solvente") {
-                    setPrintingType("sem_impressao");
                   }
                 } else {
                   setVerso("sem_verso");
@@ -873,6 +821,45 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
             </select>
           </label>
         ) : null}
+
+        <label className="text-sm font-semibold text-[#102038]">
+          Impressao
+          <select
+            className="mt-1.5 h-12 w-full rounded-2xl border border-[#c8d2df] bg-[#f1f4f8] px-4 text-[1.05rem] font-normal text-[#203653] outline-none transition focus:border-[#77a6e7] disabled:cursor-not-allowed disabled:opacity-55 sm:text-[1.1rem]"
+            value={printingType}
+            disabled={hasSpecialProduct}
+            onChange={(event) => {
+              const value = event.target.value;
+              setPrintingType(value);
+              if (value === "eco_solvente") {
+                setRigidMaterial("sem_rigido");
+                setVerso("sem_verso");
+              }
+              if (value === "uv") {
+                setMaterial("sem_material");
+              }
+              if (value !== "uv" && optionalFinishing === "fita_dupla_face") {
+                setOptionalFinishing("sem_opcional");
+              }
+            }}
+          >
+            {Object.entries(PRINTING_TYPES)
+              .filter(([key]) => {
+                if (rigidMaterial !== "sem_rigido") {
+                  return key === "uv";
+                }
+                if (material !== "sem_material") {
+                  return key === "sem_impressao" || key === "eco_solvente";
+                }
+                return true;
+              })
+              .map(([key, value]) => (
+                <option key={key} value={key}>
+                  {PRINTING_ICONS[key] ? `${PRINTING_ICONS[key]} ${value.name}` : value.name}
+                </option>
+              ))}
+          </select>
+        </label>
 
         <label className="text-sm font-semibold text-[#102038]">
           Acabamento
@@ -943,6 +930,34 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
                 {value.name}
               </option>
               ))}
+          </select>
+        </label>
+
+        <label className="text-sm font-semibold text-[#102038]">
+          Especiais
+          <select
+            className="mt-1.5 h-12 w-full rounded-2xl border border-[#c8d2df] bg-[#f1f4f8] px-4 text-[1.05rem] font-normal text-[#203653] outline-none transition focus:border-[#77a6e7] disabled:cursor-not-allowed disabled:opacity-55 sm:text-[1.1rem]"
+            value={specialProduct}
+            disabled={hasStandardData && !hasSpecialProduct}
+            onChange={(event) => {
+              const value = event.target.value;
+              setSpecialProduct(value);
+              if (value) {
+                setHeight("");
+                setWidth("");
+                setMaterial("sem_material");
+                setPrintingType("sem_impressao");
+                setRigidMaterial("sem_rigido");
+                setFinishing("sem_acabamento");
+                setOptionalFinishing("sem_opcional");
+                setVerso("sem_verso");
+              }
+            }}
+          >
+            <option value="">Selecione um produto</option>
+            {Object.entries(SPECIAL_PRODUCTS).map(([key, product]) => (
+              <option key={key} value={key}>{`${product.name} - ${formatCurrency(product.unitPrice)}`}</option>
+            ))}
           </select>
         </label>
 
