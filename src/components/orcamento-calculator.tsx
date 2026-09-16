@@ -1094,11 +1094,16 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
         </table>
       </div>
 
-      <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mt-4 flex flex-col items-start justify-between gap-2 rounded-2xl border border-[#cfe1fa] bg-[#f7fbff] px-4 py-3 sm:flex-row sm:items-center">
+        <span className="text-sm text-[#335981]">Total estimado</span>
+        <strong className="font-heading text-2xl text-[#0f3864]">{formatCurrency(totalBudget)}</strong>
+      </div>
+
+      <div className="mt-6 flex justify-end">
         <button
           type="button"
           onClick={exportBudgetPdf}
-          className="inline-flex items-center justify-center rounded-full border border-[#7faee2] bg-white px-5 py-3 text-sm font-semibold text-[#0f3864] transition hover:bg-[#eff6ff]"
+          className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-[#79a2e3] px-7 text-[1.05rem] font-semibold text-white transition hover:bg-[#668fd3] sm:text-[1.1rem]"
         >
           Baixar Orçamento PDF
         </button>
@@ -1106,15 +1111,10 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
           href={whatsappBudgetHref}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center justify-center rounded-full border border-[#7faee2] bg-white px-5 py-3 text-sm font-semibold text-[#0f3864] transition hover:bg-[#eff6ff]"
+          className="hidden"
         >
           Enviar resumo no WhatsApp
         </a>
-      </div>
-
-      <div className="mt-4 flex flex-col items-start justify-between gap-2 rounded-2xl border border-[#cfe1fa] bg-[#f7fbff] px-4 py-3 sm:flex-row sm:items-center">
-        <span className="text-sm text-[#335981]">Total estimado</span>
-        <strong className="font-heading text-2xl text-[#0f3864]">{formatCurrency(totalBudget)}</strong>
       </div>
     </section>
   );
