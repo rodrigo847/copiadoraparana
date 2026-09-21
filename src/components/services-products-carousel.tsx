@@ -87,7 +87,7 @@ export function ServicesProductsCarousel({ items, imageMap }: ServicesProductsCa
               <article
               key={item.title}
               data-carousel-card
-              className={`reveal-up min-w-[calc(100%-1rem)] snap-start overflow-hidden rounded-3xl border border-[#b6d3fb] bg-white/90 transition duration-300 hover:border-[#7eb2f3] sm:min-w-[calc(50%-0.75rem)] lg:min-w-[calc(33.333%-0.85rem)] xl:min-w-[calc(20%-0.82rem)] ${
+              className={`reveal-up min-w-[calc(100%-1rem)] snap-start overflow-hidden rounded-none border border-[#b6d3fb] bg-white/90 transition duration-300 hover:border-[#7eb2f3] sm:min-w-[calc(50%-0.75rem)] lg:min-w-[calc(33.333%-0.85rem)] xl:min-w-[calc(20%-0.82rem)] ${
                 index % 4 === 0
                   ? "reveal-delay-1"
                   : index % 4 === 1

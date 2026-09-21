@@ -513,7 +513,7 @@ export default function HomePage() {
               {landingProcessVideos.map((item) => (
                 <article
                   key={item.id}
-                  className="overflow-hidden rounded-3xl border border-[#d8e6fb] bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(246,250,255,0.9))] shadow-[0_10px_24px_rgba(19,38,68,0.08)]"
+                  className="overflow-hidden rounded-none border border-[#d8e6fb] bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(246,250,255,0.9))] shadow-[0_10px_24px_rgba(19,38,68,0.08)]"
                 >
                   <div className="aspect-video bg-[#e6efff]">
                     <SilentVideo
