@@ -467,8 +467,8 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
       return;
     }
 
-    if (rigidMaterial !== "sem_rigido" && printingType !== "uv") {
-      setErrorMessage("Para material rigido, selecione impressao UV.");
+    if (rigidMaterial !== "sem_rigido" && printingType !== "uv" && printingType !== "sem_impressao") {
+      setErrorMessage("Para material rigido, selecione UV ou Sem impressao.");
       return;
     }
 
@@ -862,7 +862,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
             {Object.entries(PRINTING_TYPES)
               .filter(([key]) => {
                 if (rigidMaterial !== "sem_rigido") {
-                  return key === "uv";
+                  return key === "sem_impressao" || key === "uv";
                 }
                 if (material !== "sem_material") {
                   return key === "sem_impressao" || key === "eco_solvente";
