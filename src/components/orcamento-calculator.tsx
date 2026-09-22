@@ -819,7 +819,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
                 setRigidMaterial(value);
                 if (value !== "sem_rigido") {
                   setMaterial("sem_material");
-                  setPrintingType("uv");
+                  setPrintingType("sem_impressao");
                   if (value !== "ps_1mm" && value !== "ps_2mm" && value !== "ps_3mm") {
                     setOptionalFinishing("sem_opcional");
                   }
