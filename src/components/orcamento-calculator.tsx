@@ -12,11 +12,9 @@ import {
   MIN_UNIT_PRICE_SMALL_PIECE,
   PRINTING_TYPES,
   RIGID_MATERIALS,
-  UV_SMALL_PIECE_LABOR_SURCHARGE,
   VERSO_TYPES,
   getMinimumPurchaseForItem,
   isBannerMaterial,
-  isUvSmallPiece,
   isValidBannerSize,
   type Unit,
 } from "@/lib/orcamento-pricing";
@@ -207,13 +205,9 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
       versoPrice;
 
     const isSmallerThanTwoByTwoCm = hCm < 2 && wCm < 2;
-    let unitPrice = isSmallerThanTwoByTwoCm
+    const unitPrice = isSmallerThanTwoByTwoCm
       ? Math.max(calculatedUnitPrice, MIN_UNIT_PRICE_SMALL_PIECE)
       : calculatedUnitPrice;
-
-    if (isUvSmallPiece(printingType, hCm, wCm)) {
-      unitPrice += UV_SMALL_PIECE_LABOR_SURCHARGE;
-    }
 
     if (unitPrice <= 0) return null;
 
@@ -498,13 +492,9 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
       doubleSidedTapePrice +
       versoPrice;
     const isSmallerThanTwoByTwoCm = hCm < 2 && wCm < 2;
-    let unitPrice = isSmallerThanTwoByTwoCm
+    const unitPrice = isSmallerThanTwoByTwoCm
       ? Math.max(calculatedUnitPrice, MIN_UNIT_PRICE_SMALL_PIECE)
       : calculatedUnitPrice;
-
-    if (isUvSmallPiece(printingType, hCm, wCm)) {
-      unitPrice += UV_SMALL_PIECE_LABOR_SURCHARGE;
-    }
 
     const itemMinimumPurchase = getMinimumPurchaseForItem(printingType, hCm, wCm);
     const rawTotalPrice = unitPrice * qty;

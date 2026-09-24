@@ -60,7 +60,6 @@ export const VERSO_TYPES: Record<string, PriceLabel> = {
 export const MINIMUM_PURCHASE = 60;
 export const UV_MINIMUM_SMALL_PIECE = 60;
 export const UV_MINIMUM_SIZE_LIMIT_CM = 6;
-export const UV_SMALL_PIECE_LABOR_SURCHARGE = 2.5;
 export const MIN_UNIT_PRICE_SMALL_PIECE = 0.08;
 export const MAX_QUANTITY = 100000;
 export const BANNER_MIN_SIDE_SMALL_CM = 60;
