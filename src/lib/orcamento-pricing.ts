@@ -52,7 +52,11 @@ export const OPTIONAL_FINISHING_TYPES: Record<string, PriceLabel> = {
   mascara_papel: { name: "Máscara de papel + R$45,00m²", pricePerM2: 45 },
   laminacao_frio: { name: "Laminação a Frio + R$95,00m²", pricePerM2: 95 },
   fita_dupla_face: { name: "Fita dupla face + R$10,00/m linear", pricePerM2: 10 },
+  manuseio: { name: "Manuseio (peças < 5x5cm) + R$0,95/un", pricePerM2: 0.95 },
 };
+
+export const MANUSEIO_MAX_SIZE_CM = 5;
+
 
 export const VERSO_TYPES: Record<string, PriceLabel> = {
   sem_verso: { name: "Sem verso", pricePerM2: 0 },

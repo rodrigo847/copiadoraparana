@@ -7,6 +7,7 @@ import {
   FINISHING_TYPES,
   MATERIALS,
   OPTIONAL_FINISHING_TYPES,
+  MANUSEIO_MAX_SIZE_CM,
   MAX_QUANTITY,
   MINIMUM_PURCHASE,
   MIN_UNIT_PRICE_SMALL_PIECE,
@@ -192,11 +193,14 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
     const printingPrice = PRINTING_TYPES[printingType]?.pricePerM2 || 0;
     const rigidPrice = RIGID_MATERIALS[rigidMaterial]?.pricePerM2 || 0;
     const finishingPrice = FINISHING_TYPES[finishing]?.pricePerM2 || 0;
-    const optionalFinishingPrice = canUseOptionalFinishing && optionalFinishing !== "fita_dupla_face"
+    const optionalFinishingPrice = canUseOptionalFinishing && optionalFinishing !== "fita_dupla_face" && optionalFinishing !== "manuseio"
       ? OPTIONAL_FINISHING_TYPES[optionalFinishing]?.pricePerM2 || 0
       : 0;
     const doubleSidedTapePrice = optionalFinishing === "fita_dupla_face"
       ? (hCm / 100) * 2 * OPTIONAL_FINISHING_TYPES.fita_dupla_face.pricePerM2
+      : 0;
+    const manuseioPrice = optionalFinishing === "manuseio" && hCm < MANUSEIO_MAX_SIZE_CM && wCm < MANUSEIO_MAX_SIZE_CM
+      ? OPTIONAL_FINISHING_TYPES.manuseio.pricePerM2
       : 0;
     const smallPieceMultiplier = areaM2 < 0.0009 ? 1.4 : 1;
     const versoPrice = (VERSO_TYPES[verso]?.pricePerM2 || 0) * areaM2;
@@ -204,6 +208,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
     const calculatedUnitPrice =
       areaM2 * (materialPrice + printingPrice + rigidPrice + finishingPrice + optionalFinishingPrice) * smallPieceMultiplier +
       doubleSidedTapePrice +
+      manuseioPrice +
       versoPrice;
 
     const isSmallerThanTwoByTwoCm = hCm < 2 && wCm < 2;
@@ -928,7 +933,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
             {Object.entries(OPTIONAL_FINISHING_TYPES)
               .filter(([key]) => {
                 if (printingType === "uv") {
-                  return key === "sem_opcional" || key === "laminacao_frio" || key === "fita_dupla_face";
+                  return key === "sem_opcional" || key === "laminacao_frio" || key === "fita_dupla_face" || key === "manuseio";
                 }
 
                 return key !== "fita_dupla_face";
