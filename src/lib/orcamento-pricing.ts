@@ -23,7 +23,9 @@ export const RIGID_MATERIALS: Record<string, PriceLabel> = {
   ps_2mm: { name: "PS 2mm", pricePerM2: 300 },
   ps_3mm: { name: "PS 3mm", pricePerM2: 420 },
   acrilico_2mm: { name: "Acrilico 2mm", pricePerM2: 450 },
+  acrilico_branco_preto_2mm: { name: "Acrilico branco/preto 2mm", pricePerM2: 510 },
   acrilico_3mm: { name: "Acrilico 3mm", pricePerM2: 580 },
+  acrilico_3mm_branco_preto: { name: "Acrilico 3mm branco/preto", pricePerM2: 630 },
   c2s_triplex: { name: "Papel C2S Triplex", pricePerM2: 45 },
 };
 

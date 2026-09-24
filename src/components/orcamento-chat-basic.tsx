@@ -248,6 +248,10 @@ function detectPrintingType(text: string, material: string | null): string | nul
 }
 
 function detectRigidMaterial(text: string): string | null {
+  // Acrylic branco/preto - check before the plain thickness variants
+  if (/\bacrilico\s*2(?:\s*mm)?\s*(?:branco|preto)/.test(text)) return "acrilico_branco_preto_2mm";
+  if (/\bacrilico\s*3(?:\s*mm)?\s*(?:branco|preto)/.test(text)) return "acrilico_3mm_branco_preto";
+
   // Acrylic - check for explicit thickness first
   if (/\bacrilico\s*2(?:\s*mm)?\b/.test(text)) return "acrilico_2mm";
   if (/\bacrilico\s*3(?:\s*mm)?\b/.test(text)) return "acrilico_3mm";

@@ -67,7 +67,9 @@ const RIGID_MATERIAL_ICONS: Record<string, string> = {
   ps_2mm: "🗞️",
   ps_3mm: "🗞️",
   acrilico_2mm: "📃",
+  acrilico_branco_preto_2mm: "📃",
   acrilico_3mm: "📃",
+  acrilico_3mm_branco_preto: "📃",
   c2s_triplex: "📦",
 };
 
