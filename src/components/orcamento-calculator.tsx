@@ -42,12 +42,18 @@ const SPECIAL_PRODUCTS: Record<string, { name: string; unitPrice: number }> = {
   dtf_a4: { name: "DTF A4", unitPrice: 25 },
   dtf_a3: { name: "DTF A3", unitPrice: 40 },
   roll_up_80x200: { name: "Roll-up 80x200cm", unitPrice: 350 },
+  placa_pix_10x15: { name: "Placa Pix 10x15cm*", unitPrice: 25 },
+  placa_pix_15x20: { name: "Placa Pix 15x20cm*", unitPrice: 35 },
 };
+
+const PIX_PLATE_BASE_NOTE = "* Base de 5cm";
 
 const SPECIAL_PRODUCT_PDF_DESCRIPTIONS: Record<string, string> = {
   dtf_a4: "DTF A4\nImpressão UV (com branco, verniz, CMYK e transfer)",
   dtf_a3: "DTF A3\nImpressão UV (com branco, verniz, CMYK e transfer)",
   roll_up_80x200: "Roll-up 80x200cm\nCom banner",
+  placa_pix_10x15: `Placa Pix 10x15cm*\n${PIX_PLATE_BASE_NOTE}`,
+  placa_pix_15x20: `Placa Pix 15x20cm*\n${PIX_PLATE_BASE_NOTE}`,
 };
 
 const MATERIAL_ICONS: Record<string, string> = {
@@ -166,15 +172,6 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
   const canUseOptionalFinishing =
     material === "vinil_branco_brilho" || material === "vinil_branco_fosco" || isPsRigidMaterial || printingType === "uv";
   const hasSpecialProduct = specialProduct !== "";
-  const hasStandardData =
-    height !== "" ||
-    width !== "" ||
-    material !== "sem_material" ||
-    rigidMaterial !== "sem_rigido" ||
-    printingType !== "sem_impressao" ||
-    finishing !== "sem_acabamento" ||
-    optionalFinishing !== "sem_opcional" ||
-    verso !== "sem_verso";
 
   const minimumPerServiceHint = useMemo(() => {
     const h = Number.parseFloat(height);
@@ -259,7 +256,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
         const extra = OPTIONAL_FINISHING_TYPES[item.optionalFinishing || "sem_opcional"]?.name || "-";
         const verso = VERSO_TYPES[item.verso]?.name || "-";
         const descricao = item.specialProduct
-          ? SPECIAL_PRODUCTS[item.specialProduct]?.name || item.specialProduct
+          ? `${SPECIAL_PRODUCTS[item.specialProduct]?.name || item.specialProduct}${item.specialProduct.startsWith("placa_pix_") ? ` (${PIX_PLATE_BASE_NOTE})` : ""}`
           : `${item.height}x${item.width}${item.unit}`;
         return `${idx + 1}. ${descricao} - ${item.quantity} un. - ${impressao} - ${acabamento} - Item extra: ${extra} - ${verso} - Total: ${formatCurrency(item.totalPrice)}`;
       })
@@ -947,52 +944,6 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
         </label>
 
         <label className="text-sm font-semibold text-[#102038]">
-          Especiais
-          <select
-            className="mt-1.5 h-12 w-full rounded-2xl border border-[#c8d2df] bg-[#f1f4f8] px-4 text-[1.05rem] font-normal text-[#203653] outline-none transition focus:border-[#77a6e7] disabled:cursor-not-allowed disabled:opacity-55 sm:text-[1.1rem]"
-            value={specialProduct}
-            disabled={hasStandardData && !hasSpecialProduct}
-            onChange={(event) => {
-              const value = event.target.value;
-              setSpecialProduct(value);
-              if (value) {
-                setHeight("");
-                setWidth("");
-                setMaterial("sem_material");
-                setPrintingType("sem_impressao");
-                setRigidMaterial("sem_rigido");
-                setFinishing("sem_acabamento");
-                setOptionalFinishing("sem_opcional");
-                setVerso("sem_verso");
-              }
-            }}
-          >
-            <option value="">Selecione um produto</option>
-            {Object.entries(SPECIAL_PRODUCTS).map(([key, product]) => (
-              <option key={key} value={key}>{`${product.name} - ${formatCurrency(product.unitPrice)}`}</option>
-            ))}
-          </select>
-        </label>
-
-        {rigidMaterial !== "sem_rigido" ? (
-          <label className="text-sm font-semibold text-[#102038]">
-            Verso
-            <select
-              className="mt-1.5 h-12 w-full rounded-2xl border border-[#c8d2df] bg-[#f1f4f8] px-4 text-[1.05rem] font-normal text-[#203653] outline-none transition focus:border-[#77a6e7] sm:text-[1.1rem]"
-              value={verso}
-              disabled={hasSpecialProduct}
-              onChange={(event) => setVerso(event.target.value)}
-            >
-              {Object.entries(VERSO_TYPES).map(([key, value]) => (
-                <option key={key} value={key}>
-                  {value.name}
-                </option>
-              ))}
-            </select>
-          </label>
-        ) : null}
-
-        <label className="text-sm font-semibold text-[#102038]">
           Quantidade
           <div className="mt-1.5 flex h-12 w-full items-center rounded-2xl border border-[#c8d2df] bg-[#f1f4f8] shadow-[inset_0_1px_2px_rgba(18,42,72,0.05)] sm:max-w-48">
             <button
@@ -1026,6 +977,24 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
             </button>
           </div>
         </label>
+
+        {rigidMaterial !== "sem_rigido" ? (
+          <label className="text-sm font-semibold text-[#102038]">
+            Verso
+            <select
+              className="mt-1.5 h-12 w-full rounded-2xl border border-[#c8d2df] bg-[#f1f4f8] px-4 text-[1.05rem] font-normal text-[#203653] outline-none transition focus:border-[#77a6e7] sm:text-[1.1rem]"
+              value={verso}
+              disabled={hasSpecialProduct}
+              onChange={(event) => setVerso(event.target.value)}
+            >
+              {Object.entries(VERSO_TYPES).map(([key, value]) => (
+                <option key={key} value={key}>
+                  {value.name}
+                </option>
+              ))}
+            </select>
+          </label>
+        ) : null}
 
         {minimumPerServiceHint ? (
           <div className="rounded-xl border border-[#f1d486] bg-[#fff9e8] px-4 py-3 text-sm text-[#87621a] sm:col-span-2 lg:col-span-3">
@@ -1137,6 +1106,9 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
           </tbody>
         </table>
       </div>
+      {items.some((item) => item.specialProduct.startsWith("placa_pix_")) && (
+        <p className="mt-2 text-xs text-[#335981]">{PIX_PLATE_BASE_NOTE}</p>
+      )}
 
       <div className="mt-4 flex flex-col items-start justify-between gap-2 rounded-2xl border border-[#cfe1fa] bg-[#f7fbff] px-4 py-3 sm:flex-row sm:items-center">
         <span className="text-sm text-[#335981]">Total estimado</span>
