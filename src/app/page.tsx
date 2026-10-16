@@ -175,7 +175,7 @@ export default function HomePage() {
 
       <main className="flex flex-1 flex-col">
         <section id="inicio" className="mx-auto w-full max-w-7xl scroll-mt-28 px-3 pt-2 pb-7 sm:px-6 sm:pt-4 sm:pb-9 lg:px-10 lg:pt-6 lg:pb-16">
-          <div className="hero-panel relative isolate overflow-hidden rounded-3xl px-4 py-4 text-white sm:rounded-4xl sm:px-8 sm:py-8 lg:min-h-160 lg:px-12 lg:py-10">
+          <div className="hero-panel relative isolate overflow-hidden rounded-2xl px-4 py-4 text-white sm:rounded-2xl sm:px-8 sm:py-8 lg:min-h-160 lg:px-12 lg:py-10">
             <Image
               src="/img/banner1.jpg"
               alt=""
@@ -228,8 +228,8 @@ export default function HomePage() {
                 </div>
               </div>
 
-              <div className="relative h-full self-stretch overflow-hidden rounded-3xl border border-white/12 bg-white/3 p-5 sm:rounded-4xl sm:p-9 lg:p-10 backdrop-blur-2xl shadow-[0_20px_60px_rgba(2,10,22,0.25)]">
-                <div className="absolute inset-0 rounded-4xl bg-[linear-gradient(145deg,rgba(255,255,255,0.04),rgba(255,255,255,0.005))]" />
+              <div className="relative h-full self-stretch overflow-hidden rounded-2xl border border-white/12 bg-white/3 p-5 sm:rounded-2xl sm:p-9 lg:p-10 backdrop-blur-2xl shadow-[0_20px_60px_rgba(2,10,22,0.25)]">
+                <div className="absolute inset-0 rounded-2xl bg-[linear-gradient(145deg,rgba(255,255,255,0.04),rgba(255,255,255,0.005))]" />
                 <div className="relative z-10 flex h-full flex-col justify-center">
                   <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#d8e8ff]">Fale Conosco</p>
                   <h2 className="mt-3 font-heading text-xl font-bold tracking-tight text-white sm:text-2xl">Atendimento rápido e direto</h2>
@@ -288,7 +288,7 @@ export default function HomePage() {
         <ServicesProductsCarousel items={mostRequested} imageMap={productImageMap} />
 
         <section className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-10 lg:py-8">
-          <div className="section-card rounded-4xl p-6 sm:p-8 lg:p-10">
+          <div className="section-card rounded-2xl p-6 sm:p-8 lg:p-10">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
               <div className="max-w-2xl">
                 <span className="eyebrow">Por que escolher a Paraná Laser</span>
@@ -319,7 +319,7 @@ export default function HomePage() {
         </section>
 
         <section className="mx-auto w-full max-w-7xl px-4 py-4 sm:px-6 lg:px-10 lg:py-6">
-          <details className="group section-card rounded-4xl p-6 sm:p-8 lg:p-10">
+          <details className="group section-card rounded-2xl p-6 sm:p-8 lg:p-10">
             <summary className="flex cursor-pointer list-none items-center justify-between gap-5 [&::-webkit-details-marker]:hidden">
               <span className="eyebrow">Serviços mais buscados</span>
               <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#c9ddf8] bg-white/70 text-[#35669e] transition duration-300 group-open:rotate-180" aria-hidden="true">
@@ -355,7 +355,7 @@ export default function HomePage() {
             {services.map((service) => (
               <article
                 key={service.title}
-                className="section-card relative isolate overflow-hidden rounded-3xl transition duration-300 hover:border-[#95c1ff]"
+                className="section-card relative isolate overflow-hidden rounded-2xl transition duration-300 hover:border-[#95c1ff]"
               >
                 {service.backgroundImage ? (
                   <>
@@ -376,7 +376,7 @@ export default function HomePage() {
                       fill
                       sizes="(min-width: 1024px) 50vw, 100vw"
                       className="hidden sm:block"
-                      style={{ objectFit: "cover", objectPosition: "center", opacity: 0.6, borderRadius: "1.75rem" }}
+                      style={{ objectFit: "cover", objectPosition: "center", opacity: 0.6, borderRadius: "1rem" }}
                     />
                     <div className="absolute inset-0 hidden bg-[linear-gradient(180deg,rgba(255,255,255,0.82),rgba(242,248,255,0.74))] sm:block" />
                   </>
@@ -392,7 +392,7 @@ export default function HomePage() {
         </section>
 
         <section className="mx-auto w-full max-w-7xl scroll-mt-28 px-4 py-8 sm:px-6 lg:px-10 lg:py-10">
-          <details className="group section-card rounded-4xl p-6 sm:p-8">
+          <details className="group section-card rounded-2xl p-6 sm:p-8">
             <summary className="flex cursor-pointer list-none items-center justify-between gap-5 [&::-webkit-details-marker]:hidden">
               <span className="eyebrow">Serviços por especialidade</span>
               <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#c9ddf8] bg-white/70 text-[#35669e] transition duration-300 group-open:rotate-180" aria-hidden="true">
@@ -453,7 +453,7 @@ export default function HomePage() {
 
         <section className="mx-auto w-full max-w-7xl scroll-mt-28 px-4 py-8 sm:px-6 lg:px-10 lg:py-10">
           <div>
-            <article className="reveal-up reveal-delay-1 relative isolate overflow-hidden rounded-4xl border border-white/18 p-5 text-white shadow-[0_24px_50px_rgba(4,16,34,0.35)] backdrop-blur-2xl sm:p-6">
+            <article className="reveal-up reveal-delay-1 relative isolate overflow-hidden rounded-2xl border border-white/18 p-5 text-white shadow-[0_24px_50px_rgba(4,16,34,0.35)] backdrop-blur-2xl sm:p-6">
               <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(11,23,40,0.78),rgba(12,28,50,0.62)),url('/img/Empresas.png')] bg-cover bg-center" />
               <div className="absolute inset-0 bg-[linear-gradient(110deg,rgba(9,24,44,0.78)_0%,rgba(9,24,44,0.64)_38%,rgba(9,24,44,0.4)_68%,rgba(9,24,44,0.22)_100%)]" />
 
@@ -501,7 +501,7 @@ export default function HomePage() {
         </section>
 
         <section id="projetos" className="mx-auto w-full max-w-7xl scroll-mt-28 px-4 py-8 sm:px-6 lg:px-10 lg:py-10">
-          <div className="section-card rounded-4xl p-8 lg:p-10">
+          <div className="section-card rounded-2xl p-8 lg:p-10">
             <div className="max-w-3xl">
               <span className="eyebrow">Processos de impressão!</span>
               <h2 className="mt-5 font-heading text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
@@ -571,7 +571,7 @@ export default function HomePage() {
                   return (
                     <article
                       key={step.title}
-                      className={`group relative isolate overflow-hidden rounded-4xl border ${variant.border} bg-[linear-gradient(180deg,rgba(255,255,255,0.94),rgba(247,251,255,0.9))] p-6 transition duration-300 hover:-translate-y-1.5 ${variant.glow}`}
+                      className={`group relative isolate overflow-hidden rounded-2xl border ${variant.border} bg-[linear-gradient(180deg,rgba(255,255,255,0.94),rgba(247,251,255,0.9))] p-6 transition duration-300 hover:-translate-y-1.5 ${variant.glow}`}
                     >
                       <div className="absolute inset-0 bg-[radial-gradient(circle_at_90%_8%,rgba(62,129,225,0.17),transparent_35%)]" />
 
@@ -601,7 +601,7 @@ export default function HomePage() {
 
 
         <section id="quem-somos" className="mx-auto w-full max-w-7xl scroll-mt-28 px-4 py-8 sm:px-6 lg:px-10 lg:py-10">
-          <div className="max-w-6xl rounded-4xl border border-[#cfe0fb] bg-[linear-gradient(135deg,rgba(255,255,255,0.96),rgba(242,248,255,0.9))] p-6 text-base leading-7 text-[#234a74] sm:p-8 lg:p-10">
+          <div className="max-w-6xl rounded-2xl border border-[#cfe0fb] bg-[linear-gradient(135deg,rgba(255,255,255,0.96),rgba(242,248,255,0.9))] p-6 text-base leading-7 text-[#234a74] sm:p-8 lg:p-10">
             <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr] lg:items-start">
               <div>
                 <span className="eyebrow">Quem somos</span>
@@ -657,7 +657,7 @@ export default function HomePage() {
         <section className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-10 lg:py-10">
           <div className="space-y-8">
             <section id="perguntas-frequentes" className="scroll-mt-28">
-              <div className="section-card rounded-4xl p-6 sm:p-8">
+              <div className="section-card rounded-2xl p-6 sm:p-8">
                 <span className="eyebrow">Perguntas frequentes!</span>
                 <h2 className="mt-4 font-heading text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
                   Dúvidas comuns sobre serviços de impressão em Curitiba
@@ -692,7 +692,7 @@ export default function HomePage() {
                 </h2>
               </div>
 
-              <div className="relative overflow-hidden rounded-4xl border border-white/18 bg-[linear-gradient(145deg,rgba(255,255,255,0.14),rgba(255,255,255,0.06))] p-5 text-[#e8f1ff] shadow-[0_24px_50px_rgba(4,16,34,0.35)] backdrop-blur-2xl sm:p-7 lg:p-8">
+              <div className="relative overflow-hidden rounded-2xl border border-white/18 bg-[linear-gradient(145deg,rgba(255,255,255,0.14),rgba(255,255,255,0.06))] p-5 text-[#e8f1ff] shadow-[0_24px_50px_rgba(4,16,34,0.35)] backdrop-blur-2xl sm:p-7 lg:p-8">
                 <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_90%_100%,rgba(18,97,199,0.25),transparent_42%)]" />
 
                 <div className="relative z-10 space-y-3.5">
