@@ -47,6 +47,7 @@ const SPECIAL_PRODUCTS: Record<string, { name: string; unitPrice: number }> = {
 };
 
 const PIX_PLATE_BASE_NOTE = "* Base de 5cm";
+const PREMIUM_COLOR_MATERIAL = "vinil_premium_color";
 
 const SPECIAL_PRODUCT_PDF_DESCRIPTIONS: Record<string, string> = {
   dtf_a4: "DTF A4\nImpressão UV (com branco, verniz, CMYK e transfer)",
@@ -60,6 +61,7 @@ const MATERIAL_ICONS: Record<string, string> = {
   sem_material: "🚫",
   vinil_branco_fosco: "⚪",
   vinil_branco_brilho: "⚪",
+  vinil_premium_color: "⚪",
   vinil_transparente_brilho: "⚪",
   adesivo_perfurado: "🧩",
   papel_couche_fosco_150g: "📄",
@@ -322,10 +324,14 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
     setWidth(String(item.width));
     setUnit(item.unit);
     setMaterial(item.material);
-    setPrintingType(item.printingType);
+    setPrintingType(item.material === PREMIUM_COLOR_MATERIAL ? "sem_impressao" : item.printingType);
     setRigidMaterial(item.rigidMaterial);
     setQuantity(String(item.quantity));
-    setFinishing(item.finishing);
+    setFinishing(
+      item.material === PREMIUM_COLOR_MATERIAL && item.finishing !== "meio_corte"
+        ? "sem_acabamento"
+        : item.finishing
+    );
     setOptionalFinishing(item.optionalFinishing || "sem_opcional");
     setVerso(item.verso);
   };
@@ -780,7 +786,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
               if (value !== "sem_material") {
                 setRigidMaterial("sem_rigido");
                 setVerso("sem_verso");
-                setPrintingType("eco_solvente");
+                setPrintingType(value === PREMIUM_COLOR_MATERIAL ? "sem_impressao" : "eco_solvente");
               }
               if (value === "adesivo_perfurado") {
                 setPrintingType("eco_solvente");
@@ -855,16 +861,25 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
           >
             {Object.entries(PRINTING_TYPES)
               .filter(([key]) => {
+                if (material === PREMIUM_COLOR_MATERIAL) {
+                  return true;
+                }
+
                 if (rigidMaterial !== "sem_rigido") {
                   return key === "sem_impressao" || key === "uv";
                 }
+
                 if (material !== "sem_material") {
                   return key === "sem_impressao" || key === "eco_solvente";
                 }
                 return true;
               })
               .map(([key, value]) => (
-                <option key={key} value={key}>
+                <option
+                  key={key}
+                  value={key}
+                  disabled={material === PREMIUM_COLOR_MATERIAL && key !== "sem_impressao"}
+                >
                   {PRINTING_ICONS[key] ? `${PRINTING_ICONS[key]} ${value.name}` : value.name}
                 </option>
               ))}
@@ -906,6 +921,10 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
                 }
 
                 if (material.startsWith("vinil_")) {
+                  if (material === PREMIUM_COLOR_MATERIAL) {
+                    return key === "sem_acabamento" || key === "meio_corte";
+                  }
+
                   return key === "sem_acabamento" || key === "meio_corte" || key === "corte_total";
                 }
 
