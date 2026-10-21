@@ -172,7 +172,11 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
   const isPsRigidMaterial =
     rigidMaterial === "ps_1mm" || rigidMaterial === "ps_2mm" || rigidMaterial === "ps_3mm";
   const canUseOptionalFinishing =
-    material === "vinil_branco_brilho" || material === "vinil_branco_fosco" || isPsRigidMaterial || printingType === "uv";
+    material === PREMIUM_COLOR_MATERIAL ||
+    material === "vinil_branco_brilho" ||
+    material === "vinil_branco_fosco" ||
+    isPsRigidMaterial ||
+    printingType === "uv";
   const hasSpecialProduct = specialProduct !== "";
 
   const minimumPerServiceHint = useMemo(() => {
