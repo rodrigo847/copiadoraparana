@@ -256,7 +256,7 @@ export default function HomePage() {
                     <p className="mt-1 text-sm leading-6 text-[#e7f0fb]">
                       Rua Teixeira Coelho, 61, Batel, <span className="whitespace-nowrap">Curitiba - PR</span>
                     </p>
-                    <p className="mt-2 text-sm font-semibold text-[#d8e8ff]">Seg a Sex - 9h às 18h | Sábados - 9h às 12h</p>
+                    <p className="mt-2 text-sm font-semibold text-[#d8e8ff]">Seg a Sex - 9h às 18h</p>
                     <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
                       <a
                         href={site.googleMapsDirections}
@@ -727,7 +727,7 @@ export default function HomePage() {
                   <div className="rounded-3xl border border-white/12 bg-white/8 p-4 text-sm leading-6 text-[#e4eefc]">
                     <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#bfd8f9]">Atendimento presencial</p>
                     <p className="mt-1.5">{site.address.street}, {site.address.district}, {site.address.city} - {site.address.region}</p>
-                    <p className="mt-2 font-semibold text-[#f0f6ff]">Seg a Sex - 9h às 18h | Sábados - 9h às 12h</p>
+                    <p className="mt-2 font-semibold text-[#f0f6ff]">Seg a Sex - 9h às 18h</p>
                     <div className="mt-3 flex flex-wrap gap-2">
                       <a
                         href={site.googleMapsDirections}
