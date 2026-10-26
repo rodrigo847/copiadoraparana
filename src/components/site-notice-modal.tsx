@@ -69,7 +69,7 @@ export function SiteNoticeModal({ enabled = false }: SiteNoticeModalProps) {
       <div className="space-y-5 p-6 sm:p-8">
         <div id="site-notice-description" className="space-y-3 text-base leading-7">
           <p>
-            A partir de <strong>7 de novembro de 2026</strong>, não abriremos mais
+            A partir de <strong>25 de Outubro de 2026</strong>, não abriremos mais
             aos <strong>sábados</strong>.
           </p>
           <p>
