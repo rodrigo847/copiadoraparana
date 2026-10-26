@@ -41,7 +41,7 @@ export function SiteNoticeModal({ enabled = false }: SiteNoticeModalProps) {
           setIsOpen(false);
         }
       }}
-      className="fixed inset-0 m-auto max-h-[calc(100dvh_-_3rem)] w-[calc(100%_-_2rem)] max-w-lg overflow-y-auto rounded-3xl border border-[#18457f] bg-white p-0 text-[#071427] shadow-2xl backdrop:bg-[#041022]/80 backdrop:backdrop-blur-sm"
+      className="fixed inset-0 m-auto max-h-[calc(100dvh-3rem)] w-[calc(100%-2rem)] max-w-lg overflow-y-auto rounded-3xl border border-[#18457f] bg-white p-0 text-[#071427] shadow-2xl backdrop:bg-[#041022]/80 backdrop:backdrop-blur-sm"
       aria-modal="true"
       aria-labelledby="site-notice-title"
       aria-describedby="site-notice-description"
