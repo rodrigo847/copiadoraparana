@@ -41,6 +41,16 @@ Nao usamos pasta `out/` nem `next export`.
 npm run dev
 ```
 
+## Aviso de atendimento
+
+O modal em `src/components/site-notice-modal.tsx` informa que, a partir de
+7 de novembro de 2026, não haverá atendimento aos sábados devido à adoção da
+escala 5x2. O atendimento permanece de segunda a sexta-feira, das 9h às 18h.
+
+O aviso está ativo em todas as páginas e pode ser fechado pelos botões ou pela
+tecla Escape. Para desativá-lo, altere `siteNoticeEnabled` para `false` em
+`src/app/layout.tsx`.
+
 ## Build de produção
 
 ```bash

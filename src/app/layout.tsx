@@ -6,7 +6,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import { FloatingOrcamentoButton } from "@/components/floating-orcamento-button";
 import { FontSizeToggle } from "@/components/font-size-toggle";
-import { HolidayNoticeModal } from "@/components/holiday-notice-modal";
+import { SiteNoticeModal } from "@/components/site-notice-modal";
 
 import "./globals.css";
 
@@ -77,7 +77,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const siteNoticeEnabled = false;
+  const siteNoticeEnabled = true;
 
   return (
     <html
@@ -111,7 +111,7 @@ export default function RootLayout({
         {children}
         <FontSizeToggle />
         <FloatingOrcamentoButton />
-        <HolidayNoticeModal enabled={siteNoticeEnabled} />
+        <SiteNoticeModal enabled={siteNoticeEnabled} />
         <Analytics />
         <SpeedInsights />
       </body>
