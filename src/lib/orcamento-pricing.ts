@@ -73,6 +73,53 @@ export const MAX_QUANTITY = 100000;
 export const BANNER_MIN_SIDE_SMALL_CM = 60;
 export const BANNER_MIN_SIDE_LARGE_CM = 80;
 
+function toAreaM2(height: number, width: number, unit: Unit): number {
+  if (unit === "m2") return height * width;
+  const multiplier = unit === "mm" ? 0.001 : 0.01;
+  return height * multiplier * (width * multiplier);
+}
+
+function toCm(value: number, unit: Unit): number {
+  if (unit === "mm") return value / 10;
+  if (unit === "cm") return value;
+  return value * 100;
+}
+
+export function getEffectiveAreaM2(
+  height: number,
+  width: number,
+  unit: Unit,
+  material: string,
+  finishing: string,
+): number {
+  const isVinyl = material.startsWith("vinil_") || material === "adesivo_perfurado";
+  const cutLossCm = isVinyl
+    ? 0.3
+    : isBannerMaterial(material) && finishing === "com_ilhos"
+      ? 5
+      : 0;
+
+  if (unit === "m2" || cutLossCm === 0) {
+    return toAreaM2(height, width, unit);
+  }
+
+  const heightCm = toCm(height, unit) + cutLossCm;
+  const widthCm = toCm(width, unit) + cutLossCm;
+  return (heightCm / 100) * (widthCm / 100);
+}
+
+export function getManuseioPricePerUnit(optionalFinishing: string, hCm: number, wCm: number): number {
+  return optionalFinishing === "manuseio" && hCm < MANUSEIO_MAX_SIZE_CM && wCm < MANUSEIO_MAX_SIZE_CM
+    ? OPTIONAL_FINISHING_TYPES.manuseio.pricePerM2
+    : 0;
+}
+
+export function getUnitPriceWithSmallPieceMinimum(calculatedUnitPrice: number, hCm: number, wCm: number): number {
+  return hCm < 2 && wCm < 2
+    ? Math.max(calculatedUnitPrice, MIN_UNIT_PRICE_SMALL_PIECE)
+    : calculatedUnitPrice;
+}
+
 export function getPrintingPricePerM2(printingType: string, pieceAreaM2: number): number {
   const basePrice = PRINTING_TYPES[printingType]?.pricePerM2 ?? 0;
   // A conversao de 20x28cm pode resultar em 0.05600000000000001m2.

@@ -1,8 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  getEffectiveAreaM2,
+  getManuseioPricePerUnit,
   getMinimumPurchaseForItem,
   getPrintingPricePerM2,
+  getUnitPriceWithSmallPieceMinimum,
   PRINTING_TYPES,
 } from "./orcamento-pricing.ts";
 
@@ -53,4 +56,23 @@ test("o acrescimo e apenas da impressao e por peca, sem dobrar outros custos", (
   assert.equal(areaM2 * getPrintingPricePerM2("uv", areaM2) * 100, 190);
   assert.equal(getMinimumPurchaseForItem("uv", 10, 10), 60);
   assert.equal(getMinimumPurchaseForItem("uv", 1, 1), 60);
+});
+
+test("adesivos vinil consideram a margem de corte na area faturada", () => {
+  assert.ok(Math.abs(getEffectiveAreaM2(3, 3, "cm", "vinil_branco_fosco", "meio_corte") - 0.001089) < 1e-12);
+  assert.ok(Math.abs(getEffectiveAreaM2(3, 3, "cm", "adesivo_perfurado", "sem_acabamento") - 0.001089) < 1e-12);
+  assert.ok(Math.abs(getEffectiveAreaM2(3, 3, "cm", "banner_brilho", "sem_acabamento") - 0.0009) < 1e-12);
+});
+
+test("manuseio custa por unidade somente para pecas menores que 5x5cm", () => {
+  assert.equal(getManuseioPricePerUnit("manuseio", 3, 3), 0.95);
+  assert.equal(getManuseioPricePerUnit("manuseio", 3, 5), 0);
+  assert.equal(getManuseioPricePerUnit("sem_opcional", 3, 3), 0);
+});
+
+test("o piso de R$0,08 por unidade permanece abaixo de 2x2cm", () => {
+  assert.equal(getUnitPriceWithSmallPieceMinimum(0.02, 1, 1), 0.08);
+  assert.equal(getUnitPriceWithSmallPieceMinimum(0.02, 1.99, 1.99), 0.08);
+  assert.equal(getUnitPriceWithSmallPieceMinimum(0.02, 1, 2), 0.02);
+  assert.equal(getUnitPriceWithSmallPieceMinimum(0.07, 2, 2), 0.07);
 });

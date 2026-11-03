@@ -69,6 +69,10 @@ acabamentos, verso, produtos especiais com preço fixo e o pedido mínimo de
 R$ 60 continuam com suas regras anteriores. Por isso, o total de um pedido
 pequeno ainda pode ficar no mínimo de R$ 60.
 
+Nos adesivos de vinil, a área considera 0,3 cm de margem em cada dimensão. Peças
+menores que 2 × 2 cm mantêm o piso de R$ 0,08 por unidade. O opcional Manuseio
+custa R$ 0,95 por unidade para peças menores que 5 × 5 cm.
+
 Para validar a regra de preço:
 
 ```bash

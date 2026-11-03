@@ -9,15 +9,16 @@ import {
   FINISHING_TYPES,
   MATERIALS,
   MAX_QUANTITY,
-  MIN_UNIT_PRICE_SMALL_PIECE,
   OPTIONAL_FINISHING_TYPES,
   PRINTING_TYPES,
   RIGID_MATERIALS,
   VERSO_TYPES,
+  getEffectiveAreaM2,
+  getManuseioPricePerUnit,
   getMinimumPurchaseForItem,
   getPrintingPricePerM2,
+  getUnitPriceWithSmallPieceMinimum,
   isBannerMaterial,
-  isUvSmallPiece,
   isValidBannerSize,
   type Unit,
 } from "@/lib/orcamento-pricing";
@@ -689,20 +690,21 @@ function buildQuote(raw: string): QuoteResult {
       const printingPrice = getPrintingPricePerM2(printingType, areaM2ForOptions);
       const rigidPrice = RIGID_MATERIALS[optionRigid]?.pricePerM2 || 0;
       const finishingPrice = FINISHING_TYPES[optionFinishing]?.pricePerM2 || 0;
-      const optionalFinishingPrice = canUseOptionOptionalFinishing
+      const optionalFinishingPrice = canUseOptionOptionalFinishing && optionalFinishing !== "manuseio"
         ? OPTIONAL_FINISHING_TYPES[optionalFinishing]?.pricePerM2 || 0
+        : 0;
+      const manuseioPrice = canUseOptionOptionalFinishing
+        ? getManuseioPricePerUnit(optionalFinishing, hCm, wCm)
         : 0;
       const smallPieceMultiplier = areaM2ForOptions < 0.0009 ? 1.4 : 1;
       const versoPrice = (VERSO_TYPES[verso]?.pricePerM2 || 0) * areaM2ForOptions;
 
       const calculatedUnitPrice =
         areaM2ForOptions * (materialPrice + printingPrice + rigidPrice + finishingPrice + optionalFinishingPrice) * smallPieceMultiplier +
+        manuseioPrice +
         versoPrice;
 
-      const isSmallerThanTwoByTwoCm = hCm < 2 && wCm < 2;
-      const optionUnitPrice = isSmallerThanTwoByTwoCm
-        ? Math.max(calculatedUnitPrice, MIN_UNIT_PRICE_SMALL_PIECE)
-        : calculatedUnitPrice;
+      const optionUnitPrice = getUnitPriceWithSmallPieceMinimum(calculatedUnitPrice, hCm, wCm);
 
       const itemMinimumPurchase = getMinimumPurchaseForItem(printingType, hCm, wCm);
       const rawTotalPrice = optionUnitPrice * safeQuantity;
@@ -773,20 +775,21 @@ function buildQuote(raw: string): QuoteResult {
       const printingPrice = getPrintingPricePerM2(printingType, areaM2ForOptions);
       const rigidPrice = RIGID_MATERIALS[optionRigid]?.pricePerM2 || 0;
       const finishingPrice = FINISHING_TYPES[finishing]?.pricePerM2 || 0;
-      const optionalFinishingPrice = canUseOptionOptionalFinishing
+      const optionalFinishingPrice = canUseOptionOptionalFinishing && optionalFinishing !== "manuseio"
         ? OPTIONAL_FINISHING_TYPES[optionalFinishing]?.pricePerM2 || 0
+        : 0;
+      const manuseioPrice = canUseOptionOptionalFinishing
+        ? getManuseioPricePerUnit(optionalFinishing, hCm, wCm)
         : 0;
       const smallPieceMultiplier = areaM2ForOptions < 0.0009 ? 1.4 : 1;
       const versoPrice = (VERSO_TYPES[verso]?.pricePerM2 || 0) * areaM2ForOptions;
 
       const calculatedUnitPrice =
         areaM2ForOptions * (materialPrice + printingPrice + rigidPrice + finishingPrice + optionalFinishingPrice) * smallPieceMultiplier +
+        manuseioPrice +
         versoPrice;
 
-      const isSmallerThanTwoByTwoCm = hCm < 2 && wCm < 2;
-      const optionUnitPrice = isSmallerThanTwoByTwoCm
-        ? Math.max(calculatedUnitPrice, MIN_UNIT_PRICE_SMALL_PIECE)
-        : calculatedUnitPrice;
+      const optionUnitPrice = getUnitPriceWithSmallPieceMinimum(calculatedUnitPrice, hCm, wCm);
 
       const itemMinimumPurchase = getMinimumPurchaseForItem(printingType, hCm, wCm);
       const rawTotalPrice = optionUnitPrice * safeQuantity;
@@ -836,25 +839,26 @@ function buildQuote(raw: string): QuoteResult {
 
   const areaM2 = bannerMinimumApplied
     ? (pricingHCm * pricingWCm) / 10000
-    : toAreaM2(safeHeight, safeWidth, unit);
+    : getEffectiveAreaM2(safeHeight, safeWidth, unit, material, finishing);
   const materialPrice = MATERIALS[material]?.pricePerM2 ?? 0;
   const printingPrice = getPrintingPricePerM2(printingType, toAreaM2(safeHeight, safeWidth, unit));
   const rigidPrice = RIGID_MATERIALS[rigidMaterial]?.pricePerM2 || 0;
   const finishingPrice = FINISHING_TYPES[finishing]?.pricePerM2 || 0;
-  const optionalFinishingPrice = canUseOptionalFinishing
+  const optionalFinishingPrice = canUseOptionalFinishing && optionalFinishing !== "manuseio"
     ? OPTIONAL_FINISHING_TYPES[optionalFinishing]?.pricePerM2 || 0
+    : 0;
+  const manuseioPrice = canUseOptionalFinishing
+    ? getManuseioPricePerUnit(optionalFinishing, hCm, wCm)
     : 0;
   const smallPieceMultiplier = areaM2 < 0.0009 ? 1.4 : 1;
   const versoPrice = (VERSO_TYPES[verso]?.pricePerM2 || 0) * areaM2;
 
   const calculatedUnitPrice =
     areaM2 * (materialPrice + printingPrice + rigidPrice + finishingPrice + optionalFinishingPrice) * smallPieceMultiplier +
+    manuseioPrice +
     versoPrice;
 
-  const isSmallerThanTwoByTwoCm = hCm < 2 && wCm < 2;
-  const unitPrice = isSmallerThanTwoByTwoCm
-    ? Math.max(calculatedUnitPrice, MIN_UNIT_PRICE_SMALL_PIECE)
-    : calculatedUnitPrice;
+  const unitPrice = getUnitPriceWithSmallPieceMinimum(calculatedUnitPrice, hCm, wCm);
 
   const itemMinimumPurchase = getMinimumPurchaseForItem(printingType, hCm, wCm);
   const rawTotalPrice = unitPrice * safeQuantity;

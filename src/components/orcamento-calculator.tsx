@@ -7,15 +7,16 @@ import {
   FINISHING_TYPES,
   MATERIALS,
   OPTIONAL_FINISHING_TYPES,
-  MANUSEIO_MAX_SIZE_CM,
   MAX_QUANTITY,
   MINIMUM_PURCHASE,
-  MIN_UNIT_PRICE_SMALL_PIECE,
   PRINTING_TYPES,
   RIGID_MATERIALS,
   VERSO_TYPES,
+  getEffectiveAreaM2,
+  getManuseioPricePerUnit,
   getMinimumPurchaseForItem,
   getPrintingPricePerM2,
+  getUnitPriceWithSmallPieceMinimum,
   isBannerMaterial,
   isValidBannerSize,
   type Unit,
@@ -112,27 +113,6 @@ function toCm(value: number, unit: Unit): number {
   return value * 100;
 }
 
-function getCutLossCm(material: string, finishing: string): number {
-  const isVinyl = material.startsWith("vinil_") || material === "adesivo_perfurado";
-  const hasBannerHem = isBannerMaterial(material) && finishing === "com_ilhos";
-
-  if (isVinyl) return 0.3;
-  if (hasBannerHem) return 5;
-  return 0;
-}
-
-function getEffectiveAreaM2(height: number, width: number, unit: Unit, material: string, finishing: string): number {
-  const cutLossCm = getCutLossCm(material, finishing);
-
-  if (unit === "m2" || cutLossCm === 0) {
-    return toAreaM2(height, width, unit);
-  }
-
-  const hCm = toCm(height, unit) + cutLossCm;
-  const wCm = toCm(width, unit) + cutLossCm;
-  return (hCm / 100) * (wCm / 100);
-}
-
 function formatCurrency(value: number): string {
   return new Intl.NumberFormat("pt-BR", {
     style: "currency",
@@ -190,8 +170,8 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
     if (!Number.isFinite(h) || !Number.isFinite(w) || h <= 0 || w <= 0) return null;
     if (material === "sem_material" && rigidMaterial === "sem_rigido") return null;
 
-    const hCm = toCm(h, unit) + getCutLossCm(material, finishing);
-    const wCm = toCm(w, unit) + getCutLossCm(material, finishing);
+    const hCm = toCm(h, unit);
+    const wCm = toCm(w, unit);
     const areaM2 = getEffectiveAreaM2(h, w, unit, material, finishing);
     const materialPrice = MATERIALS[material]?.pricePerM2 ?? 0;
     const printingPrice = getPrintingPricePerM2(printingType, toAreaM2(h, w, unit));
@@ -203,9 +183,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
     const doubleSidedTapePrice = optionalFinishing === "fita_dupla_face"
       ? (hCm / 100) * 2 * OPTIONAL_FINISHING_TYPES.fita_dupla_face.pricePerM2
       : 0;
-    const manuseioPrice = optionalFinishing === "manuseio" && hCm < MANUSEIO_MAX_SIZE_CM && wCm < MANUSEIO_MAX_SIZE_CM
-      ? OPTIONAL_FINISHING_TYPES.manuseio.pricePerM2
-      : 0;
+    const manuseioPrice = getManuseioPricePerUnit(optionalFinishing, hCm, wCm);
     const smallPieceMultiplier = areaM2 < 0.0009 ? 1.4 : 1;
     const versoPrice = (VERSO_TYPES[verso]?.pricePerM2 || 0) * areaM2;
 
@@ -215,10 +193,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
       manuseioPrice +
       versoPrice;
 
-    const isSmallerThanTwoByTwoCm = hCm < 2 && wCm < 2;
-    const unitPrice = isSmallerThanTwoByTwoCm
-      ? Math.max(calculatedUnitPrice, MIN_UNIT_PRICE_SMALL_PIECE)
-      : calculatedUnitPrice;
+    const unitPrice = getUnitPriceWithSmallPieceMinimum(calculatedUnitPrice, hCm, wCm);
 
     if (unitPrice <= 0) return null;
 
@@ -494,22 +469,22 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
     const rigidPrice = RIGID_MATERIALS[rigidMaterial]?.pricePerM2 || 0;
     const finishingPrice = FINISHING_TYPES[finishing]?.pricePerM2 || 0;
     const optionalFinishingPrice = canUseOptionalFinishing && optionalFinishing !== "fita_dupla_face"
+      && optionalFinishing !== "manuseio"
       ? OPTIONAL_FINISHING_TYPES[optionalFinishing]?.pricePerM2 || 0
       : 0;
     const doubleSidedTapePrice = optionalFinishing === "fita_dupla_face"
       ? (hCm / 100) * 2 * OPTIONAL_FINISHING_TYPES.fita_dupla_face.pricePerM2
       : 0;
     const smallPieceMultiplier = areaM2 < 0.0009 ? 1.4 : 1;
+    const manuseioPrice = getManuseioPricePerUnit(optionalFinishing, hCm, wCm);
     const versoPrice = (VERSO_TYPES[verso]?.pricePerM2 || 0) * areaM2;
 
     const calculatedUnitPrice =
       areaM2 * (materialPrice + printingPrice + rigidPrice + finishingPrice + optionalFinishingPrice) * smallPieceMultiplier +
       doubleSidedTapePrice +
+      manuseioPrice +
       versoPrice;
-    const isSmallerThanTwoByTwoCm = hCm < 2 && wCm < 2;
-    const unitPrice = isSmallerThanTwoByTwoCm
-      ? Math.max(calculatedUnitPrice, MIN_UNIT_PRICE_SMALL_PIECE)
-      : calculatedUnitPrice;
+    const unitPrice = getUnitPriceWithSmallPieceMinimum(calculatedUnitPrice, hCm, wCm);
 
     const itemMinimumPurchase = getMinimumPurchaseForItem(printingType, hCm, wCm);
     const rawTotalPrice = unitPrice * qty;
