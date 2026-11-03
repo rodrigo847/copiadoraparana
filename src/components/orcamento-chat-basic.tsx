@@ -15,6 +15,7 @@ import {
   RIGID_MATERIALS,
   VERSO_TYPES,
   getMinimumPurchaseForItem,
+  getPrintingPricePerM2,
   isBannerMaterial,
   isUvSmallPiece,
   isValidBannerSize,
@@ -685,7 +686,7 @@ function buildQuote(raw: string): QuoteResult {
     const buildPlacaPixOption = (optionRigid: "ps_2mm" | "acrilico_2mm", title: string): string => {
       const canUseOptionOptionalFinishing = canUseOptionalFinishingForSelection(material, optionRigid);
       const materialPrice = MATERIALS[material]?.pricePerM2 ?? 0;
-      const printingPrice = PRINTING_TYPES[printingType]?.pricePerM2 || 0;
+      const printingPrice = getPrintingPricePerM2(printingType, areaM2ForOptions);
       const rigidPrice = RIGID_MATERIALS[optionRigid]?.pricePerM2 || 0;
       const finishingPrice = FINISHING_TYPES[optionFinishing]?.pricePerM2 || 0;
       const optionalFinishingPrice = canUseOptionOptionalFinishing
@@ -769,7 +770,7 @@ function buildQuote(raw: string): QuoteResult {
     const buildPlacaUvOption = (optionRigid: "ps_2mm" | "acrilico_2mm", title: string): string => {
       const canUseOptionOptionalFinishing = canUseOptionalFinishingForSelection(material, optionRigid);
       const materialPrice = MATERIALS[material]?.pricePerM2 ?? 0;
-      const printingPrice = PRINTING_TYPES[printingType]?.pricePerM2 || 0;
+      const printingPrice = getPrintingPricePerM2(printingType, areaM2ForOptions);
       const rigidPrice = RIGID_MATERIALS[optionRigid]?.pricePerM2 || 0;
       const finishingPrice = FINISHING_TYPES[finishing]?.pricePerM2 || 0;
       const optionalFinishingPrice = canUseOptionOptionalFinishing
@@ -837,7 +838,7 @@ function buildQuote(raw: string): QuoteResult {
     ? (pricingHCm * pricingWCm) / 10000
     : toAreaM2(safeHeight, safeWidth, unit);
   const materialPrice = MATERIALS[material]?.pricePerM2 ?? 0;
-  const printingPrice = PRINTING_TYPES[printingType]?.pricePerM2 || 0;
+  const printingPrice = getPrintingPricePerM2(printingType, toAreaM2(safeHeight, safeWidth, unit));
   const rigidPrice = RIGID_MATERIALS[rigidMaterial]?.pricePerM2 || 0;
   const finishingPrice = FINISHING_TYPES[finishing]?.pricePerM2 || 0;
   const optionalFinishingPrice = canUseOptionalFinishing

@@ -57,6 +57,24 @@ tecla Escape. Para desativá-lo, altere `siteNoticeEnabled` para `false` em
 npm run build
 ```
 
+## Impressão UV no Orça Fácil
+
+Na calculadora e no chat, peças com área individual de até 560 cm²
+(0,056 m², equivalente a 20 × 28 cm), inclusive, têm somente a impressão UV
+cobrada em dobro: R$ 190/m² em vez de R$ 95/m². O limite é pela área, portanto
+formatos como 10 × 50 cm também entram na regra, independentemente da quantidade.
+
+Acima desse limite, a impressão UV permanece em R$ 95/m². Materiais,
+acabamentos, verso, produtos especiais com preço fixo e o pedido mínimo de
+R$ 60 continuam com suas regras anteriores. Por isso, o total de um pedido
+pequeno ainda pode ficar no mínimo de R$ 60.
+
+Para validar a regra de preço:
+
+```bash
+node --test src/lib/orcamento-pricing.test.mjs
+```
+
 ## Próximos conteúdos recomendados
 
 - textos detalhados por serviço e produto

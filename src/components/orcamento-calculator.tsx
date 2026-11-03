@@ -15,6 +15,7 @@ import {
   RIGID_MATERIALS,
   VERSO_TYPES,
   getMinimumPurchaseForItem,
+  getPrintingPricePerM2,
   isBannerMaterial,
   isValidBannerSize,
   type Unit,
@@ -193,7 +194,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
     const wCm = toCm(w, unit) + getCutLossCm(material, finishing);
     const areaM2 = getEffectiveAreaM2(h, w, unit, material, finishing);
     const materialPrice = MATERIALS[material]?.pricePerM2 ?? 0;
-    const printingPrice = PRINTING_TYPES[printingType]?.pricePerM2 || 0;
+    const printingPrice = getPrintingPricePerM2(printingType, toAreaM2(h, w, unit));
     const rigidPrice = RIGID_MATERIALS[rigidMaterial]?.pricePerM2 || 0;
     const finishingPrice = FINISHING_TYPES[finishing]?.pricePerM2 || 0;
     const optionalFinishingPrice = canUseOptionalFinishing && optionalFinishing !== "fita_dupla_face" && optionalFinishing !== "manuseio"
@@ -489,7 +490,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
     const materialPrice = MATERIALS[material]?.pricePerM2 ?? 0;
     // Acréscimo de acabamento para vinil fosco e brilho
 
-    const printingPrice = PRINTING_TYPES[printingType]?.pricePerM2 || 0;
+    const printingPrice = getPrintingPricePerM2(printingType, toAreaM2(h, w, unit));
     const rigidPrice = RIGID_MATERIALS[rigidMaterial]?.pricePerM2 || 0;
     const finishingPrice = FINISHING_TYPES[finishing]?.pricePerM2 || 0;
     const optionalFinishingPrice = canUseOptionalFinishing && optionalFinishing !== "fita_dupla_face"
@@ -888,6 +889,11 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
                 </option>
               ))}
           </select>
+          {printingType === "uv" && !hasSpecialProduct ? (
+            <span className="mt-1.5 block text-xs font-normal text-[#5f7390]">
+              Em peças de até 560 cm² (20 × 28 cm), apenas o valor da impressão UV é dobrado.
+            </span>
+          ) : null}
         </label>
 
         <label className="text-sm font-semibold text-[#102038]">

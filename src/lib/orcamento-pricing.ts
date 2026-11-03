@@ -67,10 +67,22 @@ export const VERSO_TYPES: Record<string, PriceLabel> = {
 export const MINIMUM_PURCHASE = 60;
 export const UV_MINIMUM_SMALL_PIECE = 60;
 export const UV_MINIMUM_SIZE_LIMIT_CM = 6;
+export const UV_SMALL_PIECE_MAX_AREA_M2 = 560 / 10000;
 export const MIN_UNIT_PRICE_SMALL_PIECE = 0.08;
 export const MAX_QUANTITY = 100000;
 export const BANNER_MIN_SIDE_SMALL_CM = 60;
 export const BANNER_MIN_SIDE_LARGE_CM = 80;
+
+export function getPrintingPricePerM2(printingType: string, pieceAreaM2: number): number {
+  const basePrice = PRINTING_TYPES[printingType]?.pricePerM2 ?? 0;
+  // A conversao de 20x28cm pode resultar em 0.05600000000000001m2.
+  const isSmallUvPiece =
+    printingType === "uv" &&
+    pieceAreaM2 > 0 &&
+    pieceAreaM2 <= UV_SMALL_PIECE_MAX_AREA_M2 + Number.EPSILON;
+
+  return basePrice * (isSmallUvPiece ? 2 : 1);
+}
 
 export function isUvSmallPiece(printingType: string, hCm: number, wCm: number): boolean {
   return (
