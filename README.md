@@ -69,9 +69,19 @@ acabamentos, verso, produtos especiais com preço fixo e o pedido mínimo de
 R$ 60 continuam com suas regras anteriores. Por isso, o total de um pedido
 pequeno ainda pode ficar no mínimo de R$ 60.
 
-Nos adesivos de vinil, a área considera 0,3 cm de margem em cada dimensão. Peças
+## Adesivos pequenos no Orça Fácil
+
+Na calculadora e no chat, adesivos com impressão eco-solvente de até 25 cm²
+por peça (0,0025 m²), inclusive, recebem 40% de acréscimo nos custos por m²:
+material, impressão e acabamentos por área. Isso inclui 3 × 3, 4 × 4 e 5 × 5 cm,
+além de formatos como 2,5 × 10 cm. A quantidade e a margem de corte não entram
+na comparação com o limite. O acréscimo substitui, sem acumular, os 40% anteriores
+para esses adesivos. Impressão UV, banners e adesivos sem impressão não mudam.
+
+Nos adesivos de vinil, a área faturada considera 0,3 cm de margem em cada dimensão. Peças
 menores que 2 × 2 cm mantêm o piso de R$ 0,08 por unidade. O opcional Manuseio
-custa R$ 0,95 por unidade para peças menores que 5 × 5 cm.
+custa R$ 0,95 por unidade para peças menores que 5 × 5 cm e não recebe os 40%.
+O mínimo de R$ 60 por item permanece.
 
 Para validar a regra de preço:
 

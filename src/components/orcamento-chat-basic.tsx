@@ -17,6 +17,7 @@ import {
   getManuseioPricePerUnit,
   getMinimumPurchaseForItem,
   getPrintingPricePerM2,
+  getSmallPiecePriceMultiplier,
   getUnitPriceWithSmallPieceMinimum,
   isBannerMaterial,
   isValidBannerSize,
@@ -696,7 +697,7 @@ function buildQuote(raw: string): QuoteResult {
       const manuseioPrice = canUseOptionOptionalFinishing
         ? getManuseioPricePerUnit(optionalFinishing, hCm, wCm)
         : 0;
-      const smallPieceMultiplier = areaM2ForOptions < 0.0009 ? 1.4 : 1;
+      const smallPieceMultiplier = getSmallPiecePriceMultiplier(material, printingType, areaM2ForOptions, areaM2ForOptions);
       const versoPrice = (VERSO_TYPES[verso]?.pricePerM2 || 0) * areaM2ForOptions;
 
       const calculatedUnitPrice =
@@ -781,7 +782,7 @@ function buildQuote(raw: string): QuoteResult {
       const manuseioPrice = canUseOptionOptionalFinishing
         ? getManuseioPricePerUnit(optionalFinishing, hCm, wCm)
         : 0;
-      const smallPieceMultiplier = areaM2ForOptions < 0.0009 ? 1.4 : 1;
+      const smallPieceMultiplier = getSmallPiecePriceMultiplier(material, printingType, areaM2ForOptions, areaM2ForOptions);
       const versoPrice = (VERSO_TYPES[verso]?.pricePerM2 || 0) * areaM2ForOptions;
 
       const calculatedUnitPrice =
@@ -850,7 +851,7 @@ function buildQuote(raw: string): QuoteResult {
   const manuseioPrice = canUseOptionalFinishing
     ? getManuseioPricePerUnit(optionalFinishing, hCm, wCm)
     : 0;
-  const smallPieceMultiplier = areaM2 < 0.0009 ? 1.4 : 1;
+  const smallPieceMultiplier = getSmallPiecePriceMultiplier(material, printingType, toAreaM2(safeHeight, safeWidth, unit), areaM2);
   const versoPrice = (VERSO_TYPES[verso]?.pricePerM2 || 0) * areaM2;
 
   const calculatedUnitPrice =

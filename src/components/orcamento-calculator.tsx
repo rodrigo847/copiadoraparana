@@ -16,6 +16,7 @@ import {
   getManuseioPricePerUnit,
   getMinimumPurchaseForItem,
   getPrintingPricePerM2,
+  getSmallPiecePriceMultiplier,
   getUnitPriceWithSmallPieceMinimum,
   isBannerMaterial,
   isValidBannerSize,
@@ -184,7 +185,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
       ? (hCm / 100) * 2 * OPTIONAL_FINISHING_TYPES.fita_dupla_face.pricePerM2
       : 0;
     const manuseioPrice = getManuseioPricePerUnit(optionalFinishing, hCm, wCm);
-    const smallPieceMultiplier = areaM2 < 0.0009 ? 1.4 : 1;
+    const smallPieceMultiplier = getSmallPiecePriceMultiplier(material, printingType, toAreaM2(h, w, unit), areaM2);
     const versoPrice = (VERSO_TYPES[verso]?.pricePerM2 || 0) * areaM2;
 
     const calculatedUnitPrice =
@@ -475,7 +476,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
     const doubleSidedTapePrice = optionalFinishing === "fita_dupla_face"
       ? (hCm / 100) * 2 * OPTIONAL_FINISHING_TYPES.fita_dupla_face.pricePerM2
       : 0;
-    const smallPieceMultiplier = areaM2 < 0.0009 ? 1.4 : 1;
+    const smallPieceMultiplier = getSmallPiecePriceMultiplier(material, printingType, toAreaM2(h, w, unit), areaM2);
     const manuseioPrice = getManuseioPricePerUnit(optionalFinishing, hCm, wCm);
     const versoPrice = (VERSO_TYPES[verso]?.pricePerM2 || 0) * areaM2;
 
@@ -864,11 +865,6 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
                 </option>
               ))}
           </select>
-          {printingType === "uv" && !hasSpecialProduct ? (
-            <span className="mt-1.5 block text-xs font-normal text-[#5f7390]">
-              Em peças de até 560 cm² (20 × 28 cm), apenas o valor da impressão UV é dobrado.
-            </span>
-          ) : null}
         </label>
 
         <label className="text-sm font-semibold text-[#102038]">

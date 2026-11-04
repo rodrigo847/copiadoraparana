@@ -68,6 +68,7 @@ export const MINIMUM_PURCHASE = 60;
 export const UV_MINIMUM_SMALL_PIECE = 60;
 export const UV_MINIMUM_SIZE_LIMIT_CM = 6;
 export const UV_SMALL_PIECE_MAX_AREA_M2 = 560 / 10000;
+export const SMALL_ECO_STICKER_MAX_AREA_M2 = 25 / 10000;
 export const MIN_UNIT_PRICE_SMALL_PIECE = 0.08;
 export const MAX_QUANTITY = 100000;
 export const BANNER_MIN_SIDE_SMALL_CM = 60;
@@ -85,6 +86,25 @@ function toCm(value: number, unit: Unit): number {
   return value * 100;
 }
 
+function isAdhesiveMaterial(material: string): boolean {
+  return material.startsWith("vinil_") || material === "adesivo_perfurado";
+}
+
+export function getSmallPiecePriceMultiplier(
+  material: string,
+  printingType: string,
+  pieceAreaM2: number,
+  billedAreaM2: number,
+): number {
+  if (isAdhesiveMaterial(material) && printingType === "eco_solvente") {
+    return pieceAreaM2 > 0 && pieceAreaM2 <= SMALL_ECO_STICKER_MAX_AREA_M2 + Number.EPSILON
+      ? 1.4
+      : 1;
+  }
+
+  return billedAreaM2 < 0.0009 ? 1.4 : 1;
+}
+
 export function getEffectiveAreaM2(
   height: number,
   width: number,
@@ -92,8 +112,7 @@ export function getEffectiveAreaM2(
   material: string,
   finishing: string,
 ): number {
-  const isVinyl = material.startsWith("vinil_") || material === "adesivo_perfurado";
-  const cutLossCm = isVinyl
+  const cutLossCm = isAdhesiveMaterial(material)
     ? 0.3
     : isBannerMaterial(material) && finishing === "com_ilhos"
       ? 5
