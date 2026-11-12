@@ -65,9 +65,9 @@ cobrada em dobro: R$ 190/m² em vez de R$ 95/m². O limite é pela área, portan
 formatos como 10 × 50 cm também entram na regra, independentemente da quantidade.
 
 Acima desse limite, a impressão UV permanece em R$ 95/m². Materiais,
-acabamentos, verso, produtos especiais com preço fixo e o pedido mínimo de
-R$ 60 continuam com suas regras anteriores. Por isso, o total de um pedido
-pequeno ainda pode ficar no mínimo de R$ 60.
+acabamentos, verso e produtos especiais com preço fixo continuam com suas
+regras anteriores. O mínimo por item é de R$ 70 para lona/banner e R$ 60 para
+os demais materiais.
 
 ## Adesivos pequenos no Orça Fácil
 
@@ -81,7 +81,7 @@ para esses adesivos. Impressão UV, banners e adesivos sem impressão não mudam
 Nos adesivos de vinil, a área faturada considera 0,3 cm de margem em cada dimensão. Peças
 menores que 2 × 2 cm mantêm o piso de R$ 0,08 por unidade. O opcional Manuseio
 custa R$ 0,95 por unidade para peças menores que 5 × 5 cm e não recebe os 40%.
-O mínimo de R$ 60 por item permanece.
+O mínimo por item permanece em R$ 70 para lona/banner e R$ 60 para os demais.
 
 Para validar a regra de preço:
 

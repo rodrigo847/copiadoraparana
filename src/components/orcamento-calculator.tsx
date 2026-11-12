@@ -198,7 +198,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
 
     if (unitPrice <= 0) return null;
 
-    const itemMinimumPurchase = getMinimumPurchaseForItem(printingType, hCm, wCm);
+    const itemMinimumPurchase = getMinimumPurchaseForItem(material, printingType, hCm, wCm);
     const currentTotal = unitPrice * qty;
     if (currentTotal >= itemMinimumPurchase) return null;
 
@@ -487,7 +487,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
       versoPrice;
     const unitPrice = getUnitPriceWithSmallPieceMinimum(calculatedUnitPrice, hCm, wCm);
 
-    const itemMinimumPurchase = getMinimumPurchaseForItem(printingType, hCm, wCm);
+    const itemMinimumPurchase = getMinimumPurchaseForItem(material, printingType, hCm, wCm);
     const rawTotalPrice = unitPrice * qty;
     const totalPrice = Math.max(rawTotalPrice, itemMinimumPurchase);
     const finalUnitPrice = totalPrice / qty;

@@ -55,8 +55,15 @@ test("o acrescimo e apenas da impressao e por peca, sem dobrar outros custos", (
 
   assert.ok(Math.abs(newUnitPrice - originalUnitPrice - 0.95) < 1e-10);
   assert.equal(areaM2 * getPrintingPricePerM2("uv", areaM2) * 100, 190);
-  assert.equal(getMinimumPurchaseForItem("uv", 10, 10), 60);
-  assert.equal(getMinimumPurchaseForItem("uv", 1, 1), 60);
+  assert.equal(getMinimumPurchaseForItem("ps_2mm", "uv", 10, 10), 60);
+  assert.equal(getMinimumPurchaseForItem("ps_2mm", "uv", 1, 1), 60);
+});
+
+test("lona e banner têm mínimo de R$ 70 sem alterar o mínimo dos demais itens", () => {
+  assert.equal(getMinimumPurchaseForItem("banner_brilho", "eco_solvente", 100, 150), 70);
+  assert.equal(getMinimumPurchaseForItem("banner_fosco", "eco_solvente", 100, 150), 70);
+  assert.equal(getMinimumPurchaseForItem("vinil_branco_fosco", "eco_solvente", 100, 150), 60);
+  assert.equal(getMinimumPurchaseForItem("ps_2mm", "uv", 10, 10), 60);
 });
 
 test("adesivos vinil consideram a margem de corte na area faturada", () => {

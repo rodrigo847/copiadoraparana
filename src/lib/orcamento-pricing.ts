@@ -65,6 +65,7 @@ export const VERSO_TYPES: Record<string, PriceLabel> = {
 }; 
 
 export const MINIMUM_PURCHASE = 60;
+export const BANNER_MINIMUM_PURCHASE = 70;
 export const UV_MINIMUM_SMALL_PIECE = 60;
 export const UV_MINIMUM_SIZE_LIMIT_CM = 6;
 export const UV_SMALL_PIECE_MAX_AREA_M2 = 560 / 10000;
@@ -158,9 +159,18 @@ export function isUvSmallPiece(printingType: string, hCm: number, wCm: number): 
   );
 }
 
-export function getMinimumPurchaseForItem(printingType: string, hCm: number, wCm: number): number {
+export function getMinimumPurchaseForItem(
+  material: string,
+  printingType: string,
+  hCm: number,
+  wCm: number,
+): number {
   if (isUvSmallPiece(printingType, hCm, wCm)) {
     return UV_MINIMUM_SMALL_PIECE;
+  }
+
+  if (isBannerMaterial(material)) {
+    return BANNER_MINIMUM_PURCHASE;
   }
 
   return MINIMUM_PURCHASE;

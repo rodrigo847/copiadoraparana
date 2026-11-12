@@ -203,6 +203,7 @@ function parseWrittenQuantity(text: string): number | null {
 
 function detectMaterial(text: string): string | null {
   // Banner must be checked before generic patterns
+  if (/\blona\b/.test(text)) return "banner_brilho";
   if (/\bban+n?er(?:es|s)?\s+fosco\b/.test(text)) return "banner_fosco";
   if (/\bban+n?er(?:es|s)?\s+brilho\b/.test(text)) return "banner_brilho";
   if (/\bban+n?er(?:es|s)?\b/.test(text)) return "banner_brilho"; // default to shiny if not specified
@@ -297,7 +298,7 @@ function hasExplicitFinishKeyword(text: string): boolean {
 }
 
 function hasExplicitMaterialKeyword(text: string): boolean {
-  return /\b(?:adesivo|banner|vinil|ps\s*\d|acrilico|triplex|c2s|material\s+cliente|papel|couche|offset)\b/i.test(text);
+  return /\b(?:adesivo|banner|lona|vinil|ps\s*\d|acrilico|triplex|c2s|material\s+cliente|papel|couche|offset)\b/i.test(text);
 }
 
 function detectVerso(text: string): string | null {
@@ -707,7 +708,7 @@ function buildQuote(raw: string): QuoteResult {
 
       const optionUnitPrice = getUnitPriceWithSmallPieceMinimum(calculatedUnitPrice, hCm, wCm);
 
-      const itemMinimumPurchase = getMinimumPurchaseForItem(printingType, hCm, wCm);
+      const itemMinimumPurchase = getMinimumPurchaseForItem(optionRigid, printingType, hCm, wCm);
       const rawTotalPrice = optionUnitPrice * safeQuantity;
       const totalPrice = Math.max(rawTotalPrice, itemMinimumPurchase);
       const finalUnitPrice = totalPrice / safeQuantity;
@@ -792,7 +793,7 @@ function buildQuote(raw: string): QuoteResult {
 
       const optionUnitPrice = getUnitPriceWithSmallPieceMinimum(calculatedUnitPrice, hCm, wCm);
 
-      const itemMinimumPurchase = getMinimumPurchaseForItem(printingType, hCm, wCm);
+      const itemMinimumPurchase = getMinimumPurchaseForItem(optionRigid, printingType, hCm, wCm);
       const rawTotalPrice = optionUnitPrice * safeQuantity;
       const totalPrice = Math.max(rawTotalPrice, itemMinimumPurchase);
       const finalUnitPrice = totalPrice / safeQuantity;
@@ -861,7 +862,7 @@ function buildQuote(raw: string): QuoteResult {
 
   const unitPrice = getUnitPriceWithSmallPieceMinimum(calculatedUnitPrice, hCm, wCm);
 
-  const itemMinimumPurchase = getMinimumPurchaseForItem(printingType, hCm, wCm);
+  const itemMinimumPurchase = getMinimumPurchaseForItem(material, printingType, hCm, wCm);
   const rawTotalPrice = unitPrice * safeQuantity;
   const totalPrice = Math.max(rawTotalPrice, itemMinimumPurchase);
   const finalUnitPrice = totalPrice / safeQuantity;
