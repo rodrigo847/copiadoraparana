@@ -307,10 +307,16 @@ function detectVerso(text: string): string | null {
   return detectFromCatalogByName(text, VERSO_TYPES, "sem_verso") || "sem_verso";
 }
 
-function canUseOptionalFinishingForSelection(material: string, rigidMaterial: string): boolean {
+function canUseOptionalFinishingForSelection(
+  material: string,
+  rigidMaterial: string,
+  optionalFinishing: string,
+): boolean {
   const isVinylWithOptional = material === "vinil_branco_brilho" || material === "vinil_branco_fosco";
+  const isTransparentVinylWithCalco =
+    material === "vinil_transparente_brilho" && optionalFinishing === "calco_branco";
   const isPsRigid = rigidMaterial === "ps_1mm" || rigidMaterial === "ps_2mm" || rigidMaterial === "ps_3mm";
-  return isVinylWithOptional || isPsRigid;
+  return isVinylWithOptional || isTransparentVinylWithCalco || isPsRigid;
 }
 
 function detectProductType(text: string): "chaveiro" | "placa_pix" | "placa" | null {
@@ -333,7 +339,11 @@ function buildBasePriceSummary(
   optionalFinishing: string,
 ): string | null {
   const lines: string[] = [];
-  const canUseOptionalFinishing = canUseOptionalFinishingForSelection(material, rigidMaterial);
+  const canUseOptionalFinishing = canUseOptionalFinishingForSelection(
+    material,
+    rigidMaterial,
+    optionalFinishing,
+  );
 
   if (material !== "sem_material") {
     lines.push(
@@ -530,7 +540,11 @@ function buildQuote(raw: string): QuoteResult {
   // automaticamente quando o cliente não explicitou essas opções.
   // Regras de recomendação ficam restritas apenas à solicitação explícita do usuário.
 
-  const canUseOptionalFinishing = canUseOptionalFinishingForSelection(material, rigidMaterial);
+  const canUseOptionalFinishing = canUseOptionalFinishingForSelection(
+    material,
+    rigidMaterial,
+    optionalFinishing,
+  );
   if (!canUseOptionalFinishing) {
     optionalFinishing = "sem_opcional";
   }
@@ -687,7 +701,11 @@ function buildQuote(raw: string): QuoteResult {
     const optionFinishing = finishing === "sem_acabamento" ? "corte_dobra" : finishing;
 
     const buildPlacaPixOption = (optionRigid: "ps_2mm" | "acrilico_2mm", title: string): string => {
-      const canUseOptionOptionalFinishing = canUseOptionalFinishingForSelection(material, optionRigid);
+      const canUseOptionOptionalFinishing = canUseOptionalFinishingForSelection(
+        material,
+        optionRigid,
+        optionalFinishing,
+      );
       const materialPrice = MATERIALS[material]?.pricePerM2 ?? 0;
       const printingPrice = getPrintingPricePerM2(printingType, areaM2ForOptions);
       const rigidPrice = RIGID_MATERIALS[optionRigid]?.pricePerM2 || 0;
@@ -772,7 +790,11 @@ function buildQuote(raw: string): QuoteResult {
     const areaM2ForOptions = toAreaM2(safeHeight, safeWidth, unit);
 
     const buildPlacaUvOption = (optionRigid: "ps_2mm" | "acrilico_2mm", title: string): string => {
-      const canUseOptionOptionalFinishing = canUseOptionalFinishingForSelection(material, optionRigid);
+      const canUseOptionOptionalFinishing = canUseOptionalFinishingForSelection(
+        material,
+        optionRigid,
+        optionalFinishing,
+      );
       const materialPrice = MATERIALS[material]?.pricePerM2 ?? 0;
       const printingPrice = getPrintingPricePerM2(printingType, areaM2ForOptions);
       const rigidPrice = RIGID_MATERIALS[optionRigid]?.pricePerM2 || 0;

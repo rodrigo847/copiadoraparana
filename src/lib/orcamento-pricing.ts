@@ -49,6 +49,7 @@ export const FINISHING_TYPES: Record<string, PriceLabel> = {
 
 export const OPTIONAL_FINISHING_TYPES: Record<string, PriceLabel> = {
   sem_opcional: { name: "Nenhum", pricePerM2: 0 },
+  calco_branco: { name: "Calço Branco (reverso) + R$40,00/m²", pricePerM2: 40 },
   mascara: { name: "Máscara Transparente + R$80,00m²", pricePerM2: 80 },
   mascara_papel: { name: "Máscara de papel + R$45,00m²", pricePerM2: 45 },
   laminacao_frio: { name: "Laminação a Frio + R$95,00m²", pricePerM2: 95 },

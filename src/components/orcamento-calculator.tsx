@@ -157,6 +157,7 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
     material === PREMIUM_COLOR_MATERIAL ||
     material === "vinil_branco_brilho" ||
     material === "vinil_branco_fosco" ||
+    material === "vinil_transparente_brilho" ||
     isPsRigidMaterial ||
     printingType === "uv";
   const hasSpecialProduct = specialProduct !== "";
@@ -772,7 +773,11 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
               if (value === "adesivo_perfurado") {
                 setPrintingType("eco_solvente");
               }
-              if (value !== "vinil_branco_brilho" && value !== "vinil_branco_fosco") {
+              if (
+                value === "vinil_transparente_brilho" ||
+                optionalFinishing === "calco_branco" ||
+                (value !== "vinil_branco_brilho" && value !== "vinil_branco_fosco")
+              ) {
                 setOptionalFinishing("sem_opcional");
               }
               // Sempre resetar acabamento para 'sem_acabamento' ao trocar material
@@ -929,6 +934,14 @@ export function OrcamentoCalculator({ whatsappHref }: OrcamentoCalculatorProps) 
           >
             {Object.entries(OPTIONAL_FINISHING_TYPES)
               .filter(([key]) => {
+                if (material === "vinil_transparente_brilho") {
+                  return key === "sem_opcional" || key === "calco_branco";
+                }
+
+                if (key === "calco_branco") {
+                  return false;
+                }
+
                 if (printingType === "uv") {
                   return key === "sem_opcional" || key === "laminacao_frio" || key === "fita_dupla_face" || key === "manuseio";
                 }
