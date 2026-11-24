@@ -235,6 +235,8 @@ export default function HomePage() {
                   <h2 className="mt-3 font-heading text-xl font-bold tracking-tight text-white sm:text-2xl">Atendimento rápido e direto</h2>
 
                   <div className="mt-5 space-y-3">
+                    <CopyWhatsappCard whatsappDisplay={site.whatsappDisplay} />
+
                     <a
                       href={site.phoneHref}
                       className="flex items-center gap-3 rounded-2xl border border-white/12 bg-white/8 px-3 py-3 transition hover:border-[#78a9e2] hover:bg-white/12"
@@ -247,8 +249,6 @@ export default function HomePage() {
                         <span className="block font-heading text-xl font-bold text-white">{site.phoneDisplay}</span>
                       </span>
                     </a>
-
-                    <CopyWhatsappCard whatsappDisplay={site.whatsappDisplay} />
                   </div>
 
                   <div className="mt-5 rounded-2xl border border-white/12 bg-white/7 px-5 py-4">
@@ -256,7 +256,7 @@ export default function HomePage() {
                     <p className="mt-1 text-sm leading-6 text-[#e7f0fb]">
                       Rua Teixeira Coelho, 61, Batel, <span className="whitespace-nowrap">Curitiba - PR</span>
                     </p>
-                    <p className="mt-2 text-sm font-semibold text-[#d8e8ff]">Seg a Sex - 9h às 18h</p>
+                    <p className="mt-2 text-lg font-bold text-amber-200 sm:text-xl">Segunda a Sexta - 9h às 18h</p>
                     <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
                       <a
                         href={site.googleMapsDirections}
@@ -278,6 +278,14 @@ export default function HomePage() {
                       </a>
                     </div>
                   </div>
+
+                  <aside aria-label="Aviso sobre férias coletivas" className="mt-5 rounded-2xl border border-amber-200/35 bg-amber-100/10 px-4 py-3">
+                    <p className="text-xs font-semibold uppercase tracking-[0.12em] text-amber-200">Aviso</p>
+                    <h3 className="mt-1 font-heading text-base font-bold text-white">Férias coletivas</h3>
+                    <p className="mt-1 text-sm leading-6 text-[#e7f0fb]">
+                      Estaremos em férias coletivas de 18 de dezembro de 2026 a 14 de janeiro de 2027.
+                    </p>
+                  </aside>
 
                 </div>
               </div>
