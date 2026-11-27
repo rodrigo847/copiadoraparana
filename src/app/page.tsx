@@ -4,6 +4,7 @@ import Link from "next/link";
 import Script from "next/script";
 
 import { CopyWhatsappCard } from "@/components/copy-whatsapp-card";
+import { RotatingSiteNotice } from "@/components/rotating-site-notice";
 import { SilentVideo } from "@/components/silent-video";
 import { ServicesProductsCarousel } from "@/components/services-products-carousel";
 import { ServiceCube } from "@/components/service-cube";
@@ -279,32 +280,7 @@ export default function HomePage() {
                     </div>
                   </div>
 
-                  <aside
-                    aria-label="Aviso sobre férias coletivas"
-                    className="relative mt-5 overflow-hidden rounded-2xl border border-amber-200/35 bg-[linear-gradient(110deg,rgba(251,191,36,0.12),rgba(255,255,255,0.025))] px-4 py-3"
-                  >
-                    <svg
-                      className="pointer-events-none absolute right-3 top-1/2 h-24 w-24 -translate-y-1/2 text-amber-100 opacity-20 sm:right-5 sm:h-28 sm:w-28"
-                      viewBox="0 0 100 100"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="1.5"
-                      aria-hidden="true"
-                    >
-                      <circle cx="74" cy="27" r="9" />
-                      <path d="M7 76c10-5 19-5 29 0s19 5 29 0 19-5 29 0M7 86c10-5 19-5 29 0s19 5 29 0 19-5 29 0" />
-                      <path d="M39 76c4-13 7-25 9-37M47 42c-8-10-16-12-24-9 5 8 12 11 24 9ZM47 42c-2-12 1-20 8-25 4 9 2 17-8 25ZM47 42c7-9 15-12 24-9-5 8-12 11-24 9ZM47 42c-10-4-18-3-24 3 8 5 16 4 24-3ZM47 42c3-10 9-16 18-17 0 9-6 15-18 17Z" />
-                    </svg>
-                    <div className="relative z-10 pr-14 sm:pr-16">
-                      <p className="text-xs font-semibold uppercase tracking-[0.12em] text-amber-200">Aviso</p>
-                      <h3 className="mt-1 font-heading text-base font-bold text-white">Férias coletivas</h3>
-                      <p className="mt-1 text-sm leading-6 text-[#e7f0fb]">
-                        Estaremos em férias coletivas de 18 de dezembro de 2026 a 14 de janeiro de 2027.
-                      </p>
-                    </div>
-                  </aside>
+                  <RotatingSiteNotice />
 
                 </div>
               </div>

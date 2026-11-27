@@ -216,10 +216,19 @@ a {
   animation: serviceLabelReveal 0.45s ease both;
 }
 
+.notice-slide {
+  animation: noticeSlideIn 0.4s ease-out both;
+}
+
 @keyframes serviceCubeTurn {
   0% { transform: rotateX(-18deg) rotateY(-28deg); }
   50% { transform: rotateX(18deg) rotateY(152deg); }
   100% { transform: rotateX(-18deg) rotateY(332deg); }
+}
+
+@keyframes noticeSlideIn {
+  from { opacity: 0; transform: translateX(0.4rem); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes serviceLabelReveal {
@@ -243,7 +252,8 @@ a {
 
 @media (prefers-reduced-motion: reduce) {
   .service-cube,
-  .service-cube-copy strong {
+  .service-cube-copy strong,
+  .notice-slide {
     animation: none;
   }
 }
