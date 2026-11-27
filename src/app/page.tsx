@@ -203,28 +203,52 @@ export default function HomePage() {
                 </p>
 
 
-                <div className="mt-7 sm:mt-8 flex flex-col gap-3 sm:flex-row sm:gap-5">
-                  <Link
-                    href="/orcafacil"
-                    className="inline-flex items-center justify-center rounded-full border border-[#4f7eb5] bg-[linear-gradient(180deg,rgba(31,132,255,0.24),rgba(16,83,166,0.18))] px-6 py-3 text-center text-sm font-semibold text-[#1f84ff] transition hover:border-[#86b8f5] hover:bg-[linear-gradient(180deg,rgba(31,132,255,0.32),rgba(16,83,166,0.24))] sm:w-auto"
-                  >
-                    <svg viewBox="0 0 24 24" className="h-6 w-6 mr-2" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                      <rect x="6" y="2.8" width="12" height="18.4" rx="2.2" />
-                      <path d="M9.4 7.2h5.2M9.4 10.2h5.2M9.4 13.2h5.2M12 17.2h.01" />
-                    </svg>
-                    Orça Fácil
-                  </Link>
+                <div className="mt-7 flex w-full max-w-full flex-col gap-4 sm:mt-8 sm:w-fit">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                    <Link
+                      href="/orcafacil"
+                      className="inline-flex items-center justify-center rounded-full border border-[#4f7eb5] bg-[linear-gradient(180deg,rgba(31,132,255,0.24),rgba(16,83,166,0.18))] px-6 py-3 text-center text-sm font-semibold text-[#1f84ff] transition hover:border-[#86b8f5] hover:bg-[linear-gradient(180deg,rgba(31,132,255,0.32),rgba(16,83,166,0.24))] sm:w-auto"
+                    >
+                      <svg viewBox="0 0 24 24" className="h-6 w-6 mr-2" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                        <rect x="6" y="2.8" width="12" height="18.4" rx="2.2" />
+                        <path d="M9.4 7.2h5.2M9.4 10.2h5.2M9.4 13.2h5.2M12 17.2h.01" />
+                      </svg>
+                      Orça Fácil
+                    </Link>
+                    <a
+                      href={site.whatsappHref}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/12 px-6 py-3 text-center text-sm font-semibold text-white transition hover:bg-white/20 sm:w-auto"
+                    >
+                      <svg className="mr-2 h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                        <path d="M7 4h10a3 3 0 013 3v10a3 3 0 01-3 3H9l-4 3V7a3 3 0 013-3z" />
+                        <path d="M8.5 9.5h7M8.5 12.5h4.5" />
+                      </svg>
+                      Atendimento WhatsApp
+                    </a>
+                  </div>
+
                   <a
-                    href={site.whatsappHref}
+                    href={site.instagram}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/12 px-6 py-3 text-center text-sm font-semibold text-white transition hover:bg-white/20 sm:w-auto"
+                    className="flex w-full items-center gap-3 rounded-2xl border border-white/20 bg-white/10 px-4 py-3 text-white transition hover:border-[#dfb3df] hover:bg-white/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                   >
-                    <svg className="mr-2 h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                      <path d="M7 4h10a3 3 0 013 3v10a3 3 0 01-3 3H9l-4 3V7a3 3 0 013-3z" />
-                      <path d="M8.5 9.5h7M8.5 12.5h4.5" />
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[linear-gradient(135deg,#833ab4,#d74670,#f4a54b)]">
+                      <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+                        <rect x="3" y="3" width="18" height="18" rx="5" />
+                        <circle cx="12" cy="12" r="4" />
+                        <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none" />
+                      </svg>
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-xs font-semibold uppercase tracking-[0.12em] text-[#c5dcfb]">Siga nosso Instagram</span>
+                      <span className="block break-all font-heading text-sm font-bold sm:text-base">@copiadoraparanalaser</span>
+                    </span>
+                    <svg className="h-4 w-4 shrink-0 text-[#d8e8ff]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M7 17 17 7M7 7h10v10" />
                     </svg>
-                    Atendimento WhatsApp
                   </a>
                 </div>
               </div>
